@@ -16,21 +16,25 @@
 -->
 
 <resources>
-    <string name="app_name">جيت باك</string>
-    <string name="btn_click_text">احصل على العنصر</string>
-    <string name="home">الرئيسية</string>
-    <string name="error_item_loading">خطأ في تحميل العنصر</string>
-    <string name="profile">الملف الشخصي</string>
-    <string name="search">بحث</string>
-    <string name="more">المزيد</string>
-    <string name="back">رجوع</string>
-    <string name="top_app_bar_action_icon_description">الإعدادات</string>
-    <string name="top_app_bar_navigation_icon_description">بحث</string>
-    <string name="settings">الإعدادات</string>
-    <string name="loading">جارٍ التحميل…</string>
-    <string name="not_connected">⚠️ أنت غير متصل بالإنترنت</string>
-    <string name="profile_picture">صورة الملف الشخصي</string>
-    <string name="done">تم</string>
-    <string name="purchase_premium">شراء جيت باك بريميوم</string>
-    <string name="add">إضافة</string>
+    <string name="app_name">Jetpack</string>
+    <string name="btn_click_text">Get Item</string>
+    <string name="browse">Browse</string>
+    <string name="games">Games</string>
+    <string name="forgot_password">Forgot Password</string>
+    <string name="favorite">Favorite</string>
+    <string name="user">User</string>
+    <string name="error_item_loading">Error Loading Item</string>
+    <string name="profile">Profile</string>
+    <string name="search">Search</string>
+    <string name="more">More</string>
+    <string name="back">Back</string>
+    <string name="top_app_bar_action_icon_description">Settings</string>
+    <string name="top_app_bar_navigation_icon_description">Search</string>
+    <string name="settings">Settings</string>
+    <string name="loading">Loading…</string>
+    <string name="not_connected">⚠️ You aren’t connected to the internet</string>
+    <string name="profile_picture">Profile Picture</string>
+    <string name="done">Done</string>
+    <string name="purchase_premium">Purchase Jetpack Premium</string>
+    <string name="add">Add</string>
 </resources>

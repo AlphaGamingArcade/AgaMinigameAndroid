@@ -62,4 +62,4 @@
 -keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
 
 # Keep model classes used for deserialization by Retrofit.
--keep class dev.atick.core.network.model.** { *; }
+-keep class com.alphagamingarcade.core.network.model.** { *; }

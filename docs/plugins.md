@@ -5,7 +5,7 @@ module-level build files. These plugins are located in the `build-logic` directo
 
 ## Available Plugins
 
-### 1. Application Plugin (`dev.atick.application`)
+### 1. Application Plugin (`com.alphagamingarcade.application`)
 
 Used for the main application module:
 
@@ -22,7 +22,7 @@ plugins {
 }
 ```
 
-### 2. Library Plugin (`dev.atick.library`)
+### 2. Library Plugin (`com.alphagamingarcade.library`)
 
 Base plugin for Android library modules:
 
@@ -37,7 +37,7 @@ plugins {
 }
 ```
 
-### 3. UI Library Plugin (`dev.atick.ui.library`)
+### 3. UI Library Plugin (`com.alphagamingarcade.ui.library`)
 
 Extended library plugin for UI modules:
 
@@ -52,7 +52,7 @@ plugins {
 }
 ```
 
-### 4. Dagger Hilt Plugin (`dev.atick.dagger.hilt`)
+### 4. Dagger Hilt Plugin (`com.alphagamingarcade.dagger.hilt`)
 
 Sets up Dagger Hilt in a module:
 
@@ -66,7 +66,7 @@ plugins {
 }
 ```
 
-### 5. Firebase Plugin (`dev.atick.firebase`)
+### 5. Firebase Plugin (`com.alphagamingarcade.firebase`)
 
 Configures Firebase services:
 

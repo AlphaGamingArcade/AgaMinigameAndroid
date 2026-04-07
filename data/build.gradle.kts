@@ -21,7 +21,7 @@ plugins {
 }
 
 android {
-    namespace = "dev.atick.data"
+    namespace = "com.alphagamingarcade.data"
 }
 
 dependencies {
@@ -30,8 +30,4 @@ dependencies {
     implementation(project(":core:network"))
     implementation(project(":core:preferences"))
     implementation(project(":core:room"))
-
-    // ... Firebase
-    implementation(project(":firebase:auth"))
-    implementation(project(":firebase:firestore"))
 }

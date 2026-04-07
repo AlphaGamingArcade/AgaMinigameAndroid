@@ -20,11 +20,12 @@ plugins {
 }
 
 android {
-    namespace = "dev.atick.core.ui"
+    namespace = "com.alphagamingarcade.core.ui"
 }
 
 dependencies {
     api(project(":core:android"))
+    api(project(":core:model"))
 
     // ... AppCompat
     api(libs.androidx.appcompat)

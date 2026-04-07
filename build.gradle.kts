@@ -20,8 +20,6 @@ plugins {
     alias(libs.plugins.android.application) apply (false)
     alias(libs.plugins.kotlin.serialization) apply (false)
     alias(libs.plugins.dagger.hilt.android) apply (false)
-    alias(libs.plugins.firebase.crashlytics) apply (false)
-    alias(libs.plugins.firebase.perf) apply false
     alias(libs.plugins.kotlin.compose.compiler) apply (false)
     alias(libs.plugins.secrets) apply (false)
     alias(libs.plugins.gms) apply (false)
@@ -48,11 +46,7 @@ dependencies {
     dokka(project(":feature:home"))
     dokka(project(":feature:profile"))
     dokka(project(":feature:settings"))
-
-    // ... Firebase
-    dokka(project(":firebase:analytics"))
-    dokka(project(":firebase:firestore"))
-    dokka(project(":firebase:auth"))
+    dokka(project(":feature:gamedetail"))
 
     // ... Sync
     dokka(project(":sync"))
@@ -66,6 +60,6 @@ dokka {
     pluginsConfiguration.html {
         customAssets.from("docs/assets/logo-icon.svg")
         customStyleSheets.from("docs/assets/dokka.css")
-        footerMessage.set("Made with ❤\uFE0F by Atick Faisal")
+        footerMessage.set("ALpha Gaming Arcade")
     }
 }

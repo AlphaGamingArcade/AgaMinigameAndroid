@@ -18,6 +18,7 @@
 <resources>
     <string name="hide_password">إخفاء كلمة المرور</string>
     <string name="show_password">إظهار كلمة المرور</string>
+    <string name="forgot_password">Forgot Password</string>
     <string name="profile_picture">صورة الملف الشخصي</string>
     <string name="empty" />
     <string name="report">الإبلاغ</string>

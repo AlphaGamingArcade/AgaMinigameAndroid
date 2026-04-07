@@ -1,19 +1,3 @@
-/*
- * Copyright 2023 Atick Faisal
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 @file:Suppress("UnstableApiUsage")
 
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
@@ -27,7 +11,6 @@ val keystorePropertiesFile: File = rootProject.file("keystore.properties")
 plugins {
     alias(libs.plugins.jetpack.application)
     alias(libs.plugins.jetpack.dagger.hilt)
-    alias(libs.plugins.jetpack.firebase)
     alias(libs.plugins.jetpack.dokka)
 }
 
@@ -48,7 +31,7 @@ android {
     defaultConfig {
         versionCode = mVersionCode
         versionName = mVersionName
-        applicationId = "dev.atick.compose"
+        applicationId = "com.alphagamingarcade.compose"
     }
 
     signingConfigs {
@@ -86,7 +69,7 @@ android {
             } else {
                 println(
                     "keystore.properties file not found. Using debug key. Read more here: " +
-                            "https://atick.dev/Jetpack-Android-Starter/github",
+                            "######",
                 )
                 signingConfigs.getByName("debug")
 
@@ -106,7 +89,7 @@ android {
         generateLocaleConfig = true
     }
 
-    namespace = "dev.atick.compose"
+    namespace = "com.alphagamingarcade.compose"
 }
 
 dependencies {
@@ -118,11 +101,13 @@ dependencies {
     // ... Features
     implementation(project(":feature:auth"))
     implementation(project(":feature:home"))
+    implementation(project(":feature:games"))
+    implementation(project(":feature:gamedetail"))
+    implementation(project(":feature:browse"))
+    implementation(project(":feature:favorite"))
+    implementation(project(":feature:user"))
     implementation(project(":feature:profile"))
     implementation(project(":feature:settings"))
-
-    // ... Analytics
-    implementation(project(":firebase:analytics"))
 
     // ... Sync
     implementation(project(":sync"))
@@ -136,4 +121,5 @@ dependencies {
     // ... LeakCanary
     // TODO: Comment out the following line to disable LeakCanary
     debugImplementation(libs.leakcanary.android)
+    implementation(libs.material)
 }

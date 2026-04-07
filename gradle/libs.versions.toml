@@ -45,11 +45,6 @@ playServicesAuth = "21.4.0"
 androidxCredentials = "1.5.0"
 identityGoogleId = "1.1.1"
 
-# ... FIREBASE ...
-firebaseBom = "34.4.0"
-firebaseCrashlyticsPlugin = "3.0.6"
-firebasePerfPlugin = "2.0.1"
-
 # ... DAGGER-HILT ...
 daggerHilt = "2.57.2"
 daggerHiltExt = "1.3.0"
@@ -68,6 +63,10 @@ workVersion = "2.11.0"
 minSdk = "24"
 compileSdk = "36"
 targetSdk = "36"
+junit = "4.13.2"
+junitVersion = "1.3.0"
+espressoCore = "3.7.0"
+material = "1.13.0"
 
 
 [plugins]
@@ -76,8 +75,6 @@ kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlyticsPlugin" }
-firebase-perf = { id = "com.google.firebase.firebase-perf", version.ref = "firebasePerfPlugin" }
 gms = { id = "com.google.gms.google-services", version.ref = "gmsPlugin" }
 dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "daggerHilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
@@ -87,12 +84,11 @@ kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.
 google-oss-licenses = { id = "com.google.android.gms.oss-licenses-plugin", version.ref = "googleOssPlugin" }
 
 # ... Custom Plugins ...
-jetpack-library = { id = "dev.atick.library" }
-jetpack-ui-library = { id = "dev.atick.ui.library" }
-jetpack-application = { id = "dev.atick.application" }
-jetpack-dagger-hilt = { id = "dev.atick.dagger.hilt" }
-jetpack-firebase = { id = "dev.atick.firebase" }
-jetpack-dokka = { id = "dev.atick.dokka" }
+jetpack-library = { id = "com.alphagamingarcade.library" }
+jetpack-ui-library = { id = "com.alphagamingarcade.ui.library" }
+jetpack-application = { id = "com.alphagamingarcade.application" }
+jetpack-dagger-hilt = { id = "com.alphagamingarcade.dagger.hilt" }
+jetpack-dokka = { id = "com.alphagamingarcade.dokka" }
 
 [libraries]
 
@@ -161,14 +157,6 @@ androidx-credentials = { group = "androidx.credentials", name = "credentials", v
 credentials-play-services-auth = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "androidxCredentials" }
 identity-google-id = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "identityGoogleId" }
 
-# ... FIREBASE ...
-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
-firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
-firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
-firebase-perf = { group = "com.google.firebase", name = "firebase-perf" }
-firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
-firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore" }
-
 # ... DAGGER-HILT ...
 dagger-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "daggerHilt" }
 dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "daggerHilt" }
@@ -194,3 +182,7 @@ androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version
 # ... DOKKA PLUGINS ...
 dokka-android-plugin = { module = "org.jetbrains.dokka:android-documentation-plugin", version.ref = "dokka" }
 dokka-mermaid-plugin = { module = "com.glureau:html-mermaid-dokka-plugin", version.ref = "dokkaMermaid" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }

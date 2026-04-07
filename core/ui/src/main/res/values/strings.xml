@@ -18,6 +18,7 @@
 <resources>
     <string name="hide_password">Hide Password</string>
     <string name="show_password">Show Password</string>
+    <string name="forgot_password">Forgot Password</string>
     <string name="profile_picture">Profile Picture</string>
     <string name="empty" />
     <string name="report">Report</string>

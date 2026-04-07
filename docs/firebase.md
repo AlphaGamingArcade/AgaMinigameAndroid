@@ -128,8 +128,8 @@ Set up security rules in Firebase Console to protect your data:
            // ... other validations
        }
    
-       // Match the specific path structure: dev.atick.jetpack/{userId}/jetpacks/{jetpackId}
-       match /dev.atick.jetpack/{userId}/jetpacks/{jetpackId} {
+       // Match the specific path structure: com.alphagamingarcade.jetpack/{userId}/jetpacks/{jetpackId}
+       match /com.alphagamingarcade.jetpack/{userId}/jetpacks/{jetpackId} {
          allow read: if isUserOwner(userId);
          
          allow create: if isUserOwner(userId) 

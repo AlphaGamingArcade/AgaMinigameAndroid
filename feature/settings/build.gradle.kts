@@ -21,7 +21,7 @@ plugins {
 }
 
 android {
-    namespace = "dev.atick.feature.settings"
+    namespace = "com.alphagamingarcade.feature.settings"
 }
 
 dependencies {

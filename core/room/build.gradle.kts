@@ -21,7 +21,7 @@ plugins {
 }
 
 android {
-    namespace = "dev.atick.core.room"
+    namespace = "com.alphagamingarcade.core.room"
 }
 
 dependencies {

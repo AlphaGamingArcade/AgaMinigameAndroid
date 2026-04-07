@@ -1,19 +1,3 @@
-/*
- * Copyright 2023 Atick Faisal
- *
- *   Licensed under the Apache License, Version 2.0 (the "License");
- *   you may not use this file except in compliance with the License.
- *   You may obtain a copy of the License at
- *
- *       https://www.apache.org/licenses/LICENSE-2.0
- *
- *   Unless required by applicable law or agreed to in writing, software
- *   distributed under the License is distributed on an "AS IS" BASIS,
- *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *   See the License for the specific language governing permissions and
- *   limitations under the License.
- */
-
 import org.gradle.kotlin.dsl.compileOnly
 import org.gradle.kotlin.dsl.gradlePlugin
 import org.gradle.kotlin.dsl.libs
@@ -23,7 +7,7 @@ plugins {
     `kotlin-dsl`
 }
 
-group = "dev.atick.build.logic"
+group = "com.alphagamingarcade.build.logic"
 
 val javaVersion = libs.versions.java.get().toInt()
 
@@ -48,27 +32,27 @@ dependencies {
 gradlePlugin {
     plugins {
         register("library") {
-            id = "dev.atick.library"
+            id = "com.alphagamingarcade.library"
             implementationClass = "LibraryConventionPlugin"
         }
         register("uiLibrary") {
-            id = "dev.atick.ui.library"
+            id = "com.alphagamingarcade.ui.library"
             implementationClass = "UiLibraryConventionPlugin"
         }
         register("application") {
-            id = "dev.atick.application"
+            id = "com.alphagamingarcade.application"
             implementationClass = "ApplicationConventionPlugin"
         }
         register("daggerHilt") {
-            id = "dev.atick.dagger.hilt"
+            id = "com.alphagamingarcade.dagger.hilt"
             implementationClass = "DaggerHiltConventionPlugin"
         }
         register("firebase") {
-            id = "dev.atick.firebase"
+            id = "com.alphagamingarcade.firebase"
             implementationClass = "FirebaseConventionPlugin"
         }
         register("dokka") {
-            id = "dev.atick.dokka"
+            id = "com.alphagamingarcade.dokka"
             implementationClass = "DokkaConventionPlugin"
         }
     }
