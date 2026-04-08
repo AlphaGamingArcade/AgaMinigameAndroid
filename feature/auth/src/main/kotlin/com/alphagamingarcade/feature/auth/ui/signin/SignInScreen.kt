@@ -38,9 +38,9 @@ import com.alphagamingarcade.core.ui.components.DividerWithText
 import com.alphagamingarcade.core.ui.components.ForgotPassword
 import com.alphagamingarcade.core.ui.components.JetpackButton
 import com.alphagamingarcade.core.ui.components.JetpackOutlinedButton
-import com.alphagamingarcade.core.ui.components.JetpackPasswordFiled
+import com.alphagamingarcade.core.ui.components.JetpackPasswordField
 import com.alphagamingarcade.core.ui.components.JetpackTextButton
-import com.alphagamingarcade.core.ui.components.JetpackTextFiled
+import com.alphagamingarcade.core.ui.components.JetpackTextField
 import com.alphagamingarcade.core.ui.utils.PreviewDevices
 import com.alphagamingarcade.core.ui.utils.PreviewThemes
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
@@ -128,7 +128,7 @@ private fun SignInScreen(
             }
         }
         Spacer(modifier = Modifier.height(24.dp))
-        JetpackTextFiled(
+        JetpackTextField(
             value = screenData.email.value,
             errorMessage = screenData.email.errorMessage,
             onValueChange = onEmailChange,
@@ -141,7 +141,7 @@ private fun SignInScreen(
                 )
             },
         )
-        JetpackPasswordFiled(
+        JetpackPasswordField(
             value = screenData.password.value,
             errorMessage = screenData.password.errorMessage,
             onValueChange = onPasswordChange,

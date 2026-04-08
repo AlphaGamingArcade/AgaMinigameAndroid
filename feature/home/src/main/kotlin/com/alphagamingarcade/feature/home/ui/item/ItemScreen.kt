@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.alphagamingarcade.core.ui.components.AgamgActionBar
-import com.alphagamingarcade.core.ui.components.JetpackTextFiled
+import com.alphagamingarcade.core.ui.components.JetpackTextField
 import com.alphagamingarcade.core.ui.utils.PreviewDevices
 import com.alphagamingarcade.core.ui.utils.PreviewThemes
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
@@ -142,7 +142,7 @@ private fun EditItemForm(
             .padding(horizontal = 24.dp),
     ) {
         Spacer(modifier = Modifier.height(16.dp))
-        JetpackTextFiled(
+        JetpackTextField(
             value = name,
             onValueChange = onUpdateName,
             label = { Text(text = stringResource(id = R.string.jetpack_name)) },
@@ -154,7 +154,7 @@ private fun EditItemForm(
             },
         )
         Spacer(modifier = Modifier.height(16.dp))
-        JetpackTextFiled(
+        JetpackTextField(
             value = price.toString(),
             onValueChange = onUpdatePrice,
             label = { Text(text = stringResource(id = R.string.price)) },

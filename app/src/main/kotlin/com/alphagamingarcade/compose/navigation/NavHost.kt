@@ -5,7 +5,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.compose.ui.AgamgAppState
-import com.alphagamingarcade.feature.auth.navigation.AuthNavGraph
 import com.alphagamingarcade.feature.auth.navigation.authNavGraph
 import com.alphagamingarcade.feature.auth.navigation.checkYourEmailScreen
 import com.alphagamingarcade.feature.auth.navigation.forgotPasswordScreen
@@ -19,8 +18,18 @@ import com.alphagamingarcade.feature.games.navigation.Games
 import com.alphagamingarcade.feature.games.navigation.gamesScreen
 import com.alphagamingarcade.feature.browse.navigation.browseScreen
 import com.alphagamingarcade.feature.favorite.navigation.favoriteScreen
+import com.alphagamingarcade.feature.gamedetail.navigation.GameDetail
+import com.alphagamingarcade.feature.gamedetail.navigation.gameDetailScreen
+import com.alphagamingarcade.feature.gamedetail.navigation.navigateToGameDetailScreen
 import com.alphagamingarcade.feature.games.navigation.categoriesScreen
 import com.alphagamingarcade.feature.games.navigation.navigateToCategoriesScreen
+import com.alphagamingarcade.feature.user.navigation.accountNavGraph
+import com.alphagamingarcade.feature.user.navigation.changePasswordScreen
+import com.alphagamingarcade.feature.user.navigation.editProfileScreen
+import com.alphagamingarcade.feature.user.navigation.navigateToChangePasswordScreen
+import com.alphagamingarcade.feature.user.navigation.navigateToEditProfileScreen
+import com.alphagamingarcade.feature.user.navigation.navigateToTransactionScreen
+import com.alphagamingarcade.feature.user.navigation.transactionScreen
 import com.alphagamingarcade.feature.user.navigation.userScreen
 
 /**
@@ -40,7 +49,7 @@ fun AgamgNavHost(
 //    val startDestination =
 //        if (appState.isUserLoggedIn) HomeNavGraph::class else AuthNavGraph::class
 
-    val startDestination = Games::class
+    val startDestination = GameDetail(gameId = "test-id")
 
     NavHost(
         navController = navController,
@@ -71,9 +80,16 @@ fun AgamgNavHost(
                 )
             },
         )
+        gameDetailScreen(
+            onShowSnackbar = onShowSnackbar,
+            onBackClick = { navController.popBackStack() },
+            onPlayClick = { }
+        )
         gamesScreen(
             onShowSnackbar = onShowSnackbar,
-            onGameClick = {},
+            onGameClick = { gameId ->
+                navController.navigateToGameDetailScreen(gameId = gameId)
+            },
             onCategoryClick = { categoryId ->
                 navController.navigateToCategoriesScreen(categoryId = categoryId)
             },
@@ -91,9 +107,29 @@ fun AgamgNavHost(
             onShowSnackbar = onShowSnackbar,
             onJetpackClick = {}
         )
-        userScreen(
-            onShowSnackbar = onShowSnackbar,
-//            onJetpackClick = {}
+        accountNavGraph(
+            nestedNavGraphs = {
+                userScreen(
+                    onShowSnackbar = onShowSnackbar,
+                    onEditProfileClick = navController::navigateToEditProfileScreen,
+                    onChangePasswordClick = navController::navigateToChangePasswordScreen,
+                    onTermsAndPrivacyClick = {},
+                    onContactSupportClick = {},
+                    onTransactionClick = navController::navigateToTransactionScreen
+                )
+                changePasswordScreen(
+                    onBackClick = { navController.popBackStack() },
+                    onShowSnackbar = onShowSnackbar
+                )
+                editProfileScreen(
+                    onBackClick = { navController.popBackStack() },
+                    onShowSnackbar = onShowSnackbar
+                )
+                transactionScreen(
+                    onBackClick = { navController.popBackStack()},
+                    onShowSnackbar = onShowSnackbar
+                )
+            }
         )
     }
 }

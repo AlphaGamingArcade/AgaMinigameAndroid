@@ -1,19 +1,3 @@
-/*
- * Copyright 2025 Atick Faisal
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.alphagamingarcade.feature.auth.ui.signup
 
 import android.app.DatePickerDialog
@@ -54,15 +38,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.alphagamingarcade.core.extensions.getActivity
 import com.alphagamingarcade.core.ui.components.DividerWithText
 import com.alphagamingarcade.core.ui.components.JetpackButton
 import com.alphagamingarcade.core.ui.components.JetpackOutlinedButton
-import com.alphagamingarcade.core.ui.components.JetpackPasswordFiled
+import com.alphagamingarcade.core.ui.components.JetpackPasswordField
 import com.alphagamingarcade.core.ui.components.JetpackTextButton
-import com.alphagamingarcade.core.ui.components.JetpackTextFiled
+import com.alphagamingarcade.core.ui.components.JetpackTextField
 import com.alphagamingarcade.core.ui.utils.PreviewDevices
 import com.alphagamingarcade.core.ui.utils.PreviewThemes
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
@@ -83,7 +66,7 @@ import java.util.Calendar
 internal fun SignUpScreen(
     onSignInClick: () -> Unit,
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
-    signUpViewModel: SignUpViewModel = hiltViewModel(),
+    signUpViewModel: SignUpViewModel = androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel()
 ) {
     val signUpState by signUpViewModel.signUpUiState.collectAsStateWithLifecycle()
 
@@ -176,7 +159,7 @@ private fun SignUpScreen(
         Spacer(modifier = Modifier.height(24.dp))
 
         // Account Field
-        JetpackTextFiled(
+        JetpackTextField(
             value = screenData.account.value,
             errorMessage = screenData.account.errorMessage,
             onValueChange = onAccountChange,
@@ -190,7 +173,7 @@ private fun SignUpScreen(
         )
 
         // Nickname Field
-        JetpackTextFiled(
+        JetpackTextField(
             value = screenData.nickname.value,
             errorMessage = screenData.nickname.errorMessage,
             onValueChange = onNicknameChange,
@@ -204,7 +187,7 @@ private fun SignUpScreen(
         )
 
         // Date of Birth Field
-        JetpackTextFiled(
+        JetpackTextField(
             value = screenData.dob.value,
             errorMessage = screenData.dob.errorMessage,
             onValueChange = {},
@@ -227,7 +210,7 @@ private fun SignUpScreen(
         )
 
         // Email Field
-        JetpackTextFiled(
+        JetpackTextField(
             value = screenData.email.value,
             errorMessage = screenData.email.errorMessage,
             onValueChange = onEmailChange,
@@ -242,7 +225,7 @@ private fun SignUpScreen(
         )
 
         // Password Field
-        JetpackPasswordFiled(
+        JetpackTextField(
             value = screenData.password.value,
             errorMessage = screenData.password.errorMessage,
             onValueChange = onPasswordChange,
@@ -257,7 +240,7 @@ private fun SignUpScreen(
         )
 
         // Confirm Password Field
-        JetpackPasswordFiled(
+        JetpackPasswordField(
             value = screenData.confirmPassword.value,
             errorMessage = screenData.confirmPassword.errorMessage,
             onValueChange = onConfirmPasswordChange,

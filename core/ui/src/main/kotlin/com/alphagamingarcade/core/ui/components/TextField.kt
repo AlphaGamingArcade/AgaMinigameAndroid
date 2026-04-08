@@ -40,7 +40,7 @@ import com.alphagamingarcade.core.ui.R
  * @param errorMessage The error message to display below the text field, if any.
  */
 @Composable
-fun JetpackTextFiled(
+fun JetpackTextField(
     value: String,
     onValueChange: (String) -> Unit,
     label: @Composable () -> Unit,
@@ -75,7 +75,7 @@ fun JetpackTextFiled(
  * @param errorMessage The error message to display below the password field, if any.
  */
 @Composable
-fun JetpackPasswordFiled(
+fun JetpackPasswordField(
     value: String,
     onValueChange: (String) -> Unit,
     label: @Composable () -> Unit,

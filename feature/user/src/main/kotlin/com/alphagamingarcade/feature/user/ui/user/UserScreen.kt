@@ -59,7 +59,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.core.ui.utils.StatefulComposable
@@ -89,6 +89,11 @@ private val IconBgRed     = Color(0xFFFFE4E4)
 internal fun UserScreen(
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
     userViewModel: UserViewModel = hiltViewModel(),
+    onEditProfileClick: () -> Unit,
+    onChangePasswordClick: () -> Unit,
+    onTermsAndPrivacyClick: () -> Unit,
+    onContactSupportClick: () -> Unit,
+    onTransactionClick: () -> Unit
 ) {
     val profileState by userViewModel.profileUiState.collectAsStateWithLifecycle()
 
@@ -98,7 +103,11 @@ internal fun UserScreen(
     ) { profile ->
         UserScreen(
             profile = profile,
-            onSignOutClick = userViewModel::signOut,
+            onEditProfileClick = onEditProfileClick,
+            onChangePasswordClick = onChangePasswordClick,
+            onTermsAndPrivacyClick =  onTermsAndPrivacyClick,
+            onContactSupportClick = onContactSupportClick,
+            onTransactionClick = onTransactionClick
         )
     }
 }
@@ -109,7 +118,11 @@ internal fun UserScreen(
 @Composable
 private fun UserScreen(
     profile: Profile,
-    onSignOutClick: () -> Unit,
+    onEditProfileClick: () -> Unit,
+    onChangePasswordClick: () -> Unit,
+    onTermsAndPrivacyClick: () -> Unit,
+    onContactSupportClick: () -> Unit,
+    onTransactionClick: () -> Unit
 ) {
     var showDialog by remember { mutableStateOf(false) }
     var showDailyReward by remember { mutableStateOf(false) }
@@ -128,7 +141,8 @@ private fun UserScreen(
 
                 WalletCard(
                     balance = profile.userBalance.toString(),
-                    onRechargeClick = { showDailyReward = true },  // 👈 open bottom sheet
+                    onRechargeClick = { showDailyReward = true },
+                    onTransactionClick = onTransactionClick
                 )
                 Spacer(Modifier.height(24.dp))
                 StatsRow(balance = profile.userBalance.toString())
@@ -141,7 +155,7 @@ private fun UserScreen(
                         iconTint = AccentPurple,
                         title = "Edit Profile",
                         subtitle = "Update your personal info",
-                        onClick = {},
+                        onClick = onEditProfileClick,
                     )
                     MenuDivider()
                     MenuItem(
@@ -150,7 +164,7 @@ private fun UserScreen(
                         iconTint = Color(0xFF059669),
                         title = "Change Password",
                         subtitle = "Manage security settings",
-                        onClick = {},
+                        onClick = onChangePasswordClick,
                     )
                     MenuDivider()
                     MenuItem(
@@ -159,7 +173,7 @@ private fun UserScreen(
                         iconTint = Color(0xFFD97706),
                         title = "Terms & Privacy",
                         subtitle = "Read legal documents",
-                        onClick = {},
+                        onClick = onTermsAndPrivacyClick,
                     )
                 }
                 Spacer(Modifier.height(16.dp))
@@ -171,7 +185,7 @@ private fun UserScreen(
                         iconTint = AccentBlue,
                         title = "Contact Support",
                         subtitle = "Get help from our team",
-                        onClick = {},
+                        onClick = onContactSupportClick,
                     )
                 }
                 Spacer(Modifier.height(32.dp))
@@ -488,7 +502,8 @@ private fun StatCard(
 @Composable
 private fun WalletCard(
     balance: String,
-    onRechargeClick: () -> Unit,   // 👈 added callback
+    onRechargeClick: () -> Unit,
+    onTransactionClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -538,7 +553,7 @@ private fun WalletCard(
                     Text(text = "🎁 Daily Reward", fontSize = 13.sp, fontWeight = FontWeight.Bold)
                 }
                 OutlinedButton(
-                    onClick = {},
+                    onClick = onTransactionClick,
                     shape = RoundedCornerShape(12.dp),
                     border = BorderStroke(1.dp, Color.White.copy(alpha = 0.4f)),
                     colors = ButtonDefaults.outlinedButtonColors(
@@ -546,7 +561,7 @@ private fun WalletCard(
                     ),
                     modifier = Modifier.weight(1f),
                 ) {
-                    Text(text = "History", fontSize = 13.sp, fontWeight = FontWeight.Medium)
+                    Text(text = "Transactions", fontSize = 13.sp, fontWeight = FontWeight.Medium)
                 }
             }
         }

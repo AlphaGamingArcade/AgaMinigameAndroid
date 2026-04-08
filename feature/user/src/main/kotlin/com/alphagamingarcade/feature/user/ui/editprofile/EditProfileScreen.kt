@@ -1,4 +1,4 @@
-package com.alphagamingarcade.feature.user.ui.changepassword
+package com.alphagamingarcade.feature.user.ui.editprofile
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,8 +14,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Password
+import androidx.compose.material.icons.filled.AlternateEmail
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -36,59 +37,59 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.alphagamingarcade.core.ui.components.JetpackButton
-import com.alphagamingarcade.core.ui.components.JetpackPasswordField
+import com.alphagamingarcade.core.ui.components.JetpackTextField
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.core.ui.utils.StatefulComposable
 
 /**
- * Change password screen.
+ * Edit profile screen.
  *
  * @param onNavigateBack Navigate back.
  * @param onShowSnackbar Show Snackbar.
- * @param viewModel [ChangePasswordViewModel].
+ * @param viewModel [EditProfileViewModel].
  */
 @Composable
-internal fun ChangePasswordScreen(
+internal fun EditProfileScreen(
     onNavigateBack: () -> Unit,
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
-    viewModel: ChangePasswordViewModel = hiltViewModel(),
+    viewModel: EditProfileViewModel = hiltViewModel(),
 ) {
-    val changePasswordState by viewModel.changePasswordUiState.collectAsStateWithLifecycle()
+    val editProfileState by viewModel.editProfileUiState.collectAsStateWithLifecycle()
 
     StatefulComposable(
-        state = changePasswordState,
+        state = editProfileState,
         onShowSnackbar = onShowSnackbar,
     ) { screenData ->
-        ChangePasswordScreen(
+        EditProfileScreen(
             screenData = screenData,
             onNavigateBack = onNavigateBack,
-            onCurrentPasswordChange = viewModel::updateCurrentPassword,
-            onNewPasswordChange = viewModel::updateNewPassword,
-            onConfirmPasswordChange = viewModel::updateConfirmPassword,
-            onChangePasswordClick = viewModel::changePassword,
+            onFullNameChange = viewModel::updateFullName,
+            onUsernameChange = viewModel::updateUsername,
+            onEmailChange = viewModel::updateEmail,
+            onSaveClick = viewModel::saveProfile,
         )
     }
 }
 
 /**
- * Change password screen.
+ * Edit profile screen content.
  *
- * @param screenData [ChangePasswordScreenData].
+ * @param screenData [EditProfileScreenData].
  * @param onNavigateBack Navigate back.
- * @param onCurrentPasswordChange Callback when current password is changed.
- * @param onNewPasswordChange Callback when new password is changed.
- * @param onConfirmPasswordChange Callback when confirm password is changed.
- * @param onChangePasswordClick Callback when change password is clicked.
+ * @param onFullNameChange Callback when full name changes.
+ * @param onUsernameChange Callback when username changes.
+ * @param onEmailChange Callback when email changes.
+ * @param onSaveClick Callback when save is clicked.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ChangePasswordScreen(
-    screenData: ChangePasswordScreenData,
+private fun EditProfileScreen(
+    screenData: EditProfileScreenData,
     onNavigateBack: () -> Unit,
-    onCurrentPasswordChange: (String) -> Unit,
-    onNewPasswordChange: (String) -> Unit,
-    onConfirmPasswordChange: (String) -> Unit,
-    onChangePasswordClick: () -> Unit,
+    onFullNameChange: (String) -> Unit,
+    onUsernameChange: (String) -> Unit,
+    onEmailChange: (String) -> Unit,
+    onSaveClick: () -> Unit,
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -131,57 +132,56 @@ private fun ChangePasswordScreen(
                 Spacer(Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
 
                 Text(
-                    text = "Update your password",
+                    text = "Update your profile",
                     style = MaterialTheme.typography.headlineLarge,
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "Choose a strong password to keep your account secure.",
+                    text = "Keep your personal information up to date.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                JetpackPasswordField(
-                    value = screenData.currentPassword.value,
-                    errorMessage = screenData.currentPassword.errorMessage,
-                    onValueChange = onCurrentPasswordChange,
-                    label = { Text("Current Password") },
+                JetpackTextField(
+                    value = screenData.fullName.value,
+                    onValueChange = onFullNameChange,
+                    label = { Text("Full Name") },
                     leadingIcon = {
                         Icon(
-                            imageVector = Icons.Default.Lock,
-                            contentDescription = "Current Password",
+                            imageVector = Icons.Default.Person,
+                            contentDescription = "Full Name",
                         )
                     },
                     modifier = Modifier.fillMaxWidth(),
                 )
 
-                JetpackPasswordField(
-                    value = screenData.newPassword.value,
-                    errorMessage = screenData.newPassword.errorMessage,
-                    onValueChange = onNewPasswordChange,
-                    label = { Text("New Password") },
+                JetpackTextField(
+                    value = screenData.username.value,
+                    errorMessage = screenData.username.errorMessage,
+                    onValueChange = onUsernameChange,
+                    label = { Text("Username") },
                     leadingIcon = {
                         Icon(
-                            imageVector = Icons.Default.Password,
-                            contentDescription = "New Password",
+                            imageVector = Icons.Default.AlternateEmail,
+                            contentDescription = "Username",
                         )
                     },
                     modifier = Modifier.fillMaxWidth(),
                 )
 
-                JetpackPasswordField(
-                    value = screenData.confirmPassword.value,
-                    errorMessage = screenData.confirmPassword.errorMessage,
-                    onValueChange = onConfirmPasswordChange,
-                    label = { Text("Confirm New Password") },
+                JetpackTextField(
+                    value = screenData.email.value,
+                    errorMessage = screenData.email.errorMessage,
+                    onValueChange = onEmailChange,
+                    label = { Text("Email") },
                     leadingIcon = {
                         Icon(
-                            imageVector = Icons.Default.Password,
-                            contentDescription = "Confirm New Password",
+                            imageVector = Icons.Default.Email,
+                            contentDescription = "Email",
                         )
                     },
                     modifier = Modifier.fillMaxWidth(),
@@ -192,13 +192,13 @@ private fun ChangePasswordScreen(
                 JetpackButton(
                     onClick = {
                         focusManager.clearFocus()
-                        onChangePasswordClick()
+                        onSaveClick()
                     },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp)
                         .height(56.dp),
-                    text = { Text("Change Password") },
+                    text = { Text("Save Changes") },
                 )
 
                 Spacer(modifier = Modifier.height(40.dp))

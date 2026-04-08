@@ -32,7 +32,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.alphagamingarcade.core.ui.components.JetpackButton
 import com.alphagamingarcade.core.ui.components.JetpackTextButton
-import com.alphagamingarcade.core.ui.components.JetpackTextFiled
+import com.alphagamingarcade.core.ui.components.JetpackTextField
 import com.alphagamingarcade.core.ui.utils.PreviewDevices
 import com.alphagamingarcade.core.ui.utils.PreviewThemes
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
@@ -91,7 +91,7 @@ private fun ForgotPasswordScreen(
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
         )
         Spacer(modifier = Modifier.height(24.dp))
-        JetpackTextFiled(
+        JetpackTextField(
             value = screenData.email.value,
             errorMessage = screenData.email.errorMessage,
             onValueChange = onEmailChange,
