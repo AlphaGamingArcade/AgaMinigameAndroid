@@ -20,7 +20,6 @@ import com.alphagamingarcade.core.network.utils.NetworkUtils
 import com.alphagamingarcade.feature.games.navigation.navigateToGamesScreen
 import com.alphagamingarcade.feature.browse.navigation.navigateToBrowseScreen
 import com.alphagamingarcade.feature.favorite.navigation.navigateToFavoriteScreen
-import com.alphagamingarcade.feature.home.navigation.navigateToItemScreen
 import com.alphagamingarcade.feature.user.navigation.navigateToUserScreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -136,13 +135,6 @@ class AgamgAppState(
     val topLevelDestinationsWithUnreadResources: StateFlow<Set<TopLevelDestination>> =
         // TODO: Requires Implementation
         MutableStateFlow(setOf<TopLevelDestination>()).asStateFlow()
-
-    /**
-     * Navigates to the item screen with no item ID (creates new item).
-     */
-    fun navigateToItemScreen() {
-        navController.navigateToItemScreen(null)
-    }
 
     /**
      * Navigates to the specified top-level destination.

@@ -67,11 +67,7 @@ private val SearchBarColor = Color(0xFFF0F1F5)
 private val TextPrimary    = Color(0xFF1A1A2E)
 private val TextSecondary  = Color(0xFF8A8A9A)
 
-// ─── Categories ──────────────────────────────────────────────────────────────
-
-private val categories = listOf("All", "Hot 🔥", "New ✨", "Slots", "Table", "Live")
-
-// ─── Entry Point ─────────────────────────────────────────────────────────────
+private val categories = listOf("All", "Hot", "New", "Slots", "Table")
 
 @Composable
 internal fun BrowseScreen(
@@ -106,8 +102,10 @@ private fun BrowseScreen(
         data.allGames
             .filter { game ->
                 when (selectedCategory) {
-                    "Hot 🔥" -> game.isHot
-                    "New ✨" -> game.isNew
+                    "Hot" -> game.isHot
+                    "New" -> game.isNew
+                    "Slots" -> game.category == "Slots"
+                    "Table" -> game.category == "Table"
                     else -> true
                 }
             }
@@ -123,12 +121,6 @@ private fun BrowseScreen(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(bottom = 32.dp),
         ) {
-
-            // ── Header ───────────────────────────────────────────────────────
-            item {
-                BrowseHeader()
-            }
-
             // ── Search Bar ───────────────────────────────────────────────────
             item {
                 BrowseSearchBar(
@@ -168,7 +160,7 @@ private fun BrowseScreen(
             if (!isFiltering && data.hotGames.isNotEmpty()) {
                 item {
                     SectionHeader(
-                        title = "Hot Right Now 🔥",
+                        title = "Hot Right Now",
                         subtitle = "Most played this hour",
                         modifier = Modifier.padding(horizontal = 20.dp),
                     )
@@ -182,7 +174,7 @@ private fun BrowseScreen(
             if (!isFiltering && data.newGames.isNotEmpty()) {
                 item {
                     SectionHeader(
-                        title = "New Arrivals ✨",
+                        title = "New Releases",
                         subtitle = "Fresh drops this week",
                         modifier = Modifier.padding(horizontal = 20.dp),
                     )
@@ -206,42 +198,6 @@ private fun BrowseScreen(
                     modifier = Modifier.padding(horizontal = 20.dp),
                 )
             }
-        }
-    }
-}
-
-// ─── Header ──────────────────────────────────────────────────────────────────
-
-@Composable
-private fun BrowseHeader() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 20.dp, vertical = 20.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
-    ) {
-        Column {
-            Text(
-                text = "Browse Games",
-                fontWeight = FontWeight.ExtraBold,
-                fontSize = 26.sp,
-                color = TextPrimary,
-            )
-            Text(
-                text = "Find your next favourite",
-                fontSize = 13.sp,
-                color = TextSecondary,
-            )
-        }
-        Box(
-            modifier = Modifier
-                .size(44.dp)
-                .clip(CircleShape)
-                .background(SurfaceGray),
-            contentAlignment = Alignment.Center,
-        ) {
-            Text(text = "🎮", fontSize = 20.sp)
         }
     }
 }

@@ -50,8 +50,8 @@ import com.alphagamingarcade.core.ui.utils.PreviewDevices
 import com.alphagamingarcade.core.ui.utils.PreviewThemes
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.core.ui.utils.StatefulComposable
-import com.alphagamingarcade.data.utils.PRIVACY_POLICY_URL
-import com.alphagamingarcade.data.utils.TERMS_OF_SERVICE_URL
+import com.alphagamingarcade.core.data.utils.PRIVACY_POLICY_URL
+import com.alphagamingarcade.core.data.utils.TERMS_OF_SERVICE_URL
 import com.alphagamingarcade.feature.auth.R
 import java.util.Calendar
 

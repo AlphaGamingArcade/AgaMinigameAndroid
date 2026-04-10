@@ -6,22 +6,14 @@ import com.alphagamingarcade.core.extensions.isEmailValid
 import com.alphagamingarcade.core.ui.utils.TextFieldData
 import com.alphagamingarcade.core.ui.utils.UiState
 import com.alphagamingarcade.core.ui.utils.updateState
-import com.alphagamingarcade.data.repository.auth.AuthRepository
 import com.alphagamingarcade.feature.auth.ui.signin.SignInScreen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
-/**
- * [ViewModel] for [SignInScreen].
- *
- * @param authRepository [AuthRepository].
- */
 @HiltViewModel
-class ForgotPasswordViewModel @Inject constructor(
-    private val authRepository: AuthRepository,
-) : ViewModel() {
+class ForgotPasswordViewModel @Inject constructor() : ViewModel() {
     private val _signInUiState = MutableStateFlow(UiState(ForgotPasswordData()))
     val signInUiState = _signInUiState.asStateFlow()
 

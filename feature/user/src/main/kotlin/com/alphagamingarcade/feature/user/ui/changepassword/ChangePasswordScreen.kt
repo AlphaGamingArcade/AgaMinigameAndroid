@@ -128,7 +128,6 @@ private fun ChangePasswordScreen(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Spacer(Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
 
                 Text(
                     text = "Update your password",

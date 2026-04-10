@@ -49,7 +49,7 @@ fun AgamgNavHost(
 //    val startDestination =
 //        if (appState.isUserLoggedIn) HomeNavGraph::class else AuthNavGraph::class
 
-    val startDestination = GameDetail(gameId = "test-id")
+    val startDestination = Games::class
 
     NavHost(
         navController = navController,

@@ -237,8 +237,8 @@ fun AgamgTopAppBarWithLogoAndActions(
                 painter = painterResource(id = logoRes),
                 contentDescription = logoContentDescription,
                 modifier = Modifier
-                    .height(36.dp)
-                    .widthIn(min = 40.dp, max = 140.dp)
+                    .height(48.dp)
+                    .widthIn(min = 120.dp, max = 160.dp)
                     .padding(start = 16.dp),
                 contentScale = ContentScale.Fit,
             )

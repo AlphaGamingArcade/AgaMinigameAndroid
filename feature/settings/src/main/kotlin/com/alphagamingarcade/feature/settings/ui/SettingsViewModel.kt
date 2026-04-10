@@ -18,36 +18,22 @@ package com.alphagamingarcade.feature.settings.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alphagamingarcade.core.data.model.DarkThemeConfig
+import com.alphagamingarcade.core.data.model.Language
+import com.alphagamingarcade.core.data.model.Settings
 import dagger.hilt.android.lifecycle.HiltViewModel
-import com.alphagamingarcade.core.extensions.asOneTimeEvent
 import com.alphagamingarcade.core.ui.utils.UiState
 import com.alphagamingarcade.core.ui.utils.getPreferredLocale
 import com.alphagamingarcade.core.ui.utils.setLanguagePreference
-import com.alphagamingarcade.core.ui.utils.updateWith
-import com.alphagamingarcade.data.model.settings.DarkThemeConfig
-import com.alphagamingarcade.data.model.settings.Language
-import com.alphagamingarcade.data.model.settings.Settings
-import com.alphagamingarcade.data.repository.settings.SettingsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
-/**
- * [ViewModel] for [SettingsDialog].
- *
- * @param settingsRepository [SettingsRepository].
- */
+
 @HiltViewModel
-class SettingsViewModel @Inject constructor(
-    private val settingsRepository: SettingsRepository,
-) : ViewModel() {
+class SettingsViewModel @Inject constructor() : ViewModel() {
 
     private val _settingsUiState = MutableStateFlow(UiState(Settings()))
     val settingsUiState = _settingsUiState
@@ -57,25 +43,25 @@ class SettingsViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), UiState(Settings()))
 
     private fun updateSettings() {
-        settingsRepository.getSettings()
-            .map { UiState(it.copy(language = getPreferredLanguage())) }
-            .onEach { state -> _settingsUiState.update { state } }
-            .catch { e -> UiState(Settings(), error = e.asOneTimeEvent()) }
-            .launchIn(viewModelScope)
+//        settingsRepository.getSettings()
+//            .map { UiState(it.copy(language = getPreferredLanguage())) }
+//            .onEach { state -> _settingsUiState.update { state } }
+//            .catch { e -> UiState(Settings(), error = e.asOneTimeEvent()) }
+//            .launchIn(viewModelScope)
     }
 
     fun updateDarkThemeConfig(darkThemeConfig: DarkThemeConfig) {
-        _settingsUiState.updateWith {
-            settingsRepository.setDarkThemeConfig(
-                darkThemeConfig,
-            )
-        }
+//        _settingsUiState.updateWith {
+//            settingsRepository.setDarkThemeConfig(
+//                darkThemeConfig,
+//            )
+//        }
     }
 
     fun updateDynamicColorPreference(useDynamicColor: Boolean) {
-        _settingsUiState.updateWith {
-            settingsRepository.setDynamicColorPreference(useDynamicColor)
-        }
+//        _settingsUiState.updateWith {
+//            settingsRepository.setDynamicColorPreference(useDynamicColor)
+//        }
     }
 
     fun updateLanguagePreference(language: Language) {
@@ -83,7 +69,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun signOut() {
-        _settingsUiState.updateWith { settingsRepository.signOut() }
+//        _settingsUiState.updateWith { settingsRepository.signOut() }
     }
 
     private fun getPreferredLanguage(): Language {

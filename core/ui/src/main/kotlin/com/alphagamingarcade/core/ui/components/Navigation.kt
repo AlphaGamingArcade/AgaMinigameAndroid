@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.dp
  * only be shown when this item is selected.
  */
 @Composable
-fun RowScope.JetpackNavigationBarItem(
+fun RowScope.AgamgNavigationBarItem(
     selected: Boolean,
     onClick: () -> Unit,
     icon: @Composable () -> Unit,
@@ -57,11 +57,11 @@ fun RowScope.JetpackNavigationBarItem(
         label = label,
         alwaysShowLabel = alwaysShowLabel,
         colors = NavigationBarItemDefaults.colors(
-            selectedIconColor = JetpackNavigationDefaults.navigationSelectedItemColor(),
-            unselectedIconColor = JetpackNavigationDefaults.navigationContentColor(),
-            selectedTextColor = JetpackNavigationDefaults.navigationSelectedItemColor(),
-            unselectedTextColor = JetpackNavigationDefaults.navigationContentColor(),
-            indicatorColor = JetpackNavigationDefaults.navigationIndicatorColor(),
+            selectedIconColor = AgamgNavigationDefaults.navigationSelectedItemColor(),
+            unselectedIconColor = AgamgNavigationDefaults.navigationContentColor(),
+            selectedTextColor = AgamgNavigationDefaults.navigationSelectedItemColor(),
+            unselectedTextColor = AgamgNavigationDefaults.navigationContentColor(),
+            indicatorColor = AgamgNavigationDefaults.navigationIndicatorColor(),
         ),
     )
 }
@@ -74,13 +74,13 @@ fun RowScope.JetpackNavigationBarItem(
  * [NavigationBarItem]s.
  */
 @Composable
-fun JetpackNavigationBar(
+fun AgamgNavigationBar(
     modifier: Modifier = Modifier,
     content: @Composable RowScope.() -> Unit,
 ) {
     NavigationBar(
         modifier = modifier,
-        contentColor = JetpackNavigationDefaults.navigationContentColor(),
+        contentColor = AgamgNavigationDefaults.navigationContentColor(),
         tonalElevation = 0.dp,
         content = content,
     )
@@ -102,7 +102,7 @@ fun JetpackNavigationBar(
  * only be shown when this item is selected.
  */
 @Composable
-fun JetpackNavigationRailItem(
+fun AgamgNavigationRailItem(
     selected: Boolean,
     onClick: () -> Unit,
     icon: @Composable () -> Unit,
@@ -121,11 +121,11 @@ fun JetpackNavigationRailItem(
         label = label,
         alwaysShowLabel = alwaysShowLabel,
         colors = NavigationRailItemDefaults.colors(
-            selectedIconColor = JetpackNavigationDefaults.navigationSelectedItemColor(),
-            unselectedIconColor = JetpackNavigationDefaults.navigationContentColor(),
-            selectedTextColor = JetpackNavigationDefaults.navigationSelectedItemColor(),
-            unselectedTextColor = JetpackNavigationDefaults.navigationContentColor(),
-            indicatorColor = JetpackNavigationDefaults.navigationIndicatorColor(),
+            selectedIconColor = AgamgNavigationDefaults.navigationSelectedItemColor(),
+            unselectedIconColor = AgamgNavigationDefaults.navigationContentColor(),
+            selectedTextColor = AgamgNavigationDefaults.navigationSelectedItemColor(),
+            unselectedTextColor = AgamgNavigationDefaults.navigationContentColor(),
+            indicatorColor = AgamgNavigationDefaults.navigationIndicatorColor(),
         ),
     )
 }
@@ -139,7 +139,7 @@ fun JetpackNavigationRailItem(
  * [NavigationRailItem]s.
  */
 @Composable
-fun JetpackNavigationRail(
+fun AgamgNavigationRail(
     modifier: Modifier = Modifier,
     header: @Composable (ColumnScope.() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit,
@@ -147,7 +147,7 @@ fun JetpackNavigationRail(
     NavigationRail(
         modifier = modifier,
         containerColor = Color.Transparent,
-        contentColor = JetpackNavigationDefaults.navigationContentColor(),
+        contentColor = AgamgNavigationDefaults.navigationContentColor(),
         header = header,
         content = content,
     )
@@ -173,24 +173,24 @@ fun AgamgNavigationSuiteScaffold(
         .calculateFromAdaptiveInfo(windowAdaptiveInfo)
     val navigationSuiteItemColors = NavigationSuiteItemColors(
         navigationBarItemColors = NavigationBarItemDefaults.colors(
-            selectedIconColor = JetpackNavigationDefaults.navigationSelectedItemColor(),
-            unselectedIconColor = JetpackNavigationDefaults.navigationContentColor(),
-            selectedTextColor = JetpackNavigationDefaults.navigationSelectedItemTexColor(),
-            unselectedTextColor = JetpackNavigationDefaults.navigationContentColor(),
-            indicatorColor = JetpackNavigationDefaults.navigationIndicatorColor(),
+            selectedIconColor = AgamgNavigationDefaults.navigationSelectedItemColor(),
+            unselectedIconColor = AgamgNavigationDefaults.navigationContentColor(),
+            selectedTextColor = AgamgNavigationDefaults.navigationSelectedItemTexColor(),
+            unselectedTextColor = AgamgNavigationDefaults.navigationContentColor(),
+            indicatorColor = AgamgNavigationDefaults.navigationIndicatorColor(),
         ),
         navigationRailItemColors = NavigationRailItemDefaults.colors(
-            selectedIconColor = JetpackNavigationDefaults.navigationSelectedItemColor(),
-            unselectedIconColor = JetpackNavigationDefaults.navigationContentColor(),
-            selectedTextColor = JetpackNavigationDefaults.navigationSelectedItemColor(),
-            unselectedTextColor = JetpackNavigationDefaults.navigationContentColor(),
-            indicatorColor = JetpackNavigationDefaults.navigationIndicatorColor(),
+            selectedIconColor = AgamgNavigationDefaults.navigationSelectedItemColor(),
+            unselectedIconColor = AgamgNavigationDefaults.navigationContentColor(),
+            selectedTextColor = AgamgNavigationDefaults.navigationSelectedItemColor(),
+            unselectedTextColor = AgamgNavigationDefaults.navigationContentColor(),
+            indicatorColor = AgamgNavigationDefaults.navigationIndicatorColor(),
         ),
         navigationDrawerItemColors = NavigationDrawerItemDefaults.colors(
-            selectedIconColor = JetpackNavigationDefaults.navigationSelectedItemColor(),
-            unselectedIconColor = JetpackNavigationDefaults.navigationContentColor(),
-            selectedTextColor = JetpackNavigationDefaults.navigationSelectedItemColor(),
-            unselectedTextColor = JetpackNavigationDefaults.navigationContentColor(),
+            selectedIconColor = AgamgNavigationDefaults.navigationSelectedItemColor(),
+            unselectedIconColor = AgamgNavigationDefaults.navigationContentColor(),
+            selectedTextColor = AgamgNavigationDefaults.navigationSelectedItemColor(),
+            unselectedTextColor = AgamgNavigationDefaults.navigationContentColor(),
         ),
     )
 
@@ -204,7 +204,7 @@ fun AgamgNavigationSuiteScaffold(
         layoutType = layoutType,
         containerColor = Color.Transparent,
         navigationSuiteColors = NavigationSuiteDefaults.colors(
-            navigationBarContentColor = JetpackNavigationDefaults.navigationContentColor(),
+            navigationBarContentColor = AgamgNavigationDefaults.navigationContentColor(),
             navigationRailContainerColor = Color.Transparent,
         ),
         modifier = modifier,
@@ -249,9 +249,9 @@ class AgamgNavigationSuiteScope internal constructor(
 /**
  * Jetpack navigation default values.
  */
-object JetpackNavigationDefaults {
+object AgamgNavigationDefaults {
     @Composable
-    fun navigationContentColor() = MaterialTheme.colorScheme.onSurfaceVariant
+    fun navigationContentColor() = MaterialTheme.colorScheme.onSurface
 
     @Composable
     fun navigationSelectedItemColor() = MaterialTheme.colorScheme.onPrimaryContainer

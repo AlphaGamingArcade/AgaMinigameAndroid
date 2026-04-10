@@ -8,19 +8,12 @@ import com.alphagamingarcade.core.extensions.isPasswordValid
 import com.alphagamingarcade.core.ui.utils.TextFieldData
 import com.alphagamingarcade.core.ui.utils.UiState
 import com.alphagamingarcade.core.ui.utils.updateState
-import com.alphagamingarcade.data.repository.auth.AuthRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
-/**
- * [ViewModel] for [SignInScreen].
- *
- * @param authRepository [AuthRepository].
- */
 @HiltViewModel
 class SignInViewModel @Inject constructor(
-    private val authRepository: AuthRepository,
 ) : ViewModel() {
     private val _signInUiState = MutableStateFlow(UiState(SignInScreenData()))
     val signInUiState = _signInUiState.asStateFlow()

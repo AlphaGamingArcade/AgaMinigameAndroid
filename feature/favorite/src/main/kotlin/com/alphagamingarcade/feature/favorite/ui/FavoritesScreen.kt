@@ -108,12 +108,6 @@ private fun FavoriteScreen(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(bottom = 32.dp),
         ) {
-
-            // ── Header ───────────────────────────────────────────────────────
-            item {
-                FavoriteHeader(count = data.games.size)
-            }
-
             // ── Search Bar ───────────────────────────────────────────────────
             item {
                 FavoriteSearchBar(
@@ -232,45 +226,6 @@ private fun FavoriteScreen(
 //        }
 //    }
 //}
-
-@Composable
-private fun FavoriteHeader(count: Int) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 20.dp, vertical = 20.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
-    ) {
-        Column {
-            Text(
-                text = "Favorites",
-                fontWeight = FontWeight.ExtraBold,
-                fontSize = 26.sp,
-                color = TextPrimary,
-            )
-            Text(
-                text = "$count games saved",
-                fontSize = 13.sp,
-                color = TextSecondary,
-            )
-        }
-        Box(
-            modifier = Modifier
-                .size(44.dp)
-                .clip(CircleShape)
-                .background(SurfaceGray),
-            contentAlignment = Alignment.Center,
-        ) {
-            Icon(
-                imageVector = Icons.Default.Favorite,
-                contentDescription = null,
-                tint = Color.White,
-                modifier = Modifier.size(22.dp),
-            )
-        }
-    }
-}
 
 // ─── Search Bar ──────────────────────────────────────────────────────────────
 

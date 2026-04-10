@@ -43,22 +43,20 @@ rootProject.name = "Jetpack"
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
+// ... App
 include(":app")
 
 // ... Core
 include(":core:android")
+include(":core:data")
 include(":core:network")
-include(":core:preferences")
+include(":core:datastore")
 include(":core:room")
 include(":core:ui")
 include(":core:model")
 
-// ... Data
-include(":data")
-
 // ... Feature
 include(":feature:auth")
-include(":feature:home")
 include(":feature:browse")
 include(":feature:favorite")
 include(":feature:profile")
@@ -81,5 +79,3 @@ check(JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17)) {
     https://developer.android.com/build/jdks#jdk-config-in-studio
     """.trimIndent()
 }
-
-

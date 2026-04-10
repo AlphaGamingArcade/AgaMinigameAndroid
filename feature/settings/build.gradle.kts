@@ -27,7 +27,7 @@ android {
 dependencies {
     // ... Modules
     implementation(project(":core:ui"))
-    implementation(project(":data"))
+    implementation(project(":core:data"))
 
     // ... OSS Licenses
     implementation(libs.google.oss.licenses)

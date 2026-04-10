@@ -44,6 +44,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.core.ui.utils.StatefulComposable
+import com.alphagamingarcade.model.data.Banner
 import com.alphagamingarcade.model.data.Game
 
 // ─── Palette ─────────────────────────────────────────────────────────────────
@@ -97,7 +98,7 @@ private fun GamesScreen(
             // ── Hero Banner ──────────────────────────────────────────────────
             item {
                 HeroBannerCarousel(
-                    games = data.bannerGames,
+                    banners = data.bannerGames,
                     onGameClick = onGameClick,
                 )
                 Spacer(Modifier.height(24.dp))
@@ -115,18 +116,18 @@ private fun GamesScreen(
             }
 
             // ── Jackpot Banner ───────────────────────────────────────────────
-            item {
-                JackpotBanner(
-                    games = data.jackpotGames,
-                    onGameClick = onGameClick,
-                )
-                Spacer(Modifier.height(28.dp))
-            }
+//            item {
+//                JackpotBanner(
+//                    games = data.jackpotGames,
+//                    onGameClick = onGameClick,
+//                )
+//                Spacer(Modifier.height(28.dp))
+//            }
 
             // ── Trending Now ─────────────────────────────────────────────────
             item {
                 SectionHeader(
-                    title = "Trending Now 🔥",
+                    title = "Trending Now",
                     subtitle = "Most played today",
                     modifier = Modifier.padding(horizontal = 20.dp),
                 )
@@ -138,7 +139,7 @@ private fun GamesScreen(
             // ── New Releases ─────────────────────────────────────────────────
             item {
                 SectionHeader(
-                    title = "New Releases ✨",
+                    title = "New Releases",
                     subtitle = "Fresh off the press",
                     modifier = Modifier.padding(horizontal = 20.dp),
                 )
@@ -150,7 +151,7 @@ private fun GamesScreen(
             // ── Coming Soon ──────────────────────────────────────────────────
             item {
                 SectionHeader(
-                    title = "Coming Soon 🚀",
+                    title = "Coming Soon",
                     subtitle = "Stay tuned for what's next",
                     modifier = Modifier.padding(horizontal = 20.dp),
                 )
@@ -163,7 +164,7 @@ private fun GamesScreen(
             // ── Top Rated ────────────────────────────────────────────────────
             item {
                 SectionHeader(
-                    title = "Top Rated ⭐",
+                    title = "Top Rated",
                     subtitle = "Players' all-time favourites",
                     modifier = Modifier.padding(horizontal = 20.dp),
                 )
@@ -186,10 +187,10 @@ private fun GamesScreen(
 
 @Composable
 private fun HeroBannerCarousel(
-    games: List<Game>,
+    banners: List<Banner>,
     onGameClick: (String) -> Unit,
 ) {
-    val pagerState = rememberPagerState(pageCount = { games.size })
+    val pagerState = rememberPagerState(pageCount = { banners.size })
 
     Column {
         HorizontalPager(
@@ -197,17 +198,17 @@ private fun HeroBannerCarousel(
             contentPadding = PaddingValues(horizontal = 20.dp),
             pageSpacing = 12.dp,
         ) { page ->
-            val game = games[page]
+            val banner = banners[page]
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp)
                     .clip(RoundedCornerShape(20.dp))
-                    .clickable { onGameClick(game.id.toString()) },
+                    .clickable { onGameClick(banner.id.toString()) },
             ) {
                 AsyncImage(
-                    model = game.imageUrl,
-                    contentDescription = game.name,
+                    model = banner.imageUrl,
+                    contentDescription = banner.description,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize(),
                 )
@@ -227,12 +228,12 @@ private fun HeroBannerCarousel(
                         .align(Alignment.BottomStart)
                         .padding(16.dp),
                 ) {
-                    if (game.isNew) {
+                    if (banner.isNew) {
                         GameTag(label = "NEW", color = TagNew)
                         Spacer(Modifier.height(6.dp))
                     }
                     Text(
-                        text = game.name,
+                        text = banner.title,
                         color = Color.White,
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp,
@@ -252,7 +253,7 @@ private fun HeroBannerCarousel(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
         ) {
-            repeat(games.size) { i ->
+            repeat(banners.size) { i ->
                 val isSelected = pagerState.currentPage == i
                 Box(
                     modifier = Modifier

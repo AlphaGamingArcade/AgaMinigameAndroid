@@ -31,7 +31,7 @@ import com.alphagamingarcade.core.ui.utils.PreviewDevices
 import com.alphagamingarcade.core.ui.utils.PreviewThemes
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.core.ui.utils.StatefulComposable
-import com.alphagamingarcade.data.model.profile.Profile
+import com.alphagamingarcade.core.data.model.Profile
 import com.alphagamingarcade.feature.profile.R
 
 /**

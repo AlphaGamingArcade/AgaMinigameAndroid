@@ -45,8 +45,6 @@ import com.alphagamingarcade.core.ui.utils.PreviewDevices
 import com.alphagamingarcade.core.ui.utils.PreviewThemes
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.core.ui.utils.StatefulComposable
-import com.alphagamingarcade.data.utils.PRIVACY_POLICY_URL
-import com.alphagamingarcade.data.utils.TERMS_OF_SERVICE_URL
 import com.alphagamingarcade.feature.auth.R
 
 /**
@@ -194,7 +192,8 @@ private fun SignInScreen(
         ) {
             val uriHandler = LocalUriHandler.current
             JetpackTextButton(
-                onClick = { uriHandler.openUri(PRIVACY_POLICY_URL) },
+                //                onClick = { uriHandler.openUri(TERMS_OF_SERVICE_URL) },
+                onClick = { uriHandler.openUri("") },
             ) {
                 Text(
                     text = stringResource(R.string.privacy_policy),
@@ -202,7 +201,8 @@ private fun SignInScreen(
                 )
             }
             JetpackTextButton(
-                onClick = { uriHandler.openUri(TERMS_OF_SERVICE_URL) },
+//                onClick = { uriHandler.openUri(TERMS_OF_SERVICE_URL) },
+                onClick = { uriHandler.openUri("") },
             ) {
                 Text(
                     text = stringResource(R.string.terms_of_service),

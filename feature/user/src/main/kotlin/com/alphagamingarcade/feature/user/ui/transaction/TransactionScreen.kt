@@ -131,8 +131,6 @@ private fun TransactionsScreen(
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     item {
-                        Spacer(Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
-
                         Text(
                             text = "Your recharge transactions",
                             fontSize = 24.sp,

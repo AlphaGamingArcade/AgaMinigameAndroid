@@ -1,7 +1,7 @@
 package com.alphagamingarcade.model.data
 
 data class Game(
-    val id: Int,
+    val id: String,
     val name: String = String(),
     val imageUrl: String = String(),
     val isHot: Boolean = false,

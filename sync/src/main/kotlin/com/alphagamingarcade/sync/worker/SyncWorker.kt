@@ -26,12 +26,11 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkerParameters
+import com.alphagamingarcade.core.data.repository.BannersRepository
+import com.alphagamingarcade.core.data.utils.SyncProgress
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import com.alphagamingarcade.core.di.IoDispatcher
-import com.alphagamingarcade.data.repository.home.HomeRepository
-import com.alphagamingarcade.data.utils.SyncProgress
-//import com.alphagamingarcade.data.repository.home.HomeRepository
 import com.alphagamingarcade.sync.extensions.syncForegroundInfo
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
@@ -46,14 +45,14 @@ import timber.log.Timber
  * @param context The [Context].
  * @param workerParameters The [WorkerParameters].
  * @param ioDispatcher The [CoroutineDispatcher] for I/O operations.
- * @param homeRepository The [HomeRepository].
+ * @param bannersRepository The [BannersRepository].
  */
 @HiltWorker
 class SyncWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted workerParameters: WorkerParameters,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-    private val homeRepository: HomeRepository,
+    private val bannersRepository: BannersRepository,
 ) : CoroutineWorker(context, workerParameters) {
 
     /**
@@ -82,32 +81,18 @@ class SyncWorker @AssistedInject constructor(
         return withContext(ioDispatcher) {
             try {
                 setForeground(getForegroundInfo())
-
-                // DUMMY: Simulate sync with fake progress
-                createDummySyncFlow()
-                    .flowOn(ioDispatcher)
-                    .collect { progress ->
-                        Timber.d("SyncWorker: Progress: $progress")
-                        setForeground(
-                            foregroundInfo = getForegroundInfo(
-                                total = progress.total,
-                                current = progress.current,
-                            ),
-                        )
-                    }
-
                 // REAL: Uncomment when repository is ready
-                // homeRepository.sync()
-                //     .flowOn(ioDispatcher)
-                //     .collect { progress ->
-                //         Timber.d("SyncWorker: Progress: $progress")
-                //         setForeground(
-                //             foregroundInfo = getForegroundInfo(
-                //                 total = progress.total,
-                //                 current = progress.current,
-                //             ),
-                //         )
-                //     }
+                 bannersRepository.sync()
+                     .flowOn(ioDispatcher)
+                     .collect { progress ->
+                         Timber.d("SyncWorker: Progress: $progress")
+                         setForeground(
+                             foregroundInfo = getForegroundInfo(
+                                 total = progress.total,
+                                 current = progress.current,
+                             ),
+                         )
+                     }
 
                 Result.success()
             } catch (e: Exception) {

@@ -129,8 +129,6 @@ private fun EditProfileScreen(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Spacer(Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
-
                 Text(
                     text = "Update your profile",
                     style = MaterialTheme.typography.headlineLarge,

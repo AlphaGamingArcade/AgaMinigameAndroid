@@ -2,7 +2,8 @@ package com.alphagamingarcade.model.data
 
 data class Banner(
     val id: Int,
-    val name: String,
+    val title: String,
     val imageUrl: String,
-    val description: String
+    val description: String,
+    val isNew: Boolean
 )

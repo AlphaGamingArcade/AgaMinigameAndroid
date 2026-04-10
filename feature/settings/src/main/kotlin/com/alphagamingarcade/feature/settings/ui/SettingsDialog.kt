@@ -70,12 +70,12 @@ import com.alphagamingarcade.core.ui.utils.PreviewDevices
 import com.alphagamingarcade.core.ui.utils.PreviewThemes
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.core.ui.utils.StatefulComposable
-import com.alphagamingarcade.data.model.settings.DarkThemeConfig
-import com.alphagamingarcade.data.model.settings.Language
-import com.alphagamingarcade.data.model.settings.Settings
-import com.alphagamingarcade.data.utils.FEEDBACK_URL
-import com.alphagamingarcade.data.utils.PRIVACY_POLICY_URL
-import com.alphagamingarcade.data.utils.TERMS_OF_SERVICE_URL
+import com.alphagamingarcade.core.data.model.DarkThemeConfig
+import com.alphagamingarcade.core.data.model.Language
+import com.alphagamingarcade.core.data.model.Settings
+import com.alphagamingarcade.core.data.utils.FEEDBACK_URL
+import com.alphagamingarcade.core.data.utils.PRIVACY_POLICY_URL
+import com.alphagamingarcade.core.data.utils.TERMS_OF_SERVICE_URL
 import com.alphagamingarcade.feature.settings.R
 
 /**

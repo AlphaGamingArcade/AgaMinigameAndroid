@@ -36,7 +36,7 @@ import com.alphagamingarcade.model.data.Game
 fun GameItem(
     modifier: Modifier = Modifier,
     game: Game = Game(
-        id = 1,
+        id = "1",
         name = "Forest Quest",
         imageUrl = "https://picsum.photos/200/300",
     ),

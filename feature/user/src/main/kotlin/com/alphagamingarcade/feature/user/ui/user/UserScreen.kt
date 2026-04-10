@@ -63,7 +63,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.core.ui.utils.StatefulComposable
-import com.alphagamingarcade.data.model.profile.Profile
+import com.alphagamingarcade.core.data.model.Profile
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

@@ -1,45 +1,32 @@
-/*
- * Copyright 2023 Atick Faisal
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.alphagamingarcade.core.network.di
 
+import com.alphagamingarcade.core.network.data.BannerDataSource
+import com.alphagamingarcade.core.network.data.BannerDataSourceImpl
+import com.alphagamingarcade.core.network.data.GameDataSource
+import com.alphagamingarcade.core.network.data.GameDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import com.alphagamingarcade.core.network.data.NetworkDataSource
-import com.alphagamingarcade.core.network.data.NetworkDataSourceImpl
 import javax.inject.Singleton
 
 /**
- * Module for providing [NetworkDataSource].
+ * Module for providing [BannerDataSource].
  */
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class DataSourceModule {
 
-    /**
-     * Binds [NetworkDataSourceImpl] to [NetworkDataSource].
-     *
-     * @param jetpackDataSourceImpl [NetworkDataSourceImpl].
-     * @return [NetworkDataSource].
-     */
     @Binds
     @Singleton
-    internal abstract fun bindJetpackDataSource(
-        jetpackDataSourceImpl: NetworkDataSourceImpl,
-    ): NetworkDataSource
+    internal abstract fun bindBannerDataSource(
+        bannerDataSourceImpl: BannerDataSourceImpl,
+    ): BannerDataSource
+
+    @Binds
+    @Singleton
+    internal abstract fun bindGameDataSource(
+        gameDataSourceImpl: GameDataSourceImpl,
+    ): GameDataSource
+
 }

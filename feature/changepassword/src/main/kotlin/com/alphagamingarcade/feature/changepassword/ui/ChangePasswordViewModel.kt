@@ -5,22 +5,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alphagamingarcade.core.extensions.stateInDelayed
 import com.alphagamingarcade.core.ui.utils.UiState
-import com.alphagamingarcade.data.repository.home.HomeRepository
 import com.alphagamingarcade.model.data.Game
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 
-/**
- * Home view model.
- *
- * @param homeRepository [HomeRepository].
- */
 @HiltViewModel
-class ChangePasswordViewModel @Inject constructor(
-    private val homeRepository: HomeRepository,
-) : ViewModel() {
+class ChangePasswordViewModel @Inject constructor() : ViewModel() {
     private val _changePasswordUiState = MutableStateFlow(UiState(ChangePasswordScreenData()))
     val browseUiState = _changePasswordUiState
         .onStart { }

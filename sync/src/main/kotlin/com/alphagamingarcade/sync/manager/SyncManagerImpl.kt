@@ -20,19 +20,14 @@ import android.content.Context
 import androidx.work.WorkInfo
 import androidx.work.WorkInfo.State
 import androidx.work.WorkManager
+import com.alphagamingarcade.core.data.utils.SyncManager
 import dagger.hilt.android.qualifiers.ApplicationContext
-import com.alphagamingarcade.data.utils.SyncManager
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.map
 import timber.log.Timber
 import javax.inject.Inject
 
-/**
- * Implementation of [SyncManager].
- *
- * @param context [Context].
- */
 internal class SyncManagerImpl @Inject constructor(
     @ApplicationContext private val context: Context,
 ) : SyncManager {

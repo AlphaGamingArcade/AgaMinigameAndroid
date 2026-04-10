@@ -96,11 +96,10 @@ dependencies {
     // ... Core
     implementation(project(":core:ui"))
     implementation(project(":core:network"))
-    implementation(project(":core:preferences"))
+    implementation(project(":core:datastore"))
 
     // ... Features
     implementation(project(":feature:auth"))
-    implementation(project(":feature:home"))
     implementation(project(":feature:games"))
     implementation(project(":feature:gamedetail"))
     implementation(project(":feature:browse"))

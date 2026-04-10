@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alphagamingarcade.core.extensions.stateInDelayed
 import com.alphagamingarcade.core.ui.utils.UiState
-import com.alphagamingarcade.data.repository.home.HomeRepository
 import com.alphagamingarcade.model.data.Game
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -17,8 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CategoriesViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
-    private val homeRepository: HomeRepository,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val categoryName: String = savedStateHandle.get<String>("categoryName") ?: ""
@@ -47,35 +45,35 @@ class CategoriesViewModel @Inject constructor(
 
     private fun getDummyGamesForCategory(category: String): List<Game> = when (category) {
         "Slots" -> listOf(
-            Game(id = 1, name = "Neon Blaze", imageUrl = "https://picsum.photos/seed/slot1/400/400", isHot = true, isNew = false),
-            Game(id = 2, name = "Golden Empire", imageUrl = "https://picsum.photos/seed/slot2/400/400", isHot = false, isNew = true),
-            Game(id = 3, name = "Dragon's Vault", imageUrl = "https://picsum.photos/seed/slot3/400/400", isHot = true, isNew = true),
-            Game(id = 4, name = "Lucky Sevens", imageUrl = "https://picsum.photos/seed/slot4/400/400", isHot = false, isNew = false),
-            Game(id = 5, name = "Mystic Reels", imageUrl = "https://picsum.photos/seed/slot5/400/400", isHot = true, isNew = false),
-            Game(id = 6, name = "Wild Diamonds", imageUrl = "https://picsum.photos/seed/slot6/400/400", isHot = false, isNew = true),
+            Game(id = "1", name = "Neon Blaze", imageUrl = "https://picsum.photos/seed/slot1/400/400", isHot = true, isNew = false),
+            Game(id = "2", name = "Golden Empire", imageUrl = "https://picsum.photos/seed/slot2/400/400", isHot = false, isNew = true),
+            Game(id = "3", name = "Dragon's Vault", imageUrl = "https://picsum.photos/seed/slot3/400/400", isHot = true, isNew = true),
+            Game(id = "4", name = "Lucky Sevens", imageUrl = "https://picsum.photos/seed/slot4/400/400", isHot = false, isNew = false),
+            Game(id = "5", name = "Mystic Reels", imageUrl = "https://picsum.photos/seed/slot5/400/400", isHot = true, isNew = false),
+            Game(id = "6", name = "Wild Diamonds", imageUrl = "https://picsum.photos/seed/slot6/400/400", isHot = false, isNew = true),
         )
         "Table" -> listOf(
-            Game(id = 7, name = "Blackjack Pro", imageUrl = "https://picsum.photos/seed/table1/400/400", isHot = true, isNew = false),
-            Game(id = 8, name = "Roulette Royale", imageUrl = "https://picsum.photos/seed/table2/400/400", isHot = false, isNew = false),
-            Game(id = 9, name = "Baccarat Classic", imageUrl = "https://picsum.photos/seed/table3/400/400", isHot = true, isNew = true),
-            Game(id = 10, name = "Poker Masters", imageUrl = "https://picsum.photos/seed/table4/400/400", isHot = false, isNew = false),
+            Game(id = "7", name = "Blackjack Pro", imageUrl = "https://picsum.photos/seed/table1/400/400", isHot = true, isNew = false),
+            Game(id = "8", name = "Roulette Royale", imageUrl = "https://picsum.photos/seed/table2/400/400", isHot = false, isNew = false),
+            Game(id = "9", name = "Baccarat Classic", imageUrl = "https://picsum.photos/seed/table3/400/400", isHot = true, isNew = true),
+            Game(id = "10", name = "Poker Masters", imageUrl = "https://picsum.photos/seed/table4/400/400", isHot = false, isNew = false),
         )
         "Live" -> listOf(
-            Game(id = 11, name = "Live Blackjack", imageUrl = "https://picsum.photos/seed/live1/400/400", isHot = true, isNew = false),
-            Game(id = 12, name = "Live Roulette", imageUrl = "https://picsum.photos/seed/live2/400/400", isHot = true, isNew = false),
-            Game(id = 13, name = "Live Baccarat", imageUrl = "https://picsum.photos/seed/live3/400/400", isHot = false, isNew = true),
-            Game(id = 14, name = "Dream Catcher", imageUrl = "https://picsum.photos/seed/live4/400/400", isHot = false, isNew = false),
-            Game(id = 15, name = "Crazy Time", imageUrl = "https://picsum.photos/seed/live5/400/400", isHot = true, isNew = true),
+            Game(id = "11", name = "Live Blackjack", imageUrl = "https://picsum.photos/seed/live1/400/400", isHot = true, isNew = false),
+            Game(id = "12", name = "Live Roulette", imageUrl = "https://picsum.photos/seed/live2/400/400", isHot = true, isNew = false),
+            Game(id = "13", name = "Live Baccarat", imageUrl = "https://picsum.photos/seed/live3/400/400", isHot = false, isNew = true),
+            Game(id = "14", name = "Dream Catcher", imageUrl = "https://picsum.photos/seed/live4/400/400", isHot = false, isNew = false),
+            Game(id = "15", name = "Crazy Time", imageUrl = "https://picsum.photos/seed/live5/400/400", isHot = true, isNew = true),
         )
         "Arcade" -> listOf(
-            Game(id = 16, name = "Plinko Rush", imageUrl = "https://picsum.photos/seed/arcade1/400/400", isHot = false, isNew = true),
-            Game(id = 17, name = "Mines Blast", imageUrl = "https://picsum.photos/seed/arcade2/400/400", isHot = true, isNew = false),
-            Game(id = 18, name = "Crash Rocket", imageUrl = "https://picsum.photos/seed/arcade3/400/400", isHot = true, isNew = true),
-            Game(id = 19, name = "Keno Classic", imageUrl = "https://picsum.photos/seed/arcade4/400/400", isHot = false, isNew = false),
+            Game(id = "16", name = "Plinko Rush", imageUrl = "https://picsum.photos/seed/arcade1/400/400", isHot = false, isNew = true),
+            Game(id = "17", name = "Mines Blast", imageUrl = "https://picsum.photos/seed/arcade2/400/400", isHot = true, isNew = false),
+            Game(id = "18", name = "Crash Rocket", imageUrl = "https://picsum.photos/seed/arcade3/400/400", isHot = true, isNew = true),
+            Game(id = "19", name = "Keno Classic", imageUrl = "https://picsum.photos/seed/arcade4/400/400", isHot = false, isNew = false),
         )
         else -> listOf(
-            Game(id = 20, name = "Mystery Game 1", imageUrl = "https://picsum.photos/seed/misc1/400/400", isHot = false, isNew = true),
-            Game(id = 21, name = "Mystery Game 2", imageUrl = "https://picsum.photos/seed/misc2/400/400", isHot = true, isNew = false),
+            Game(id = "20", name = "Mystery Game 1", imageUrl = "https://picsum.photos/seed/misc1/400/400", isHot = false, isNew = true),
+            Game(id = "21", name = "Mystery Game 2", imageUrl = "https://picsum.photos/seed/misc2/400/400", isHot = true, isNew = false),
         )
     }
 }

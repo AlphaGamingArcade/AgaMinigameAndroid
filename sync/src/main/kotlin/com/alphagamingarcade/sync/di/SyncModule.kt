@@ -1,10 +1,10 @@
 package com.alphagamingarcade.sync.di
 
+import com.alphagamingarcade.core.data.utils.SyncManager
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import com.alphagamingarcade.data.utils.SyncManager
 import com.alphagamingarcade.sync.manager.SyncManagerImpl
 import javax.inject.Singleton
 

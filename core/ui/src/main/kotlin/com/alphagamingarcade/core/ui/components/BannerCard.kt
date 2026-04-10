@@ -25,7 +25,7 @@ fun BannerCard(banner: Banner) {
             // Image layer
             AsyncImage(
                 model = banner.imageUrl,
-                contentDescription = banner.name,
+                contentDescription = banner.description,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
@@ -54,9 +54,10 @@ private fun BannerCardPreview(){
     BannerCard(
         banner = Banner(
             id = 1,
-            name = "Banner",
+            title = "Banner",
             imageUrl = "Image url",
-            description = "Description"
+            description = "Description",
+            isNew = true
         )
     )
 }

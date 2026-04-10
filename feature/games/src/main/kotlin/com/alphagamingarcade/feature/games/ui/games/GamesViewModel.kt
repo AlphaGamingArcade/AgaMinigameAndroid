@@ -3,28 +3,129 @@ package com.alphagamingarcade.feature.games.ui.games
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alphagamingarcade.core.data.repository.BannersRepository
+import com.alphagamingarcade.core.data.repository.GamesRepository
 import com.alphagamingarcade.core.extensions.stateInDelayed
 import com.alphagamingarcade.core.ui.utils.UiState
-import com.alphagamingarcade.data.repository.home.HomeRepository
+import com.alphagamingarcade.core.utils.OneTimeEvent
+import com.alphagamingarcade.model.data.Banner
 import com.alphagamingarcade.model.data.Game
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-/**
- * Games view model.
- *
- * @param homeRepository [HomeRepository].
- */
 @HiltViewModel
 class GamesViewModel @Inject constructor(
-    private val homeRepository: HomeRepository,
+    private val bannersRepository: BannersRepository,
+    private val gamesRepository: GamesRepository,
 ) : ViewModel() {
     private val _gamesUiState = MutableStateFlow(UiState(GamesScreenData()))
     val gamesUiState = _gamesUiState
-        .onStart { }
+        .onStart {
+            loadBanners()
+            loadTrendingGames()
+            loadLatestGames()
+            loadTopGames()
+            loadComingSoonGames()
+        }
         .stateInDelayed(UiState(GamesScreenData()), viewModelScope)
+
+    private fun loadBanners() {
+        viewModelScope.launch {
+            bannersRepository.getBanners()
+                .catch { e ->
+                    _gamesUiState.value = UiState(
+                        data = GamesScreenData(),
+                        error = OneTimeEvent(e)
+                    )
+                }
+                .collect { banners ->
+                    val currentData = _gamesUiState.value.data
+                    _gamesUiState.value = UiState(
+                        data = currentData.copy(bannerGames = banners)
+                    )
+                }
+        }
+    }
+
+    private fun loadTrendingGames() {
+        viewModelScope.launch {
+            gamesRepository.getTrendingGames()
+                .catch { e ->
+
+                    _gamesUiState.value = UiState(
+                        data = GamesScreenData(),
+                        error = OneTimeEvent(e)
+                    )
+                }
+                .collect { games ->
+                    val currentData = _gamesUiState.value.data
+                    _gamesUiState.value = UiState(
+                        data = currentData.copy(trendingGames = games)
+                    )
+                }
+        }
+    }
+
+    private fun loadLatestGames() {
+        viewModelScope.launch {
+            gamesRepository.getLatestGames()
+                .catch { e ->
+
+                    _gamesUiState.value = UiState(
+                        data = GamesScreenData(),
+                        error = OneTimeEvent(e)
+                    )
+                }
+                .collect { games ->
+                    val currentData = _gamesUiState.value.data
+                    _gamesUiState.value = UiState(
+                        data = currentData.copy(newReleases = games)
+                    )
+                }
+        }
+    }
+
+    private fun loadTopGames() {
+        viewModelScope.launch {
+            gamesRepository.getTopGames()
+                .catch { e ->
+
+                    _gamesUiState.value = UiState(
+                        data = GamesScreenData(),
+                        error = OneTimeEvent(e)
+                    )
+                }
+                .collect { games ->
+                    val currentData = _gamesUiState.value.data
+                    _gamesUiState.value = UiState(
+                        data = currentData.copy(topRated = games)
+                    )
+                }
+        }
+    }
+
+    private fun loadComingSoonGames() {
+        viewModelScope.launch {
+            gamesRepository.getComingSoonGames()
+                .catch { e ->
+
+                    _gamesUiState.value = UiState(
+                        data = GamesScreenData(),
+                        error = OneTimeEvent(e)
+                    )
+                }
+                .collect { games ->
+                    val currentData = _gamesUiState.value.data
+                    _gamesUiState.value = UiState(
+                        data = currentData.copy(comingSoonGames = games)
+                    )
+                }
+        }
+    }
 }
 
 /**
@@ -38,177 +139,46 @@ class GamesViewModel @Inject constructor(
  */
 @Immutable
 data class GamesScreenData(
-    val bannerGames: List<Game> = listOf(
-        Game(
-            id = 101,
-            name = "Neon Blaze",
-            imageUrl = "https://picsum.photos/seed/neonblaze/800/400",
-            isHot = true,
-            isNew = true,
-        ),
-        Game(
-            id = 102,
-            name = "Golden Empire",
-            imageUrl = "https://picsum.photos/seed/goldenempire/800/400",
-            isHot = true,
-            isNew = false,
-        ),
-        Game(
-            id = 103,
-            name = "Dragon's Vault",
-            imageUrl = "https://picsum.photos/seed/dragonvault/800/400",
-            isHot = false,
-            isNew = true,
-        ),
-    ),
-    val trendingGames: List<Game> = listOf(
-        Game(
-            id = 201,
-            name = "Mystic Fortune",
-            imageUrl = "https://picsum.photos/seed/mysticfortune/400/400",
-            isHot = true,
-            isNew = false,
-        ),
-        Game(
-            id = 202,
-            name = "Wild Safari",
-            imageUrl = "https://picsum.photos/seed/wildsafari/400/400",
-            isHot = true,
-            isNew = false,
-        ),
-        Game(
-            id = 203,
-            name = "Pirate's Bounty",
-            imageUrl = "https://picsum.photos/seed/piratesbounty/400/400",
-            isHot = true,
-            isNew = true,
-        ),
-        Game(
-            id = 204,
-            name = "Starfall",
-            imageUrl = "https://picsum.photos/seed/starfall/400/400",
-            isHot = false,
-            isNew = false,
-        ),
-    ),
-    val newReleases: List<Game> = listOf(
-        Game(
-            id = 301,
-            name = "Cyber Reels",
-            imageUrl = "https://picsum.photos/seed/cyberreels/400/400",
-            isHot = false,
-            isNew = true,
-        ),
-        Game(
-            id = 302,
-            name = "Moon Temple",
-            imageUrl = "https://picsum.photos/seed/moontemple/400/400",
-            isHot = false,
-            isNew = true,
-        ),
-        Game(
-            id = 303,
-            name = "Ice Kingdom",
-            imageUrl = "https://picsum.photos/seed/icekingdom/400/400",
-            isHot = false,
-            isNew = true,
-        ),
-        Game(
-            id = 304,
-            name = "Thunder Strike",
-            imageUrl = "https://picsum.photos/seed/thunderstrike/400/400",
-            isHot = true,
-            isNew = true,
-        ),
-    ),
-    val topRated: List<Game> = listOf(
-        Game(
-            id = 401,
-            name = "Royal Flush",
-            imageUrl = "https://picsum.photos/seed/royalflush/400/400",
-            isHot = false,
-            isNew = false,
-        ),
-        Game(
-            id = 402,
-            name = "Fortune Tiger",
-            imageUrl = "https://picsum.photos/seed/fortunetiger/400/400",
-            isHot = true,
-            isNew = false,
-        ),
-        Game(
-            id = 403,
-            name = "Ocean Odyssey",
-            imageUrl = "https://picsum.photos/seed/oceanodyssey/400/400",
-            isHot = false,
-            isNew = false,
-        ),
-        Game(
-            id = 404,
-            name = "Samurai Gold",
-            imageUrl = "https://picsum.photos/seed/samuraigold/400/400",
-            isHot = false,
-            isNew = false,
-        ),
-    ),
+    val bannerGames: List<Banner> = emptyList(),
+    val trendingGames: List<Game> = emptyList(),
+    val newReleases: List<Game> = emptyList(),
+    val topRated: List<Game> = emptyList(),
     val jackpotGames: List<Game> = listOf(
         Game(
-            id = 501,
+            id = "501",
             name = "Mega Millions",
             imageUrl = "https://picsum.photos/seed/megamillions/400/400",
             isHot = true,
             isNew = false,
         ),
         Game(
-            id = 502,
+            id = "502",
             name = "Grand Jackpot",
             imageUrl = "https://picsum.photos/seed/grandjackpot/400/400",
             isHot = true,
             isNew = false,
         ),
         Game(
-            id = 503,
+            id = "503",
             name = "Cash Explosion",
             imageUrl = "https://picsum.photos/seed/cashexplosion/400/400",
             isHot = true,
             isNew = true,
         ),
         Game(
-            id = 503,
+            id = "503",
             name = "Cash Explosion",
             imageUrl = "https://picsum.photos/seed/cashexplosion/400/400",
             isHot = true,
             isNew = true,
         ),
         Game(
-            id = 503,
+            id = "503",
             name = "Cash Explosion",
             imageUrl = "https://picsum.photos/seed/cashexplosion/400/400",
             isHot = true,
             isNew = true,
         ),
     ),
-    val comingSoonGames: List<Game> = listOf(
-        Game(
-            id = 503,
-            name = "Cash Explosion",
-            imageUrl = "https://picsum.photos/seed/cashexplosion/400/400",
-            isHot = true,
-            isNew = true,
-        ),
-        Game(
-            id = 503,
-            name = "Cash Explosion",
-            imageUrl = "https://picsum.photos/seed/cashexplosion/400/400",
-            isHot = true,
-            isNew = true,
-        ),
-        Game(
-            id = 503,
-            name = "Cash Explosion",
-            imageUrl = "https://picsum.photos/seed/cashexplosion/400/400",
-            isHot = true,
-            isNew = true,
-        ),
-    ),
+    val comingSoonGames: List<Game> = emptyList()
 )
