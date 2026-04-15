@@ -1,5 +1,6 @@
 package com.alphagamingarcade.core.network.di
 
+import com.alphagamingarcade.core.network.api.AuthRestApi
 import com.alphagamingarcade.core.network.api.BannerRestApi
 import com.alphagamingarcade.core.network.api.GameRestApi
 import dagger.Module
@@ -28,6 +29,12 @@ object NetworkModule {
     @Singleton
     fun providesGameRestApi(retrofit: Retrofit): GameRestApi {
         return retrofit.create(GameRestApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthRestApi(retrofit: Retrofit): AuthRestApi {
+        return retrofit.create(AuthRestApi::class.java)
     }
 
 }

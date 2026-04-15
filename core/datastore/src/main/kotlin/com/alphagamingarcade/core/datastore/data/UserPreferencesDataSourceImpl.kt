@@ -55,8 +55,8 @@ internal class UserPreferencesDataSourceImpl @Inject constructor(
             datastore.updateData { userData ->
                 userData.copy(
                     id = preferencesUserProfile.id,
-                    userName = preferencesUserProfile.userName,
-                    profilePictureUriString = preferencesUserProfile.profilePictureUriString,
+                    email = preferencesUserProfile.userEmail,
+                    isEmailVerified = preferencesUserProfile.isEmailVerified,
                 )
             }
         }

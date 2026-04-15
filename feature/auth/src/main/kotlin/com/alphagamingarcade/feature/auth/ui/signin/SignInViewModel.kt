@@ -2,20 +2,25 @@ package com.alphagamingarcade.feature.auth.ui.signin
 
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.alphagamingarcade.core.data.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import com.alphagamingarcade.core.extensions.isEmailValid
 import com.alphagamingarcade.core.extensions.isPasswordValid
 import com.alphagamingarcade.core.ui.utils.TextFieldData
 import com.alphagamingarcade.core.ui.utils.UiState
 import com.alphagamingarcade.core.ui.utils.updateState
+import com.alphagamingarcade.core.ui.utils.updateWith
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
 class SignInViewModel @Inject constructor(
+    private val authRepository: AuthRepository,
 ) : ViewModel() {
     private val _signInUiState = MutableStateFlow(UiState(SignInScreenData()))
+
     val signInUiState = _signInUiState.asStateFlow()
 
     fun updateEmail(email: String) {
@@ -36,6 +41,15 @@ class SignInViewModel @Inject constructor(
                     value = password,
                     errorMessage = if (password.isPasswordValid()) null else "Password Not Valid",
                 ),
+            )
+        }
+    }
+
+    fun loginWithEmailAndPassword() {
+        _signInUiState.updateWith {
+            authRepository.signInWithEmailAndPassword(
+                email = email.value,
+                password = password.value,
             )
         }
     }

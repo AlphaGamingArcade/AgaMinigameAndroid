@@ -9,7 +9,7 @@ import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.feature.user.ui.changepassword.ChangePasswordScreen
 import com.alphagamingarcade.feature.user.ui.editprofile.EditProfileScreen
 import com.alphagamingarcade.feature.user.ui.transaction.TransactionScreen
-import com.alphagamingarcade.feature.user.ui.user.UserScreen
+import com.alphagamingarcade.feature.user.ui.profile.ProfileScreen
 import kotlinx.serialization.Serializable
 
 /**
@@ -72,7 +72,7 @@ fun NavController.navigateToChangePasswordScreen(navOptions: NavOptions? = null)
 // *
 // * @param onShowSnackbar Lambda function to show a snackbar message.
 // */
-fun NavGraphBuilder.userScreen(
+fun NavGraphBuilder.profileScreen(
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
     onEditProfileClick: () -> Unit,
     onChangePasswordClick: () -> Unit,
@@ -81,13 +81,13 @@ fun NavGraphBuilder.userScreen(
     onTransactionClick: () -> Unit
 ) {
     composable<User> {
-        UserScreen(
+        ProfileScreen(
             onShowSnackbar = onShowSnackbar,
             onEditProfileClick = onEditProfileClick,
             onChangePasswordClick = onChangePasswordClick,
             onTermsAndPrivacyClick = onTermsAndPrivacyClick,
             onContactSupportClick = onContactSupportClick,
-            onTransactionClick = onTransactionClick
+            onTransactionClick = onTransactionClick,
         )
     }
 }

@@ -59,15 +59,12 @@ include(":core:model")
 include(":feature:auth")
 include(":feature:browse")
 include(":feature:favorite")
-include(":feature:profile")
 include(":feature:settings")
 include(":feature:user")
 include(":feature:changepassword")
 include(":feature:gamedetail")
 include(":feature:games")
 include(":feature:editprofile")
-
-
 
 // ... Sync
 include(":sync")

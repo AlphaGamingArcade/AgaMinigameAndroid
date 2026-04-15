@@ -1,5 +1,7 @@
 package com.alphagamingarcade.core.network.di
 
+import com.alphagamingarcade.core.network.data.AuthDataSource
+import com.alphagamingarcade.core.network.data.AuthDataSourceImpl
 import com.alphagamingarcade.core.network.data.BannerDataSource
 import com.alphagamingarcade.core.network.data.BannerDataSourceImpl
 import com.alphagamingarcade.core.network.data.GameDataSource
@@ -29,4 +31,9 @@ abstract class DataSourceModule {
         gameDataSourceImpl: GameDataSourceImpl,
     ): GameDataSource
 
+    @Binds
+    @Singleton
+    internal abstract fun bindAuthDataSource(
+        authDataSourceImpl: AuthDataSourceImpl,
+    ): AuthDataSource
 }

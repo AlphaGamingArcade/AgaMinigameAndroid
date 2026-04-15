@@ -19,7 +19,8 @@ fun String?.isEmailValid(): Boolean {
  * @return `true` if the string is a valid password, `false` otherwise.
  */
 fun String?.isPasswordValid(): Boolean {
-    val passwordRegex = "^(?=.*\\d)(?=.*[a-z]).{8,20}$"
+//    val passwordRegex = "^(?=.*\\d)(?=.*[a-z]).{8,20}$"
+    val passwordRegex = "^.{8,}$"
     val pattern: Pattern = Pattern.compile(passwordRegex)
     val matcher: Matcher = pattern.matcher(this ?: "")
     return matcher.matches()

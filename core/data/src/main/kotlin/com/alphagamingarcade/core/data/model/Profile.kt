@@ -1,7 +1,7 @@
 package com.alphagamingarcade.core.data.model
 
-import com.alphagamingarcade.core.preferences.model.PreferencesUserProfile
-import com.alphagamingarcade.core.preferences.model.UserDataPreferences
+import com.alphagamingarcade.core.datastore.model.PreferencesUserProfile
+import com.alphagamingarcade.core.datastore.model.UserDataPreferences
 
 /**
  * Data class representing a user profile.
@@ -13,6 +13,7 @@ data class Profile(
     val userName: String = String(),
     val userEmail: String = String(),
     val userBalance: Double = 0.0,
+    val isEmailVerified: Boolean = false,
     val profilePictureUri: String? = null,
 )
 
@@ -23,10 +24,9 @@ data class Profile(
  */
 fun UserDataPreferences.toProfile(): Profile {
     return Profile(
-        userName = userName ?: "Anonymous",
         userEmail =  "example@email.com",
         userBalance = 10000.0,
-        profilePictureUri = profilePictureUriString,
+        profilePictureUri = "",
     )
 }
 
@@ -37,9 +37,7 @@ fun UserDataPreferences.toProfile(): Profile {
  */
 fun Profile.toPreferencesUserProfile(): PreferencesUserProfile {
     return PreferencesUserProfile(
-        userName = userName,
         userEmail = userEmail,
-        userBalance = userBalance,
-        profilePictureUriString = profilePictureUri,
+        isEmailVerified = isEmailVerified,
     )
 }

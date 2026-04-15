@@ -97,6 +97,7 @@ dependencies {
     implementation(project(":core:ui"))
     implementation(project(":core:network"))
     implementation(project(":core:datastore"))
+    implementation(project(":core:data"))
 
     // ... Features
     implementation(project(":feature:auth"))
@@ -105,7 +106,6 @@ dependencies {
     implementation(project(":feature:browse"))
     implementation(project(":feature:favorite"))
     implementation(project(":feature:user"))
-    implementation(project(":feature:profile"))
     implementation(project(":feature:settings"))
 
     // ... Sync

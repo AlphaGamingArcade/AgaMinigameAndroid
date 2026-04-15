@@ -3,6 +3,7 @@ package com.alphagamingarcade.feature.auth.navigation
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
+import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
@@ -57,8 +58,10 @@ fun NavController.navigateToAuthNavGraph(navOptions: NavOptions? = null) {
  *
  * @param navOptions [NavOptions].
  */
-fun NavController.navigateToSignInScreen(navOptions: NavOptions? = null) {
-    navigate(SignIn, navOptions)
+fun NavController.navigateToSignInScreen(
+    navOptions: NavOptionsBuilder.() -> Unit = {}
+) {
+    navigate(SignIn) { navOptions() }
 }
 
 /**
@@ -83,17 +86,17 @@ fun NavController.navigateToForgotPasswordScreen(navOptions: NavOptions? = null)
 /**
  * Sign in screen.
  *
- * @param onSignInClick Callback when sign up is clicked.
+ * @param onSignUpClick Callback when sign up is clicked.
  * @param onShowSnackbar Callback to show a snackbar.
  */
 fun NavGraphBuilder.signInScreen(
-    onSignInClick: () -> Unit,
+    onSignUpClick: () -> Unit,
     onForgotPasswordClick: () -> Unit,
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
 ) {
     composable<SignIn> {
         SignInScreen(
-            onSignInClick = onSignInClick,
+            onSignUpClick = onSignUpClick,
             onForgotPasswordClick = onForgotPasswordClick,
             onShowSnackbar = onShowSnackbar,
         )

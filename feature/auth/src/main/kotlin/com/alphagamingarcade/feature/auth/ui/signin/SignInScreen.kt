@@ -56,7 +56,7 @@ import com.alphagamingarcade.feature.auth.R
  */
 @Composable
 internal fun SignInScreen(
-    onSignInClick: () -> Unit,
+    onSignUpClick: () -> Unit,
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
     onForgotPasswordClick: () -> Unit,
     signInViewModel: SignInViewModel = hiltViewModel(),
@@ -72,7 +72,8 @@ internal fun SignInScreen(
             onForgotPasswordClick,
             signInViewModel::updateEmail,
             signInViewModel::updatePassword,
-            onSignInClick,
+            onSignInClick = signInViewModel::loginWithEmailAndPassword,
+            onSignUpClick = onSignUpClick,
 
         )
     }
@@ -93,15 +94,9 @@ private fun SignInScreen(
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onSignInClick: () -> Unit,
+    onSignUpClick: () -> Unit
 
 ) {
-    val focusManager = LocalFocusManager.current
-//    val activity = LocalContext.current.getActivity()
-
-    // Try sign in with saved credentials on launch
-//    LaunchedEffect(Unit, onSignInWithSavedCredentials) {
-//        activity?.run(onSignInWithSavedCredentials)
-//    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -156,7 +151,7 @@ private fun SignInScreen(
         ForgotPassword(onForgotPasswordClick)
 
         JetpackButton(
-            onClick = {},
+            onClick = onSignInClick,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
@@ -164,22 +159,22 @@ private fun SignInScreen(
             text = { Text(stringResource(R.string.sign_in)) },
         )
         Spacer(modifier = Modifier.height(8.dp))
-        DividerWithText(text = R.string.or, modifier = Modifier.padding(vertical = 16.dp))
-        JetpackOutlinedButton(
-            onClick = {  },
-            text = { Text(text = "Sign In with Google") },
-            leadingIcon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_google),
-                    contentDescription = "Google",
-                )
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-                .height(56.dp),
-        )
-        Spacer(modifier = Modifier.height(40.dp))
+//        DividerWithText(text = R.string.or, modifier = Modifier.padding(vertical = 16.dp))
+//        JetpackOutlinedButton(
+//            onClick = {  },
+//            text = { Text(text = "Sign In with Google") },
+//            leadingIcon = {
+//                Icon(
+//                    painter = painterResource(id = R.drawable.ic_google),
+//                    contentDescription = "Google",
+//                )
+//            },
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(vertical = 8.dp)
+//                .height(56.dp),
+//        )
+//        Spacer(modifier = Modifier.height(40.dp))
         Text(
             text = stringResource(R.string.agree_to_terms),
             style = MaterialTheme.typography.bodySmall,
@@ -223,6 +218,7 @@ private fun SignInScreenPreview() {
         onForgotPasswordClick = {},
         onEmailChange = {},
         onPasswordChange = {},
+        onSignUpClick = {},
         onSignInClick = {},
     )
 }

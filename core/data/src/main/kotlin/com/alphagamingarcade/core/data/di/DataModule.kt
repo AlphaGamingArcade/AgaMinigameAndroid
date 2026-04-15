@@ -1,10 +1,13 @@
 package com.alphagamingarcade.core.data.di
 
+import com.alphagamingarcade.core.data.repository.AuthRepository
+import com.alphagamingarcade.core.data.repository.AuthRepositoryImpl
 import com.alphagamingarcade.core.data.repository.BannersRepositoryImpl
 import com.alphagamingarcade.core.data.repository.BannersRepository
 import com.alphagamingarcade.core.data.repository.GamesRepository
 import com.alphagamingarcade.core.data.repository.GamesRepositoryImpl
-import com.alphagamingarcade.core.data.repository.UserDataRepository
+import com.alphagamingarcade.core.data.repository.SettingsRepository
+import com.alphagamingarcade.core.data.repository.SettingsRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -32,7 +35,14 @@ abstract class DataModule {
 
     @Binds
     @Singleton
-    internal abstract fun bindsUserDataRepository(
-        userDataRepository: UserDataRepository,
-    ): UserDataRepository
+    internal abstract fun bindsSettingsRepository(
+        settingsRepositoryImpl: SettingsRepositoryImpl,
+    ): SettingsRepository
+
+
+    @Binds
+    @Singleton
+    internal abstract fun bindsAuthRepository(
+        authRepositoryImpl: AuthRepositoryImpl,
+    ): AuthRepository
 }

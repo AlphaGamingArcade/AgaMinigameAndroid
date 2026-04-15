@@ -22,9 +22,12 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import com.alphagamingarcade.core.network.BuildConfig
 import com.alphagamingarcade.core.network.di.okhttp.OkHttpClientModule
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import retrofit2.Converter
 import retrofit2.Retrofit
+import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import javax.inject.Singleton
 
 /**
@@ -53,7 +56,7 @@ object RetrofitModule {
     ): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.BACKEND_URL)
-            .addConverterFactory(converterFactory)
+            .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
             .client(okHttpClient)
             .build()
     }

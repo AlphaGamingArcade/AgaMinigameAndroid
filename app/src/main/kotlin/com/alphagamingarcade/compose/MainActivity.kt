@@ -18,10 +18,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.alphagamingarcade.compose.ui.AgamgApp
 import com.alphagamingarcade.compose.ui.rememberAgamgAppState
+import com.alphagamingarcade.core.datastore.model.DarkThemeConfigPreferences
+import com.alphagamingarcade.core.datastore.model.UserDataPreferences
 import dagger.hilt.android.AndroidEntryPoint
 import com.alphagamingarcade.core.network.utils.NetworkUtils
-import com.alphagamingarcade.core.preferences.model.DarkThemeConfigPreferences
-import com.alphagamingarcade.core.preferences.model.UserDataPreferences
 import com.alphagamingarcade.core.ui.extensions.checkForPermissions
 import com.alphagamingarcade.core.ui.extensions.isSystemInDarkTheme
 import com.alphagamingarcade.core.ui.theme.JetpackTheme
@@ -112,6 +112,8 @@ class MainActivity : AppCompatActivity() {
 
             val appState = rememberAgamgAppState(
                 isUserLoggedIn = isUserLoggedIn(uiState),
+                isUserEmailVerified = isUserEmailVerified(uiState),
+                userEmail = getUserEmail(uiState),
                 userProfilePictureUri = getUserProfilePictureUri(uiState),
                 windowSizeClass = calculateWindowSizeClass(this),
                 networkUtils = networkUtils,
@@ -180,18 +182,46 @@ private fun isUserLoggedIn(uiState: UiState<UserDataPreferences>): Boolean {
 }
 
 /**
+ * Determines whether a user is logged in based on the provided [UiState].
+ *
+ * @param uiState The UI state representing the user data.
+ * @return `true` if the user is considered logged in; `false` otherwise.
+ */
+private fun isUserEmailVerified(uiState: UiState<UserDataPreferences>): Boolean {
+    // User is considered email verified during loading (assuming ongoing session).
+    return uiState.data.isEmailVerified || uiState.loading
+}
+
+/**
  * Returns the user profile picture URI string from the provided [UiState].
  *
  * @param uiState The UI state representing the user data.
  * @return The user profile picture URI string, or `null` if the user is not logged in or an error occurred.
  */
 private fun getUserProfilePictureUri(uiState: UiState<UserDataPreferences>): String? {
+    return null
+//    return if (uiState.loading || uiState.error.peekContent() != null) {
+//        null
+//    } else {
+//        uiState.data.profilePictureUriString
+//    }
+}
+
+
+/**
+ * Returns the user profile picture URI string from the provided [UiState].
+ *
+ * @param uiState The UI state representing the user data.
+ * @return The user profile picture URI string, or `null` if the user is not logged in or an error occurred.
+ */
+private fun getUserEmail(uiState: UiState<UserDataPreferences>): String? {
     return if (uiState.loading || uiState.error.peekContent() != null) {
-        null
+        return null
     } else {
-        uiState.data.profilePictureUriString
+        uiState.data.email
     }
 }
+
 
 /**
  * The default light scrim, as defined by androidx and the platform:

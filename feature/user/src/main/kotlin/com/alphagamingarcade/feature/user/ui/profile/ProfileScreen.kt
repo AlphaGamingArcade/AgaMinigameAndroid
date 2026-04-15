@@ -1,4 +1,4 @@
-package com.alphagamingarcade.feature.user.ui.user
+package com.alphagamingarcade.feature.user.ui.profile
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -15,19 +15,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.SupportAgent
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -64,6 +61,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.core.ui.utils.StatefulComposable
 import com.alphagamingarcade.core.data.model.Profile
+import com.alphagamingarcade.feature.user.ui.profile.ProfileViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -86,28 +84,29 @@ private val IconBgRed     = Color(0xFFFFE4E4)
 // ─── Entry Point ─────────────────────────────────────────────────────────────
 
 @Composable
-internal fun UserScreen(
+internal fun ProfileScreen(
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
-    userViewModel: UserViewModel = hiltViewModel(),
+    userViewModel: ProfileViewModel = hiltViewModel(),
     onEditProfileClick: () -> Unit,
     onChangePasswordClick: () -> Unit,
     onTermsAndPrivacyClick: () -> Unit,
     onContactSupportClick: () -> Unit,
-    onTransactionClick: () -> Unit
+    onTransactionClick: () -> Unit,
 ) {
     val profileState by userViewModel.profileUiState.collectAsStateWithLifecycle()
+
 
     StatefulComposable(
         state = profileState,
         onShowSnackbar = onShowSnackbar,
     ) { profile ->
-        UserScreen(
+        ProfileScreen(
             profile = profile,
             onEditProfileClick = onEditProfileClick,
             onChangePasswordClick = onChangePasswordClick,
             onTermsAndPrivacyClick =  onTermsAndPrivacyClick,
             onContactSupportClick = onContactSupportClick,
-            onTransactionClick = onTransactionClick
+            onTransactionClick = onTransactionClick,
         )
     }
 }
@@ -116,13 +115,13 @@ internal fun UserScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun UserScreen(
+private fun ProfileScreen(
     profile: Profile,
     onEditProfileClick: () -> Unit,
     onChangePasswordClick: () -> Unit,
     onTermsAndPrivacyClick: () -> Unit,
     onContactSupportClick: () -> Unit,
-    onTransactionClick: () -> Unit
+    onTransactionClick: () -> Unit,
 ) {
     var showDialog by remember { mutableStateOf(false) }
     var showDailyReward by remember { mutableStateOf(false) }
@@ -512,7 +511,7 @@ private fun WalletCard(
             .clip(RoundedCornerShape(20.dp))
             .background(
                 Brush.linearGradient(
-                    colors = listOf(AccentPurple, Color(0xFF3A1078)),
+                    colors = listOf(Color(0xFF061C20), Color(0xFF0A3535)),
                 ),
             )
             .padding(20.dp),

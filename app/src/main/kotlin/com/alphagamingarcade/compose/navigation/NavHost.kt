@@ -18,7 +18,6 @@ import com.alphagamingarcade.feature.games.navigation.Games
 import com.alphagamingarcade.feature.games.navigation.gamesScreen
 import com.alphagamingarcade.feature.browse.navigation.browseScreen
 import com.alphagamingarcade.feature.favorite.navigation.favoriteScreen
-import com.alphagamingarcade.feature.gamedetail.navigation.GameDetail
 import com.alphagamingarcade.feature.gamedetail.navigation.gameDetailScreen
 import com.alphagamingarcade.feature.gamedetail.navigation.navigateToGameDetailScreen
 import com.alphagamingarcade.feature.games.navigation.categoriesScreen
@@ -30,7 +29,7 @@ import com.alphagamingarcade.feature.user.navigation.navigateToChangePasswordScr
 import com.alphagamingarcade.feature.user.navigation.navigateToEditProfileScreen
 import com.alphagamingarcade.feature.user.navigation.navigateToTransactionScreen
 import com.alphagamingarcade.feature.user.navigation.transactionScreen
-import com.alphagamingarcade.feature.user.navigation.userScreen
+import com.alphagamingarcade.feature.user.navigation.profileScreen
 
 /**
  * Composable function that sets up the navigation host for the Jetpack Compose application.
@@ -46,9 +45,6 @@ fun AgamgNavHost(
     modifier: Modifier = Modifier,
 ) {
     val navController = appState.navController
-//    val startDestination =
-//        if (appState.isUserLoggedIn) HomeNavGraph::class else AuthNavGraph::class
-
     val startDestination = Games::class
 
     NavHost(
@@ -59,7 +55,7 @@ fun AgamgNavHost(
         authNavGraph(
             nestedNavGraphs = {
                 signInScreen(
-                    onSignInClick = navController::navigateToSignUpScreen,
+                    onSignUpClick = navController::navigateToSignUpScreen,
                     onShowSnackbar = onShowSnackbar,
                     onForgotPasswordClick = navController::navigateToForgotPasswordScreen
                 )
@@ -109,7 +105,7 @@ fun AgamgNavHost(
         )
         accountNavGraph(
             nestedNavGraphs = {
-                userScreen(
+                profileScreen(
                     onShowSnackbar = onShowSnackbar,
                     onEditProfileClick = navController::navigateToEditProfileScreen,
                     onChangePasswordClick = navController::navigateToChangePasswordScreen,

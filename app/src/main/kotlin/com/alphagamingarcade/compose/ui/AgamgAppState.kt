@@ -14,18 +14,23 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.alphagamingarcade.compose.navigation.TopLevelDestination
+import com.alphagamingarcade.core.data.repository.AuthRepository
 import com.alphagamingarcade.core.extensions.stateInDelayed
 import com.alphagamingarcade.core.network.utils.NetworkState
 import com.alphagamingarcade.core.network.utils.NetworkUtils
+import com.alphagamingarcade.feature.auth.navigation.navigateToCheckYourEmailScreen
+import com.alphagamingarcade.feature.auth.navigation.navigateToSignInScreen
 import com.alphagamingarcade.feature.games.navigation.navigateToGamesScreen
 import com.alphagamingarcade.feature.browse.navigation.navigateToBrowseScreen
 import com.alphagamingarcade.feature.favorite.navigation.navigateToFavoriteScreen
 import com.alphagamingarcade.feature.user.navigation.navigateToUserScreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 
 /**
  * Remembers and creates an instance of [AgamgAppState].
@@ -41,6 +46,8 @@ import kotlinx.coroutines.flow.map
 @Composable
 fun rememberAgamgAppState(
     isUserLoggedIn: Boolean,
+    isUserEmailVerified: Boolean,
+    userEmail: String?,
     windowSizeClass: WindowSizeClass,
     networkUtils: NetworkUtils,
     userProfilePictureUri: String? = null,
@@ -49,6 +56,8 @@ fun rememberAgamgAppState(
 ): AgamgAppState {
     return remember(
         isUserLoggedIn,
+        isUserEmailVerified,
+        userEmail,
         userProfilePictureUri,
         navController,
         windowSizeClass,
@@ -57,6 +66,8 @@ fun rememberAgamgAppState(
     ) {
         AgamgAppState(
             isUserLoggedIn = isUserLoggedIn,
+            isUserEmailVerified = isUserEmailVerified,
+            userEmail = userEmail,
             userProfilePictureUri = userProfilePictureUri,
             navController = navController,
             windowSizeClass = windowSizeClass,
@@ -79,11 +90,13 @@ fun rememberAgamgAppState(
 @Stable
 class AgamgAppState(
     val isUserLoggedIn: Boolean,
+    val isUserEmailVerified: Boolean,
+    val userEmail: String?,
     val userProfilePictureUri: String?,
     val navController: NavHostController,
     val windowSizeClass: WindowSizeClass,
     coroutineScope: CoroutineScope,
-    networkUtils: NetworkUtils,
+    networkUtils: NetworkUtils
 ) {
     /**
      * The previous navigation destination.
@@ -143,16 +156,10 @@ class AgamgAppState(
      */
     fun navigateToTopLevelDestination(topLevelDestination: TopLevelDestination) {
         val topLevelNavOptions = navOptions {
-            // Pop up to the start destination of the graph to
-            // avoid building up a large stack of destinations
-            // on the back stack as users select items
             popUpTo(navController.graph.findStartDestination().id) {
                 saveState = true
             }
-            // Avoid multiple copies of the same destination when
-            // re-selecting the same item
             launchSingleTop = true
-            // Restore state when re-selecting a previously selected item
             restoreState = true
         }
 
@@ -160,7 +167,7 @@ class AgamgAppState(
             TopLevelDestination.GAMES -> navController.navigateToGamesScreen(topLevelNavOptions)
             TopLevelDestination.BROWSE -> navController.navigateToBrowseScreen(topLevelNavOptions)
             TopLevelDestination.FAVORITE -> navController.navigateToFavoriteScreen(topLevelNavOptions)
-            TopLevelDestination.USER -> navController.navigateToUserScreen(topLevelNavOptions)
+            TopLevelDestination.USER ->  navController.navigateToUserScreen(topLevelNavOptions)
         }
     }
 }

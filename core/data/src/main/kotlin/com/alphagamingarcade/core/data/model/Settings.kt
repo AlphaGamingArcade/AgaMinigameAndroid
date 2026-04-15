@@ -1,7 +1,7 @@
 package com.alphagamingarcade.core.data.model
 
-import com.alphagamingarcade.core.preferences.model.DarkThemeConfigPreferences
-import com.alphagamingarcade.core.preferences.model.UserDataPreferences
+import com.alphagamingarcade.core.datastore.model.DarkThemeConfigPreferences
+import com.alphagamingarcade.core.datastore.model.UserDataPreferences
 
 /**
  * Data class representing editable user settings related to themes and appearance.
@@ -12,7 +12,6 @@ import com.alphagamingarcade.core.preferences.model.UserDataPreferences
  * @constructor Creates a [Settings] instance with optional parameters.
  */
 data class Settings(
-    val userName: String? = null,
     val useDynamicColor: Boolean = true,
     val darkThemeConfig: DarkThemeConfig = DarkThemeConfig.FOLLOW_SYSTEM,
     val language: Language = Language.ENGLISH,
@@ -48,7 +47,6 @@ enum class Language(val code: String) {
  */
 fun UserDataPreferences.asSettings(): Settings {
     return Settings(
-        userName = userName,
         useDynamicColor = useDynamicColor,
         darkThemeConfig = darkThemeConfigPreferences.toDarkThemeConfig(),
     )

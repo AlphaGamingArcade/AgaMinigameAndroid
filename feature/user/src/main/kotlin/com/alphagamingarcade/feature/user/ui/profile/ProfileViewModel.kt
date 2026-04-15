@@ -1,17 +1,18 @@
-package com.alphagamingarcade.feature.profile.ui
+package com.alphagamingarcade.feature.user.ui.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alphagamingarcade.core.data.model.Profile
-import dagger.hilt.android.lifecycle.HiltViewModel
 import com.alphagamingarcade.core.extensions.stateInDelayed
 import com.alphagamingarcade.core.ui.utils.UiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 
 @HiltViewModel
-class ProfileViewModel @Inject constructor() : ViewModel() {
+class ProfileViewModel @Inject constructor(
+) : ViewModel() {
     private val _profileUiState = MutableStateFlow(UiState(Profile()))
     val profileUiState = _profileUiState
         .onStart { updateProfileData() }
@@ -23,9 +24,5 @@ class ProfileViewModel @Inject constructor() : ViewModel() {
 //            .onEach { data -> _profileUiState.update { data } }
 //            .catch { e -> UiState(Profile(), error = e.asOneTimeEvent()) }
 //            .launchIn(viewModelScope)
-    }
-
-    fun signOut() {
-//        _profileUiState.updateWith { profileRepository.signOut() }
     }
 }

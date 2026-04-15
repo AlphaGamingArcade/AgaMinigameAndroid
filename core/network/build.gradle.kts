@@ -24,6 +24,7 @@ secrets {
 dependencies {
     implementation(project(":core:android"))
     implementation(project(":core:model"))
+    implementation(project(":core:datastore"))
 
     // ... OkHTTP
     implementation(platform(libs.okhttp.bom))

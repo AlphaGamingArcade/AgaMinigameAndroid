@@ -25,7 +25,7 @@ dependencies {
 
     // ... Feature
     dokka(project(":feature:auth"))
-    dokka(project(":feature:profile"))
+    dokka(project(":feature:user"))
     dokka(project(":feature:settings"))
     dokka(project(":feature:gamedetail"))
 
