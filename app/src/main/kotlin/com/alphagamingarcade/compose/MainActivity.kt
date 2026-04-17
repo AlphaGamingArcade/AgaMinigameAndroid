@@ -178,7 +178,7 @@ private fun shouldUseDarkTheme(
  */
 private fun isUserLoggedIn(uiState: UiState<UserDataPreferences>): Boolean {
     // User is considered logged in during loading (assuming ongoing session).
-    return uiState.data.id.isNotEmpty() || uiState.loading
+    return (uiState.data.id.isNotEmpty() && uiState.data.isEmailVerified && uiState.data.member != null) || uiState.loading
 }
 
 /**

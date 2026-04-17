@@ -1,4 +1,4 @@
-package com.alphagamingarcade.feature.favorite.ui
+package com.alphagamingarcade.feature.favorite.ui.favorite
 
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel

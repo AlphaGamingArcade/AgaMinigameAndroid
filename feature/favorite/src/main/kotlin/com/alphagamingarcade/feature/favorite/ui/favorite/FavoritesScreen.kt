@@ -1,4 +1,4 @@
-package com.alphagamingarcade.feature.favorite.ui
+package com.alphagamingarcade.feature.favorite.ui.favorite
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -70,7 +70,7 @@ private val TextSecondary  = Color(0xFF8A8A9A)
 
 @Composable
 internal fun FavoriteScreen(
-    onJetpackClick: (String) -> Unit,
+    onGameClick: (String) -> Unit,
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
     browseViewModel: FavoriteViewModel = hiltViewModel(),
 ) {
@@ -82,7 +82,7 @@ internal fun FavoriteScreen(
     ) { homeScreenData ->
         FavoriteScreen(
             data = homeScreenData,
-            onGameClick = onJetpackClick,
+            onGameClick = onGameClick,
         )
     }
 }

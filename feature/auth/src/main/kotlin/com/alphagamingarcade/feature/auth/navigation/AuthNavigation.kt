@@ -10,6 +10,7 @@ import androidx.navigation.toRoute
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.feature.auth.ui.checkyouremail.CheckYourEmailScreen
 import com.alphagamingarcade.feature.auth.ui.forgotpassword.ForgotPasswordScreen
+import com.alphagamingarcade.feature.auth.ui.setupprofile.SetupProfileScreen
 import com.alphagamingarcade.feature.auth.ui.signin.SignInScreen
 import com.alphagamingarcade.feature.auth.ui.signup.SignUpScreen
 import kotlinx.serialization.Serializable
@@ -37,6 +38,13 @@ data object SignUp
  */
 @Serializable
 data object ForgotPassword
+
+
+/**
+ * Forgot Password route.
+ */
+@Serializable
+data object SetupProfile
 
 /**
  * Check your Email Route
@@ -84,21 +92,38 @@ fun NavController.navigateToForgotPasswordScreen(navOptions: NavOptions? = null)
 
 
 /**
+ * Navigate to the forgot password route.
+ *
+ * @param navOptions [NavOptions].
+ */
+fun NavController.navigateSetupProfileScreen(navOptions: NavOptions? = null) {
+    navigate(SetupProfile, navOptions)
+}
+
+
+
+/**
  * Sign in screen.
  *
- * @param onSignUpClick Callback when sign up is clicked.
+ * @param onSignUpLinkClick Callback when sign up is clicked.
  * @param onShowSnackbar Callback to show a snackbar.
  */
 fun NavGraphBuilder.signInScreen(
-    onSignUpClick: () -> Unit,
+    onSignUpLinkClick: () -> Unit,
     onForgotPasswordClick: () -> Unit,
+    onProfileSetup: () -> Unit,
+    onCheckYourEmail: (String) -> Unit,
+    onPrevious: () -> Unit,
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
 ) {
     composable<SignIn> {
         SignInScreen(
-            onSignUpClick = onSignUpClick,
+            onSignUpLinkClick = onSignUpLinkClick,
             onForgotPasswordClick = onForgotPasswordClick,
             onShowSnackbar = onShowSnackbar,
+            onProfileSetup = onProfileSetup,
+            onCheckYourEmail = onCheckYourEmail,
+            onPrevious = onPrevious
         )
     }
 }
@@ -106,17 +131,23 @@ fun NavGraphBuilder.signInScreen(
 /**
  * Sign up screen.
  *
- * @param onSignInClick Callback when sign in is clicked.
+ * @param onSignInLinkClick Callback when sign in is clicked.
  * @param onShowSnackbar Callback to show a snackbar.
  */
 fun NavGraphBuilder.signUpScreen(
-    onSignInClick: () -> Unit,
+    onSignInLinkClick: () -> Unit,
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
+    onProfileSetup: () -> Unit,
+    onCheckYourEmail: (String) -> Unit,
+    onPrevious: () -> Unit,
 ) {
     composable<SignUp> {
         SignUpScreen(
-            onSignInClick = onSignInClick,
+            onSignInLinkClick = onSignInLinkClick,
             onShowSnackbar = onShowSnackbar,
+            onProfileSetup = onProfileSetup,
+            onCheckYourEmail = onCheckYourEmail,
+            onPrevious = onPrevious
         )
     }
 }
@@ -143,7 +174,18 @@ fun NavGraphBuilder.forgotPasswordScreen(
 }
 
 
-//  Navigation route
+fun NavGraphBuilder.setupProfileScreen(
+    onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean
+) {
+    composable<SetupProfile> {
+        SetupProfileScreen(
+            onShowSnackbar = onShowSnackbar
+        )
+    }
+}
+
+
+
 fun NavController.navigateToCheckYourEmailScreen(
     email: String,
     navOptions: NavOptions? = null,
@@ -151,7 +193,7 @@ fun NavController.navigateToCheckYourEmailScreen(
     navigate(CheckYourEmail(email), navOptions)
 }
 
-// NavGraphBuilder
+
 fun NavGraphBuilder.checkYourEmailScreen(
     onBackToSignInClick: () -> Unit,
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
@@ -161,7 +203,7 @@ fun NavGraphBuilder.checkYourEmailScreen(
         CheckYourEmailScreen(
             email = route.email,
             onBackToSignInClick = onBackToSignInClick,
-            onShowSnackbar = onShowSnackbar,
+            onShowSnackbar = onShowSnackbar
         )
     }
 }

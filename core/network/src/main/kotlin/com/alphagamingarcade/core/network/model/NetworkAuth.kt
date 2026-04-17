@@ -1,6 +1,5 @@
 package com.alphagamingarcade.core.network.model
 
-import com.alphagamingarcade.core.datastore.model.PreferencesUserProfile
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -21,30 +20,34 @@ data class AuthData(
     @SerialName("sub")
     val sub: Int,
     @SerialName("refreshToken")
-    val refreshToken: String,
+    val refreshToken: String?,
     @SerialName("accessToken")
-    val accessToken: String,
+    val accessToken: String?,
     @SerialName("user")
-    val user: NetworkAuthUser,
+    val user: NetworkUser,
     @SerialName("member")
-    val member: String? = null
+    val member: NetworkMember? = null
 )
 
-/**
- * Wrapper for API response with pagination data.
- */
+
+
 @Serializable
-data class NetworkAuthUser(
-    @SerialName("id")
-    val id: Int,
+data class LoginRequest(
     @SerialName("email")
     val email: String,
-    @SerialName("isEmailVerified")
-    val isEmailVerified: Boolean
+    @SerialName("password")
+    val password: String
 )
 
-fun NetworkAuthUser.asPreferencesUserProfile() = PreferencesUserProfile(
-    id = id.toString(),
-    userEmail = email,
-    isEmailVerified = isEmailVerified
+@Serializable
+data class RegisterRequest(
+    @SerialName("email")
+    val email: String,
+    @SerialName("password")
+    val password: String,
+    @SerialName("confirmPassword")
+    val confirmPassword: String
 )
+
+
+

@@ -86,8 +86,7 @@ fun SettingsDialog(
             onDismiss = onDismiss,
             onChangeDynamicColorPreference = settingsViewModel::updateDynamicColorPreference,
             onChangeDarkThemeConfig = settingsViewModel::updateDarkThemeConfig,
-            onChangeLanguage = settingsViewModel::updateLanguagePreference,
-            onSignOut = settingsViewModel::signOut,
+            onChangeLanguage = settingsViewModel::updateLanguagePreference
         )
     }
 }
@@ -99,7 +98,6 @@ fun SettingsDialog(
  * @param onDismiss Callback when the dialog is dismissed.
  * @param onChangeDynamicColorPreference Callback when the dynamic color preference is changed.
  * @param onChangeDarkThemeConfig Callback when the dark theme config is changed.
- * @param onSignOut Callback when the user signs out.
  * @param supportDynamicColor Whether dynamic color is supported.
  */
 @Composable
@@ -109,7 +107,6 @@ private fun SettingsDialog(
     onChangeDynamicColorPreference: (useDynamicColor: Boolean) -> Unit,
     onChangeDarkThemeConfig: (darkThemeConfig: DarkThemeConfig) -> Unit,
     onChangeLanguage: (language: Language) -> Unit,
-    onSignOut: () -> Unit,
     supportDynamicColor: Boolean = supportsDynamicTheming(),
 ) {
     val configuration = LocalConfiguration.current
@@ -142,7 +139,6 @@ private fun SettingsDialog(
                     onChangeDynamicColorPreference = onChangeDynamicColorPreference,
                     onChangeDarkThemeConfig = onChangeDarkThemeConfig,
                     onChangeLanguage = onChangeLanguage,
-                    onSignOut = onSignOut,
                     onDismiss = onDismiss,
                 )
                 HorizontalDivider(Modifier.padding(top = 8.dp))
@@ -170,7 +166,6 @@ private fun SettingsDialog(
  * @param supportDynamicColor Whether dynamic color is supported.
  * @param onChangeDynamicColorPreference Callback when the dynamic color preference is changed.
  * @param onChangeDarkThemeConfig Callback when the dark theme config is changed.
- * @param onSignOut Callback when the user signs out.
  * @param onDismiss Callback when the dialog is dismissed.
  */
 @Composable
@@ -180,7 +175,6 @@ private fun ColumnScope.SettingsPanel(
     onChangeDynamicColorPreference: (useDynamicColor: Boolean) -> Unit,
     onChangeDarkThemeConfig: (darkThemeConfig: DarkThemeConfig) -> Unit,
     onChangeLanguage: (language: Language) -> Unit,
-    onSignOut: () -> Unit,
     onDismiss: () -> Unit,
 ) {
     var languageSelectedIndex by remember(settings.language) {
@@ -240,7 +234,6 @@ private fun ColumnScope.SettingsPanel(
     }
     JetpackOutlinedButton(
         onClick = {
-            onSignOut()
             onDismiss()
         },
         modifier = Modifier.fillMaxWidth(),
@@ -355,7 +348,6 @@ private fun SettingsDialogPreview() {
         onChangeDynamicColorPreference = {},
         onChangeDarkThemeConfig = {},
         onChangeLanguage = {},
-        onSignOut = {},
         supportDynamicColor = true,
     )
 }

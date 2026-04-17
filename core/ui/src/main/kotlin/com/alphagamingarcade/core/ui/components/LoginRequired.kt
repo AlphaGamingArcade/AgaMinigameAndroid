@@ -28,7 +28,7 @@ fun LoginRequired(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 24.dp),
+            .padding(horizontal = 24.dp, vertical = 50.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Icon(

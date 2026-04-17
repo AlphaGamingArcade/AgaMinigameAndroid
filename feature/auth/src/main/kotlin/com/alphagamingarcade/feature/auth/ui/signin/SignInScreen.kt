@@ -22,6 +22,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,6 +30,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -50,18 +52,32 @@ import com.alphagamingarcade.feature.auth.R
 /**
  * Sign in screen.
  *
- * @param onSignUpClick Navigate to sign up screen.
+ * @param onSignUpLinkClick Navigate to sign up screen.
  * @param onShowSnackbar Show Snackbar.
  * @param signInViewModel [SignInViewModel].
  */
 @Composable
 internal fun SignInScreen(
-    onSignUpClick: () -> Unit,
+    onSignUpLinkClick: () -> Unit,
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
     onForgotPasswordClick: () -> Unit,
     signInViewModel: SignInViewModel = hiltViewModel(),
+    onCheckYourEmail: (String) -> Unit,
+    onProfileSetup: () -> Unit,
+    onPrevious: () -> Unit
 ) {
     val signInState by signInViewModel.signInUiState.collectAsStateWithLifecycle()
+
+    // Listen for navigation events
+    LaunchedEffect(Unit) {
+        signInViewModel.events.collect { event ->
+            when (event) {
+                is SignInEvent.NavigateToVerifyEmail -> onCheckYourEmail(event.email)
+                SignInEvent.NavigateToProfileSetup -> onProfileSetup()
+                SignInEvent.NavigateToPrevious -> onPrevious()
+            }
+        }
+    }
 
     StatefulComposable(
         state = signInState,
@@ -73,8 +89,7 @@ internal fun SignInScreen(
             signInViewModel::updateEmail,
             signInViewModel::updatePassword,
             onSignInClick = signInViewModel::loginWithEmailAndPassword,
-            onSignUpClick = onSignUpClick,
-
+            onSignUpLinkClick = onSignUpLinkClick
         )
     }
 }
@@ -94,7 +109,7 @@ private fun SignInScreen(
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onSignInClick: () -> Unit,
-    onSignUpClick: () -> Unit
+    onSignUpLinkClick: () -> Unit
 
 ) {
     Column(
@@ -113,7 +128,7 @@ private fun SignInScreen(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(text = stringResource(R.string.do_not_have_an_account))
-            JetpackTextButton(onClick = onSignInClick) {
+            JetpackTextButton(onClick = onSignUpLinkClick) {
                 Text(
                     text = stringResource(R.string.sign_up),
                     color = MaterialTheme.colorScheme.primary,
@@ -126,7 +141,10 @@ private fun SignInScreen(
             errorMessage = screenData.email.errorMessage,
             onValueChange = onEmailChange,
             label = { Text(stringResource(R.string.email)) },
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Email,
+                capitalization = KeyboardCapitalization.None
+            ),
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Email,
@@ -218,7 +236,7 @@ private fun SignInScreenPreview() {
         onForgotPasswordClick = {},
         onEmailChange = {},
         onPasswordChange = {},
-        onSignUpClick = {},
+        onSignUpLinkClick = {},
         onSignInClick = {},
     )
 }

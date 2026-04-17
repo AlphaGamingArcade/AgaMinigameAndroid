@@ -1,13 +1,14 @@
 package com.alphagamingarcade.core.network.data
 
-import android.content.ContentValues.TAG
 import android.net.http.HttpException
-import android.util.Log
 import com.alphagamingarcade.core.di.IoDispatcher
 import com.alphagamingarcade.core.network.api.AuthRestApi
 import com.alphagamingarcade.core.network.model.LoginRequest
 import com.alphagamingarcade.core.network.model.NetworkAuthResponse
+import com.alphagamingarcade.core.network.model.NetworkEmailStatusResponse
+import com.alphagamingarcade.core.network.model.NetworkResendVerifyEmailResponse
 import com.alphagamingarcade.core.network.model.RegisterRequest
+import com.alphagamingarcade.core.network.model.ResendVerifyEmailRequest
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import java.io.IOException
@@ -28,7 +29,6 @@ internal class AuthDataSourceImpl @Inject constructor(
                 password = password
             )
             val response = authRestApi.signIn(request)
-            storeTokens(response.data.accessToken, response.data.refreshToken)
             Result.success(response)
         } catch (e: HttpException) {
             Result.failure(e) // 4xx/5xx errors (wrong password, not found, etc.)
@@ -39,18 +39,19 @@ internal class AuthDataSourceImpl @Inject constructor(
 
     override suspend fun registerWithEmailAndPassword(
         email: String,
-        password: String
+        password: String,
+        confirmPassword: String
     ): Result<NetworkAuthResponse> = withContext(ioDispatcher) {
         try {
 
             val request = RegisterRequest(
                 email = email,
-                password = password
+                password = password,
+                confirmPassword = confirmPassword
             )
 
             val response = authRestApi.register(request)
-            // Extract and store tokens securely
-            storeTokens(response.data.accessToken, response.data.refreshToken)
+
             Result.success(response)
         } catch (e: HttpException) {
             Result.failure(e) // 4xx/5xx errors (wrong password, not found, etc.)
@@ -59,30 +60,45 @@ internal class AuthDataSourceImpl @Inject constructor(
         }
     }
 
+    // Resend verify email
+    override suspend fun resendVerifyEmail(
+        email: String
+    ): Result<NetworkResendVerifyEmailResponse> = withContext(ioDispatcher) {
+        try {
+            val request = ResendVerifyEmailRequest(
+                email = email
+            )
+
+            val response = authRestApi.resendVerifyEmail(request)
+
+            Result.success(response)
+        } catch (e: HttpException) {
+            Result.failure(e)
+        } catch (e: IOException) {
+            Result.failure(e)
+        }
+    }
+
+    // Network email status
+    override suspend fun getEmailStatus(
+        email: String
+    ): Result<NetworkEmailStatusResponse> = withContext(ioDispatcher) {
+        try {
+            val response = authRestApi.getEmailStatus(email)
+            Result.success(response)
+        } catch (e: HttpException) {
+            Result.failure(e)
+        } catch (e: IOException) {
+            Result.failure(e)
+        }
+    }
+
+
     override suspend fun signOut() = withContext(ioDispatcher) {
 //        // Call sign out endpoint if available
 //        authRestApi.signOut()
         // Clear stored tokens
-        clearTokens()
+//        clearTokens()
     }
 
-    private fun storeTokens(accessToken: String, refreshToken: String) {
-        // TODO: Store tokens securely in EncryptedSharedPreferences or similar
-        // Example:
-        // val sharedPref = context.getSharedPreferences("auth", Context.MODE_PRIVATE)
-        // sharedPref.edit {
-        //     putString("access_token", accessToken)
-        //     putString("refresh_token", refreshToken)
-        // }
-    }
-
-    private fun clearTokens() {
-        // TODO: Clear tokens from secure storage
-        // Example:
-        // val sharedPref = context.getSharedPreferences("auth", Context.MODE_PRIVATE)
-        // sharedPref.edit {
-        //     remove("access_token")
-        //     remove("refresh_token")
-        // }
-    }
 }

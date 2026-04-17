@@ -5,7 +5,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
-import com.alphagamingarcade.feature.favorite.ui.FavoriteScreen
+import com.alphagamingarcade.feature.favorite.ui.favorite.FavoriteScreen
+import com.alphagamingarcade.feature.favorite.ui.loginrequired.LoginRequiredScreen
 import kotlinx.serialization.Serializable
 
 
@@ -30,13 +31,24 @@ fun NavController.navigateToFavoriteScreen(navOptions: NavOptions?) {
  * @param onShowSnackbar Lambda function to show a snackbar message.
  */
 fun NavGraphBuilder.favoriteScreen(
+    isLoggedIn: Boolean,
+    onSignInClick: () -> Unit,
+    onSignUpClick: () -> Unit,
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
-    onJetpackClick: (String) -> Unit
+    onGameClick: (String) -> Unit
 ) {
     composable<Favorite> {
-        FavoriteScreen(
-            onShowSnackbar = onShowSnackbar,
-            onJetpackClick = onJetpackClick
-        )
+        if (!isLoggedIn){
+            LoginRequiredScreen(
+                onShowSnackbar = onShowSnackbar,
+                onLoginClick = onSignInClick,
+                onSignUpClick = onSignUpClick
+            )
+        } else {
+            FavoriteScreen(
+                onShowSnackbar = onShowSnackbar,
+                onGameClick = onGameClick
+            )
+        }
     }
 }

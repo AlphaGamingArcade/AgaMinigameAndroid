@@ -1,7 +1,7 @@
 package com.alphagamingarcade.core.datastore.data
 
 import com.alphagamingarcade.core.datastore.model.DarkThemeConfigPreferences
-import com.alphagamingarcade.core.datastore.model.PreferencesUserProfile
+import com.alphagamingarcade.core.datastore.model.MemberPreferences
 import com.alphagamingarcade.core.datastore.model.UserDataPreferences
 import kotlinx.coroutines.flow.Flow
 
@@ -13,7 +13,7 @@ interface UserPreferencesDataSource {
     /**
      * Retrieves the user profile from the user preferences.
      *
-     * @return A [Flow] of [PreferencesUserProfile].
+     * @return A [Flow] of [MemberPreferences].
      */
     fun getUserDataPreferences(): Flow<UserDataPreferences>
 
@@ -25,12 +25,7 @@ interface UserPreferencesDataSource {
      */
     suspend fun getUserIdOrThrow(): String
 
-    /**
-     * Sets the user profile in the user preferences.
-     *
-     * @param preferencesUserProfile The user ID to be set.
-     */
-    suspend fun setUserProfile(preferencesUserProfile: PreferencesUserProfile)
+    suspend fun setUserProfile(userDataPreferences: UserDataPreferences)
 
     /**
      * Sets the dark theme configuration in the user preferences.
@@ -50,4 +45,6 @@ interface UserPreferencesDataSource {
      * Resets the user preferences to their default values.
      */
     suspend fun resetUserPreferences()
+
+    suspend fun setUserMember(memberPreferences: MemberPreferences)
 }

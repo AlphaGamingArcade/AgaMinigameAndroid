@@ -8,6 +8,7 @@ import androidx.navigation.navigation
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.feature.user.ui.changepassword.ChangePasswordScreen
 import com.alphagamingarcade.feature.user.ui.editprofile.EditProfileScreen
+import com.alphagamingarcade.feature.user.ui.loginrequired.LoginRequiredScreen
 import com.alphagamingarcade.feature.user.ui.transaction.TransactionScreen
 import com.alphagamingarcade.feature.user.ui.profile.ProfileScreen
 import kotlinx.serialization.Serializable
@@ -73,6 +74,9 @@ fun NavController.navigateToChangePasswordScreen(navOptions: NavOptions? = null)
 // * @param onShowSnackbar Lambda function to show a snackbar message.
 // */
 fun NavGraphBuilder.profileScreen(
+    isLoggedIn: Boolean,
+    onSignInClick: () -> Unit,
+    onSignUpClick: () -> Unit,
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
     onEditProfileClick: () -> Unit,
     onChangePasswordClick: () -> Unit,
@@ -81,14 +85,22 @@ fun NavGraphBuilder.profileScreen(
     onTransactionClick: () -> Unit
 ) {
     composable<User> {
-        ProfileScreen(
-            onShowSnackbar = onShowSnackbar,
-            onEditProfileClick = onEditProfileClick,
-            onChangePasswordClick = onChangePasswordClick,
-            onTermsAndPrivacyClick = onTermsAndPrivacyClick,
-            onContactSupportClick = onContactSupportClick,
-            onTransactionClick = onTransactionClick,
-        )
+        if (!isLoggedIn){
+            LoginRequiredScreen(
+                onShowSnackbar = onShowSnackbar,
+                onLoginClick = onSignInClick,
+                onSignUpClick = onSignUpClick
+            )
+        } else {
+            ProfileScreen(
+                onShowSnackbar = onShowSnackbar,
+                onEditProfileClick = onEditProfileClick,
+                onChangePasswordClick = onChangePasswordClick,
+                onTermsAndPrivacyClick = onTermsAndPrivacyClick,
+                onContactSupportClick = onContactSupportClick,
+                onTransactionClick = onTransactionClick,
+            )
+        }
     }
 }
 
@@ -98,10 +110,21 @@ fun NavGraphBuilder.profileScreen(
  * @param onShowSnackbar Lambda function to show a snackbar message.
  */
 fun NavGraphBuilder.changePasswordScreen(
+    isLoggedIn: Boolean,
+    onSignUpClick: () -> Unit,
+    onSignInClick: () -> Unit,
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
     onBackClick: () -> Unit
 ) {
     composable<ChangePassword> {
+        if (!isLoggedIn){
+            LoginRequiredScreen(
+                onShowSnackbar = onShowSnackbar,
+                onLoginClick = onSignInClick,
+                onSignUpClick = onSignUpClick
+            )
+        }
+
         ChangePasswordScreen(
             onNavigateBack = onBackClick,
             onShowSnackbar = onShowSnackbar,
@@ -125,14 +148,26 @@ fun NavController.navigateToEditProfileScreen(navOptions: NavOptions? = null) {
  * @param onShowSnackbar Lambda function to show a snackbar message.
  */
 fun NavGraphBuilder.transactionScreen(
+    isLoggedIn: Boolean,
+    onSignInClick: () -> Unit,
+    onSignUpClick: () -> Unit,
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
     onBackClick: () -> Unit
 ) {
     composable<Transaction> {
-        TransactionScreen(
-            onBackClick = onBackClick,
-            onShowSnackbar = onShowSnackbar,
-        )
+        if (!isLoggedIn){
+            LoginRequiredScreen(
+                onShowSnackbar = onShowSnackbar,
+                onLoginClick = onSignInClick,
+                onSignUpClick = onSignUpClick
+            )
+        } else {
+            TransactionScreen(
+                onBackClick = onBackClick,
+                onShowSnackbar = onShowSnackbar,
+            )
+        }
+
     }
 }
 
@@ -153,14 +188,25 @@ fun NavController.navigateToTransactionScreen(navOptions: NavOptions? = null) {
  * @param onShowSnackbar Lambda function to show a snackbar message.
  */
 fun NavGraphBuilder.editProfileScreen(
+    isLoggedIn: Boolean,
+    onSignUpClick: () -> Unit,
+    onSignInClick: () -> Unit,
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
     onBackClick: () -> Unit
 ) {
     composable<EditProfile> {
+        if (!isLoggedIn){
+            LoginRequiredScreen(
+                onShowSnackbar = onShowSnackbar,
+                onLoginClick = onSignInClick,
+                onSignUpClick = onSignUpClick
+            )
+        } else {
         EditProfileScreen(
             onNavigateBack = onBackClick,
             onShowSnackbar = onShowSnackbar,
         )
+        }
     }
 }
 

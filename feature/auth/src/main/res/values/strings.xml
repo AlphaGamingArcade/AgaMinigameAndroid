@@ -16,6 +16,9 @@
 -->
 
 <resources>
+    <string name="email_verified">Email Verified</string>
+    <string name="email_verified_description">Your email has been successfully verified. You can now sign in to your account.</string>
+    <string name="continue_to_sign_in">Continue to Sign In</string>
     <string name="password">Password</string>
     <string name="show_password">Show password</string>
     <string name="hide_password">Hide password</string>

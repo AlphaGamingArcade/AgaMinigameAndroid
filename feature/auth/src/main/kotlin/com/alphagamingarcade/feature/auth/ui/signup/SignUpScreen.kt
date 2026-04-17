@@ -27,6 +27,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +39,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.alphagamingarcade.core.extensions.getActivity
 import com.alphagamingarcade.core.ui.components.DividerWithText
@@ -53,22 +55,37 @@ import com.alphagamingarcade.core.ui.utils.StatefulComposable
 import com.alphagamingarcade.core.data.utils.PRIVACY_POLICY_URL
 import com.alphagamingarcade.core.data.utils.TERMS_OF_SERVICE_URL
 import com.alphagamingarcade.feature.auth.R
+import com.alphagamingarcade.feature.auth.ui.signin.SignInEvent
 import java.util.Calendar
 
 /**
  * Composable function for the SignUp screen.
  *
- * @param onSignInClick Callback to be invoked when the sign-in button is clicked.
  * @param onShowSnackbar Callback to show a snackbar with a message, action, and optional error.
  * @param signUpViewModel ViewModel for the SignUp screen, default is provided by Hilt.
  */
 @Composable
 internal fun SignUpScreen(
-    onSignInClick: () -> Unit,
+    onSignInLinkClick: () -> Unit,
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
-    signUpViewModel: SignUpViewModel = androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel()
+    signUpViewModel: SignUpViewModel = hiltViewModel(),
+    onCheckYourEmail: (String) -> Unit,
+    onProfileSetup: () -> Unit,
+    onPrevious: () -> Unit
 ) {
     val signUpState by signUpViewModel.signUpUiState.collectAsStateWithLifecycle()
+
+    // Listen for navigation events
+    LaunchedEffect(Unit) {
+        signUpViewModel.events.collect { event ->
+            when (event) {
+                is SignInEvent.NavigateToVerifyEmail -> onCheckYourEmail(event.email)
+                SignInEvent.NavigateToProfileSetup -> onProfileSetup()
+                SignInEvent.NavigateToPrevious -> onPrevious()
+            }
+        }
+    }
+
 
     StatefulComposable(
         state = signUpState,
@@ -76,13 +93,11 @@ internal fun SignUpScreen(
     ) { authScreenData ->
         SignUpScreen(
             screenData = authScreenData,
-            onAccountChange = signUpViewModel::updateAccount,
-            onNicknameChange = signUpViewModel::updateNickname,
-            onDobChange = signUpViewModel::updateDob,
             onEmailChange = signUpViewModel::updateEmail,
             onPasswordChange = signUpViewModel::updatePassword,
             onConfirmPasswordChange = signUpViewModel::updateConfirmPassword,
-            onSignInClick = onSignInClick,
+            onSignUpClick = signUpViewModel::registerWithEmailAndPassword,
+            onSignInLinkClick = onSignInLinkClick
         )
     }
 }
@@ -91,44 +106,40 @@ internal fun SignUpScreen(
  * Composable function for the SignUp screen.
  *
  * @param screenData [SignUpScreenData].
- * @param onAccountChange Callback to update the account.
- * @param onNicknameChange Callback to update the nickname.
- * @param onDobChange Callback to update the date of birth.
  * @param onEmailChange Callback to update the email.
  * @param onPasswordChange Callback to update the password.
  * @param onConfirmPasswordChange Callback to update the confirm password.
- * @param onSignInClick Callback to navigate to sign in.
+ * @param onSignInLinkClick Callback to navigate to sign in.
  */
 @Composable
 private fun SignUpScreen(
     screenData: SignUpScreenData,
-    onAccountChange: (String) -> Unit,
-    onNicknameChange: (String) -> Unit,
-    onDobChange: (String) -> Unit,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onConfirmPasswordChange: (String) -> Unit,
-    onSignInClick: () -> Unit,
+    onSignInLinkClick: () -> Unit,
+    onSignUpClick: () -> Unit
 ) {
+
     val focusManager = LocalFocusManager.current
     val context = LocalContext.current
     val activity = context.getActivity()
 
     // DatePickerDialog setup
     val calendar = Calendar.getInstance()
-    val datePickerDialog = DatePickerDialog(
-        context,
-        { _, year, month, dayOfMonth ->
-            val formattedDate = String.format("%04d-%02d-%02d", year, month + 1, dayOfMonth)
-            onDobChange(formattedDate)
-        },
-        calendar.get(Calendar.YEAR),
-        calendar.get(Calendar.MONTH),
-        calendar.get(Calendar.DAY_OF_MONTH),
-    ).apply {
-        // Restrict future dates
-        datePicker.maxDate = calendar.timeInMillis
-    }
+//    val datePickerDialog = DatePickerDialog(
+//        context,
+//        { _, year, month, dayOfMonth ->
+//            val formattedDate = String.format("%04d-%02d-%02d", year, month + 1, dayOfMonth)
+//            onDobChange(formattedDate)
+//        },
+//        calendar.get(Calendar.YEAR),
+//        calendar.get(Calendar.MONTH),
+//        calendar.get(Calendar.DAY_OF_MONTH),
+//    ).apply {
+//        // Restrict future dates
+//        datePicker.maxDate = calendar.timeInMillis
+//    }
 
     Column(
         modifier = Modifier
@@ -149,7 +160,7 @@ private fun SignUpScreen(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(text = stringResource(R.string.already_have_an_account))
-            JetpackTextButton(onClick = onSignInClick) {
+            JetpackTextButton(onClick = onSignInLinkClick) {
                 Text(
                     text = stringResource(R.string.sign_in),
                     color = MaterialTheme.colorScheme.primary,
@@ -159,55 +170,55 @@ private fun SignUpScreen(
         Spacer(modifier = Modifier.height(24.dp))
 
         // Account Field
-        JetpackTextField(
-            value = screenData.account.value,
-            errorMessage = screenData.account.errorMessage,
-            onValueChange = onAccountChange,
-            label = { Text("Account") },
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.AccountCircle,
-                    contentDescription = "Account",
-                )
-            },
-        )
+//        JetpackTextField(
+//            value = screenData.account.value,
+//            errorMessage = screenData.account.errorMessage,
+//            onValueChange = onAccountChange,
+//            label = { Text("Account") },
+//            leadingIcon = {
+//                Icon(
+//                    imageVector = Icons.Default.AccountCircle,
+//                    contentDescription = "Account",
+//                )
+//            },
+//        )
 
         // Nickname Field
-        JetpackTextField(
-            value = screenData.nickname.value,
-            errorMessage = screenData.nickname.errorMessage,
-            onValueChange = onNicknameChange,
-            label = { Text("Nickname") },
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Person,
-                    contentDescription = "Nickname",
-                )
-            },
-        )
+//        JetpackTextField(
+//            value = screenData.nickname.value,
+//            errorMessage = screenData.nickname.errorMessage,
+//            onValueChange = onNicknameChange,
+//            label = { Text("Nickname") },
+//            leadingIcon = {
+//                Icon(
+//                    imageVector = Icons.Default.Person,
+//                    contentDescription = "Nickname",
+//                )
+//            },
+//        )
 
         // Date of Birth Field
-        JetpackTextField(
-            value = screenData.dob.value,
-            errorMessage = screenData.dob.errorMessage,
-            onValueChange = {},
-            readOnly = true,
-            label = { Text("Date of Birth") },
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.CalendarToday,
-                    contentDescription = "Date of Birth",
-                )
-            },
-            trailingIcon = {
-                IconButton(onClick = { datePickerDialog.show() }) {
-                    Icon(
-                        imageVector = Icons.Default.CalendarToday,
-                        contentDescription = "Pick Date",
-                    )
-                }
-            },
-        )
+//        JetpackTextField(
+//            value = screenData.dob.value,
+//            errorMessage = screenData.dob.errorMessage,
+//            onValueChange = {},
+//            readOnly = true,
+//            label = { Text("Date of Birth") },
+//            leadingIcon = {
+//                Icon(
+//                    imageVector = Icons.Default.CalendarToday,
+//                    contentDescription = "Date of Birth",
+//                )
+//            },
+//            trailingIcon = {
+//                IconButton(onClick = { datePickerDialog.show() }) {
+//                    Icon(
+//                        imageVector = Icons.Default.CalendarToday,
+//                        contentDescription = "Pick Date",
+//                    )
+//                }
+//            },
+//        )
 
         // Email Field
         JetpackTextField(
@@ -260,9 +271,7 @@ private fun SignUpScreen(
         JetpackButton(
             onClick = {
                 focusManager.clearFocus()
-                activity?.run {
-                    // TODO: trigger sign up
-                }
+                onSignUpClick()
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -271,23 +280,23 @@ private fun SignUpScreen(
             text = { Text(stringResource(R.string.sign_up)) },
         )
 
-        DividerWithText(text = R.string.or, modifier = Modifier.padding(vertical = 16.dp))
-
-        // Google Sign Up Button
-        JetpackOutlinedButton(
-            onClick = { activity?.run { /* TODO: trigger Google sign up */ } },
-            text = { Text(text = stringResource(R.string.sign_up_with_google)) },
-            leadingIcon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_google),
-                    contentDescription = "Google",
-                )
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-                .height(56.dp),
-        )
+//        DividerWithText(text = R.string.or, modifier = Modifier.padding(vertical = 16.dp))
+//
+//        // Google Sign Up Button
+//        JetpackOutlinedButton(
+//            onClick = { activity?.run { /* TODO: trigger Google sign up */ } },
+//            text = { Text(text = stringResource(R.string.sign_up_with_google)) },
+//            leadingIcon = {
+//                Icon(
+//                    painter = painterResource(id = R.drawable.ic_google),
+//                    contentDescription = "Google",
+//                )
+//            },
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(vertical = 8.dp)
+//                .height(56.dp),
+//        )
 
         Spacer(modifier = Modifier.height(40.dp))
 
@@ -329,12 +338,10 @@ private fun SignUpScreen(
 private fun SignUpScreenPreview() {
     SignUpScreen(
         screenData = SignUpScreenData(),
-        onAccountChange = {},
-        onNicknameChange = {},
-        onDobChange = {},
         onEmailChange = {},
         onPasswordChange = {},
         onConfirmPasswordChange = {},
-        onSignInClick = {},
+        onSignInLinkClick = {},
+        onSignUpClick = {}
     )
 }

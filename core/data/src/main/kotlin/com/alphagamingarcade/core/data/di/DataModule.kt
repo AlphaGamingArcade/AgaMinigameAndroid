@@ -6,6 +6,10 @@ import com.alphagamingarcade.core.data.repository.BannersRepositoryImpl
 import com.alphagamingarcade.core.data.repository.BannersRepository
 import com.alphagamingarcade.core.data.repository.GamesRepository
 import com.alphagamingarcade.core.data.repository.GamesRepositoryImpl
+import com.alphagamingarcade.core.data.repository.MemberRepository
+import com.alphagamingarcade.core.data.repository.MemberRepositoryImpl
+import com.alphagamingarcade.core.data.repository.ProfileRepository
+import com.alphagamingarcade.core.data.repository.ProfileRepositoryImpl
 import com.alphagamingarcade.core.data.repository.SettingsRepository
 import com.alphagamingarcade.core.data.repository.SettingsRepositoryImpl
 import dagger.Binds
@@ -45,4 +49,16 @@ abstract class DataModule {
     internal abstract fun bindsAuthRepository(
         authRepositoryImpl: AuthRepositoryImpl,
     ): AuthRepository
+
+    @Binds
+    @Singleton
+    internal abstract fun bindsProfileRepository(
+        profileRepositoryImpl: ProfileRepositoryImpl
+    ): ProfileRepository
+
+    @Binds
+    @Singleton
+    internal abstract fun bindMemberRepository(
+        memberRepositoryImpl: MemberRepositoryImpl
+    ): MemberRepository
 }

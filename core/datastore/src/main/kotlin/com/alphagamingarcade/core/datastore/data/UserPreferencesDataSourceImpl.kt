@@ -3,8 +3,9 @@ package com.alphagamingarcade.core.datastore.data
 import androidx.datastore.core.DataStore
 import com.alphagamingarcade.core.di.IoDispatcher
 import com.alphagamingarcade.core.datastore.model.DarkThemeConfigPreferences
-import com.alphagamingarcade.core.datastore.model.PreferencesUserProfile
+import com.alphagamingarcade.core.datastore.model.MemberPreferences
 import com.alphagamingarcade.core.datastore.model.UserDataPreferences
+import com.alphagamingarcade.core.datastore.utils.CryptoManager
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -20,6 +21,7 @@ import javax.inject.Inject
  */
 internal class UserPreferencesDataSourceImpl @Inject constructor(
     private val datastore: DataStore<UserDataPreferences>,
+    private val cryptoManager: CryptoManager,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : UserPreferencesDataSource {
 
@@ -44,19 +46,25 @@ internal class UserPreferencesDataSourceImpl @Inject constructor(
             userId
         }
     }
-
-    /**
-     * Sets the user profile in the user preferences.
-     *
-     * @param preferencesUserProfile The user [PreferencesUserProfile] to be set.
-     */
-    override suspend fun setUserProfile(preferencesUserProfile: PreferencesUserProfile) {
+    
+    override suspend fun setUserProfile(userDataPreferences: UserDataPreferences) {
         withContext(ioDispatcher) {
             datastore.updateData { userData ->
                 userData.copy(
-                    id = preferencesUserProfile.id,
-                    email = preferencesUserProfile.userEmail,
-                    isEmailVerified = preferencesUserProfile.isEmailVerified,
+                    id = userDataPreferences.id,
+                    email = userDataPreferences.email,
+                    isEmailVerified = userDataPreferences.isEmailVerified,
+                    member = userDataPreferences.member,
+                )
+            }
+        }
+    }
+
+    override suspend fun setUserMember(memberPreferences: MemberPreferences) {
+        withContext(ioDispatcher) {
+            datastore.updateData { userData ->
+                userData.copy(
+                    member = memberPreferences,
                 )
             }
         }

@@ -20,9 +20,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.SupportAgent
 import androidx.compose.material3.Button
@@ -47,7 +49,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -61,7 +62,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.core.ui.utils.StatefulComposable
 import com.alphagamingarcade.core.data.model.Profile
-import com.alphagamingarcade.feature.user.ui.profile.ProfileViewModel
+import com.alphagamingarcade.core.ui.components.LoginRequired
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -86,14 +87,14 @@ private val IconBgRed     = Color(0xFFFFE4E4)
 @Composable
 internal fun ProfileScreen(
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
-    userViewModel: ProfileViewModel = hiltViewModel(),
+    profileViewModel: ProfileViewModel = hiltViewModel(),
     onEditProfileClick: () -> Unit,
     onChangePasswordClick: () -> Unit,
     onTermsAndPrivacyClick: () -> Unit,
     onContactSupportClick: () -> Unit,
     onTransactionClick: () -> Unit,
 ) {
-    val profileState by userViewModel.profileUiState.collectAsStateWithLifecycle()
+    val profileState by profileViewModel.profileUiState.collectAsStateWithLifecycle()
 
 
     StatefulComposable(
@@ -107,6 +108,7 @@ internal fun ProfileScreen(
             onTermsAndPrivacyClick =  onTermsAndPrivacyClick,
             onContactSupportClick = onContactSupportClick,
             onTransactionClick = onTransactionClick,
+            onSignOut = profileViewModel::signOut
         )
     }
 }
@@ -122,11 +124,13 @@ private fun ProfileScreen(
     onTermsAndPrivacyClick: () -> Unit,
     onContactSupportClick: () -> Unit,
     onTransactionClick: () -> Unit,
+    onSignOut: () -> Unit
 ) {
     var showDialog by remember { mutableStateOf(false) }
     var showDailyReward by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
+
 
     Surface(color = Color.White, modifier = Modifier.fillMaxSize()) {
         Box(modifier = Modifier.fillMaxSize()) {
@@ -139,12 +143,12 @@ private fun ProfileScreen(
                 ProfileHero(profile = profile)
 
                 WalletCard(
-                    balance = profile.userBalance.toString(),
+                    balance = "1000",
                     onRechargeClick = { showDailyReward = true },
                     onTransactionClick = onTransactionClick
                 )
                 Spacer(Modifier.height(24.dp))
-                StatsRow(balance = profile.userBalance.toString())
+                StatsRow(balance = "1000")
                 Spacer(Modifier.height(24.dp))
                 SectionLabel(title = "Account")
                 MenuCard {
@@ -187,7 +191,18 @@ private fun ProfileScreen(
                         onClick = onContactSupportClick,
                     )
                 }
-                Spacer(Modifier.height(32.dp))
+                Spacer(Modifier.height(16.dp))
+                SectionLabel(title = "Account Actions")
+                MenuCard {
+                    MenuItem(
+                        icon = Icons.AutoMirrored.Filled.Logout,
+                        iconBg = IconBgRed,
+                        iconTint = AccentRed,
+                        title = "Sign Out",
+                        subtitle = "Log out of your account",
+                        onClick = { showDialog = true },
+                    )
+                }
             }
         }
     }
@@ -202,6 +217,102 @@ private fun ProfileScreen(
                 }
             },
         )
+    }
+
+    // Logout dialog
+    // Inside ProfileScreen, after DailyRewardBottomSheet
+    if (showDialog) {
+        ModalBottomSheet(
+            onDismissRequest = { showDialog = false },
+            sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+            containerColor = Color.White,
+            dragHandle = {
+                Box(
+                    modifier = Modifier
+                        .padding(top = 12.dp, bottom = 4.dp)
+                        .size(width = 40.dp, height = 4.dp)
+                        .clip(RoundedCornerShape(2.dp))
+                        .background(BorderGray),
+                )
+            },
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.White)
+                    .padding(horizontal = 24.dp, vertical = 28.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                Text(
+                    text = "SIGN OUT",
+                    color = AccentRed,
+                    fontWeight = FontWeight.ExtraBold,
+                    fontSize = 13.sp,
+                    letterSpacing = 1.5.sp,
+                )
+
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(20.dp))
+                        .background(IconBgRed)
+                        .padding(24.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(text = "👋", fontSize = 48.sp)
+                }
+
+                Text(
+                    text = "Are you sure you want to sign out?",
+                    fontSize = 13.sp,
+                    color = TextSecondary,
+                    textAlign = TextAlign.Center,
+                    lineHeight = 20.sp,
+                )
+
+                HorizontalDivider(color = BorderGray)
+
+                Spacer(Modifier.height(4.dp))
+
+                Button(
+                    onClick = onSignOut,
+                    shape = RoundedCornerShape(14.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = AccentRed,
+                        contentColor = Color.White,
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(52.dp),
+                ) {
+                    Text(
+                        text = "Sign Out",
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                    )
+                }
+
+                OutlinedButton(
+                    onClick = { showDialog = false },
+                    shape = RoundedCornerShape(14.dp),
+                    border = BorderStroke(1.dp, BorderGray),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = TextSecondary,
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(52.dp),
+                ) {
+                    Text(
+                        text = "Cancel",
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.SemiBold,
+                    )
+                }
+
+                Spacer(Modifier.height(8.dp))
+            }
+        }
     }
 }
 
@@ -377,7 +488,7 @@ private fun ProfileHero(profile: Profile) {
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text = profile.userName.firstOrNull()?.uppercaseChar()?.toString() ?: "?",
+                    text = profile.userEmail.firstOrNull()?.uppercaseChar()?.toString() ?: "?",
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF111827),
@@ -386,7 +497,7 @@ private fun ProfileHero(profile: Profile) {
         }
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text(
-                text = profile.userName,
+                text = profile.userEmail,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
                 color = Color(0xFF111827),
@@ -401,7 +512,7 @@ private fun ProfileHero(profile: Profile) {
             ) {
                 Text(text = "★", fontSize = 10.sp, color = Color(0xFFCA8A04))
                 Text(
-                    text = "Gold Member",
+                    text = "Member",
                     fontSize = 11.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Color(0xFFCA8A04),

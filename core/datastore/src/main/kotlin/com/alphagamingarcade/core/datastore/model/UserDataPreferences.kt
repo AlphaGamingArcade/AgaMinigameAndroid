@@ -17,8 +17,13 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class UserDataPreferences(
     val id: String = String(),
-    val email: String? = null,
+    val email: String = String(),
     val isEmailVerified: Boolean = false,
+    val member: MemberPreferences? = null,
     val darkThemeConfigPreferences: DarkThemeConfigPreferences = DarkThemeConfigPreferences.FOLLOW_SYSTEM,
     val useDynamicColor: Boolean = true,
+
+    // Add these two fields for your encrypted tokens
+    val accessToken: String? = null,
+    val refreshToken: String? = null,
 )
