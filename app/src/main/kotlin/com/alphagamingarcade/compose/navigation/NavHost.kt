@@ -3,6 +3,7 @@ package com.alphagamingarcade.compose.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
+import androidx.navigation.navOptions
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.compose.ui.AgamgAppState
 import com.alphagamingarcade.feature.auth.navigation.authNavGraph
@@ -11,8 +12,10 @@ import com.alphagamingarcade.feature.auth.navigation.forgotPasswordScreen
 import com.alphagamingarcade.feature.auth.navigation.navigateSetupProfileScreen
 import com.alphagamingarcade.feature.auth.navigation.navigateToCheckYourEmailScreen
 import com.alphagamingarcade.feature.auth.navigation.navigateToForgotPasswordScreen
+import com.alphagamingarcade.feature.auth.navigation.navigateToResetLinkSentScreen
 import com.alphagamingarcade.feature.auth.navigation.navigateToSignInScreen
 import com.alphagamingarcade.feature.auth.navigation.navigateToSignUpScreen
+import com.alphagamingarcade.feature.auth.navigation.resetLinkSentScreen
 import com.alphagamingarcade.feature.auth.navigation.setupProfileScreen
 import com.alphagamingarcade.feature.auth.navigation.signInScreen
 import com.alphagamingarcade.feature.auth.navigation.signUpScreen
@@ -33,6 +36,11 @@ import com.alphagamingarcade.feature.user.navigation.navigateToEditProfileScreen
 import com.alphagamingarcade.feature.user.navigation.navigateToTransactionScreen
 import com.alphagamingarcade.feature.user.navigation.transactionScreen
 import com.alphagamingarcade.feature.user.navigation.profileScreen
+import com.alphagamingarcade.legal.navigation.contactSupportScreen
+import com.alphagamingarcade.legal.navigation.legalNavGraph
+import com.alphagamingarcade.legal.navigation.navigateToContactSupportScreen
+import com.alphagamingarcade.legal.navigation.navigateToTermsAndPrivacyScreen
+import com.alphagamingarcade.legal.navigation.termsAndPrivacyScreen
 
 /**
  * Composable function that sets up the navigation host for the Jetpack Compose application.
@@ -79,16 +87,28 @@ fun AgamgNavHost(
                 forgotPasswordScreen(
                     onSignInClick = navController::navigateToSignInScreen,
                     onShowSnackbar = onShowSnackbar,
-                    onSendResetEmailClick = { email ->
-                        navController.navigateToCheckYourEmailScreen(email = email)
+                    onResetLinkSent = { email ->
+                        navController.navigateToResetLinkSentScreen(email = email)
                     }
+                )
+                resetLinkSentScreen(
+                    onBackToSignInClick = navController::navigateToSignInScreen,
+                    onShowSnackbar = onShowSnackbar
                 )
                 checkYourEmailScreen(
                     onBackToSignInClick = navController::navigateToSignInScreen,
                     onShowSnackbar = onShowSnackbar,
                 )
                 setupProfileScreen(
-                    onShowSnackbar = onShowSnackbar
+                    onShowSnackbar = onShowSnackbar,
+                    onProfileSetupComplete = {
+                        navController.navigateToGamesScreen(
+                            navOptions {
+                                popUpTo(0) { inclusive = true }
+                                launchSingleTop = true
+                            }
+                        )
+                    }
                 )
             },
         )
@@ -122,7 +142,7 @@ fun AgamgNavHost(
             onSignInClick = navController::navigateToSignInScreen,
             onSignUpClick = navController::navigateToSignUpScreen,
             onShowSnackbar = onShowSnackbar,
-            onGameClick = {}
+            onGameClick = { }
         )
         accountNavGraph(
             nestedNavGraphs = {
@@ -133,8 +153,8 @@ fun AgamgNavHost(
                     onShowSnackbar = onShowSnackbar,
                     onEditProfileClick = navController::navigateToEditProfileScreen,
                     onChangePasswordClick = navController::navigateToChangePasswordScreen,
-                    onTermsAndPrivacyClick = {},
-                    onContactSupportClick = {},
+                    onTermsAndPrivacyClick = navController::navigateToTermsAndPrivacyScreen,
+                    onContactSupportClick = navController::navigateToContactSupportScreen,
                     onTransactionClick = navController::navigateToTransactionScreen
                 )
                 changePasswordScreen(
@@ -142,7 +162,8 @@ fun AgamgNavHost(
                     onSignInClick = navController::navigateToSignInScreen,
                     onSignUpClick = navController::navigateToSignUpScreen,
                     onBackClick = { navController.popBackStack() },
-                    onShowSnackbar = onShowSnackbar
+                    onShowSnackbar = onShowSnackbar,
+                    onPopBackToStack = { navController.popBackStack() },
                 )
                 editProfileScreen(
                     isLoggedIn = appState.isUserLoggedIn,
@@ -157,6 +178,18 @@ fun AgamgNavHost(
                     onSignUpClick = navController::navigateToSignUpScreen,
                     onBackClick = { navController.popBackStack()},
                     onShowSnackbar = onShowSnackbar
+                )
+            }
+        )
+        legalNavGraph(
+            nestedNavGraphs = {
+                termsAndPrivacyScreen(
+                    onShowSnackbar = onShowSnackbar,
+                    onBackClick = { navController.popBackStack() }
+                )
+                contactSupportScreen(
+                    onShowSnackbar = onShowSnackbar,
+                    onBackClick = { navController.popBackStack() }
                 )
             }
         )

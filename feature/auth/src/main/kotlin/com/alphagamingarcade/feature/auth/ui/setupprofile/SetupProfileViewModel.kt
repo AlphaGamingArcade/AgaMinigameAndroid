@@ -9,8 +9,10 @@ import com.alphagamingarcade.core.ui.utils.TextFieldData
 import com.alphagamingarcade.core.ui.utils.UiState
 import com.alphagamingarcade.core.ui.utils.updateState
 import com.alphagamingarcade.core.ui.utils.updateWith
+import com.alphagamingarcade.feature.auth.ui.signin.SignInEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import javax.inject.Inject
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -18,12 +20,14 @@ import java.util.Locale
 
 @HiltViewModel
 class SetupProfileViewModel @Inject constructor(
-    private  val profileRepository: ProfileRepository,
     private  val memberRepository: MemberRepository
 ) : ViewModel() {
 
     private val _setUpProfileUiState = MutableStateFlow(UiState(SetupProfileScreenData()))
     val setUpProfileUiState = _setUpProfileUiState.asStateFlow()
+
+    private val _events = kotlinx.coroutines.channels.Channel<SetupProfileEvent>()
+    val events = _events.receiveAsFlow()
 
     fun updateAccount(account: String) {
         val regex = Regex("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]+\$")
@@ -87,11 +91,17 @@ class SetupProfileViewModel @Inject constructor(
 
     fun onSetupProfile() {
         _setUpProfileUiState.updateWith {
-            memberRepository.createMember(
+            val result =memberRepository.createMember(
                 account = account.value,
                 nickname = nickname.value,
                 dateOfBirth = dob.value
             )
+
+            if (result.isSuccess){
+                _events.send(SetupProfileEvent.OnProfileSetupComplete)
+            }
+
+            result
         }
     }
 }
@@ -103,3 +113,8 @@ data class SetupProfileScreenData(
     val nickname: TextFieldData = TextFieldData(String()),      // RENAMED from name
     val dob: TextFieldData = TextFieldData(String()),           // NEW - date, must be 18+
 )
+
+
+sealed class SetupProfileEvent {
+    object OnProfileSetupComplete : SetupProfileEvent()
+}

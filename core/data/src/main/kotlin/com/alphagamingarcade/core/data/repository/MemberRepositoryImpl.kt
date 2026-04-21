@@ -22,4 +22,16 @@ class MemberRepositoryImpl @Inject constructor(
             userPreferencesDataSource.setUserMember(result.data.asMemberPreferences());
         }
     }
+
+    /**
+     * Signs out the user and resets user preferences.
+     *
+     * @return A Result indicating the success or failure of the operation.
+     */
+    override suspend fun updateMember(nickname: String): Result<Unit> {
+        return suspendRunCatching {
+            val memberId = userPreferencesDataSource.getMemberIdOrThrow()
+            memberDataSource.updateMember(memberId, nickname)
+        }
+    }
 }

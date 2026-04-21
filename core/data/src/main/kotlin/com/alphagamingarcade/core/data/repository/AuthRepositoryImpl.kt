@@ -102,4 +102,26 @@ internal class AuthRepositoryImpl @Inject constructor(
                 .isVerified
         }
     }
+
+    override suspend fun sendResetLink(email: String): Result<Unit> {
+        return suspendRunCatching {
+            authDataSource.sendForgotPasswordResetLink(email)
+        }
+    }
+
+    override suspend fun changePassword(
+        currentPassword: String,
+        newPassword: String,
+        confirmPassword: String
+    ) : Result<Unit> {
+        return suspendRunCatching {
+            authDataSource.changePassword(
+                currentPassword,
+                newPassword,
+                confirmPassword
+            )
+        }
+    }
+
+
 }

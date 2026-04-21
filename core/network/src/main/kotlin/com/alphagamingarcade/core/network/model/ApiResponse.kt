@@ -12,3 +12,11 @@ data class ApiResponse<T>(
     val data: T,
     val statusCode: Int,
 )
+
+@Serializable
+data class ApiResponseNullable<T>(
+    val success: Boolean,
+    val message: String,
+    val data: T? = null,  // ← nullable here only
+    val statusCode: Int,
+)

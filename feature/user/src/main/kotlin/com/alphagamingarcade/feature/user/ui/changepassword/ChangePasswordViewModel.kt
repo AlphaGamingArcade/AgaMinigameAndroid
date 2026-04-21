@@ -2,11 +2,16 @@ package com.alphagamingarcade.feature.user.ui.changepassword
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alphagamingarcade.core.data.repository.ProfileRepository
 import com.alphagamingarcade.core.ui.utils.UiState
+import com.alphagamingarcade.core.ui.utils.updateWith
+import com.alphagamingarcade.core.utils.OneTimeEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,7 +29,7 @@ data class FieldState(
 
 @HiltViewModel
 class ChangePasswordViewModel @Inject constructor(
-    // private val userRepository: UserRepository,
+     private val profileRepository: ProfileRepository,
 ) : ViewModel() {
 
     private val _changePasswordUiState = MutableStateFlow(
@@ -32,6 +37,9 @@ class ChangePasswordViewModel @Inject constructor(
     )
     val changePasswordUiState: StateFlow<UiState<ChangePasswordScreenData>> =
         _changePasswordUiState.asStateFlow()
+
+    private val _successEvent = Channel<Unit>(Channel.BUFFERED)
+    val successEvent = _successEvent.receiveAsFlow()
 
     fun updateCurrentPassword(value: String) {
         _changePasswordUiState.update { state ->
@@ -75,23 +83,14 @@ class ChangePasswordViewModel @Inject constructor(
     fun changePassword() {
         if (!validate()) return
 
-        viewModelScope.launch {
-            _changePasswordUiState.update { it.copy(loading = true) }
-            try {
-                // userRepository.changePassword(
-                //     currentPassword = _changePasswordUiState.value.data.currentPassword.value,
-                //     newPassword = _changePasswordUiState.value.data.newPassword.value,
-                // )
-                _changePasswordUiState.update {
-                    UiState(data = ChangePasswordScreenData()) // reset form on success
-                }
-            } catch (e: Exception) {
-                _changePasswordUiState.update {
-                    it.copy(
-                        loading = false,
-//                        error = OneTimeEvent(e),
-                    )
-                }
+        _changePasswordUiState.updateWith {
+            profileRepository.changePassword(
+                currentPassword = currentPassword.value,
+                newPassword = newPassword.value,
+                confirmPassword = confirmPassword.value,
+            ).onSuccess {
+                _successEvent.send(Unit)
+                profileRepository.signOut()
             }
         }
     }

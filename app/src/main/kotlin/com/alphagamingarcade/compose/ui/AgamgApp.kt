@@ -224,23 +224,12 @@ private fun AgamgScaffold(
 
             if (destination != null) {
                 shouldShowTopAppBar = true
-//                AgamgTopAppBarWithAvatar(
-//                    titleRes = destination.titleTextId,
-//                    avatarUri = appState.userProfilePictureUri,
-//                    avatarContentDescription = stringResource(id = R.string.settings),
-//                    colors = TopAppBarDefaults.topAppBarColors(
-//                        containerColor = Color.Transparent,
-//                    ),
-//                    onAvatarClick = { onTopAppBarActionClick() },
-//                )
                 AgamgTopAppBarWithLogoAndActions(
                     logoRes = R.drawable.ic_app_logo,
                     logoContentDescription = "App Logo",
-                    avatarUri = appState.userProfilePictureUri,
-                    avatarContentDescription = "Avatar",
-                    hasUnreadNotifications = true,
-                    onNotificationClick = { onTopAppBarActionClick() },
-                    onAvatarClick = { onTopAppBarActionClick() },
+                    isLoggedIn = appState.isUserLoggedIn,
+                    balance = "10000",
+                    onSettingsClick = { onTopAppBarActionClick() },
                 )
             }
 

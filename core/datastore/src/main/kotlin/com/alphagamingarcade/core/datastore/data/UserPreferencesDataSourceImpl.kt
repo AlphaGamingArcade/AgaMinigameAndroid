@@ -46,6 +46,20 @@ internal class UserPreferencesDataSourceImpl @Inject constructor(
             userId
         }
     }
+
+    /**
+     * Retrieves the user ID or throws an exception if the user is not authenticated.
+     *
+     * @return The user ID as a [String].
+     * @throws IllegalStateException if the user is not authenticated.
+     */
+    override suspend fun getMemberIdOrThrow(): Int {
+        return withContext(ioDispatcher) {
+            val userId = datastore.data.first().member?.id
+            if (userId == 0 || userId == null) throw IllegalStateException("User not authenticated")
+            userId
+        }
+    }
     
     override suspend fun setUserProfile(userDataPreferences: UserDataPreferences) {
         withContext(ioDispatcher) {

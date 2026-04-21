@@ -26,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,6 +57,12 @@ internal fun EditProfileScreen(
 ) {
     val editProfileState by viewModel.editProfileUiState.collectAsStateWithLifecycle()
 
+    LaunchedEffect(Unit) {
+        viewModel.successEvent.collect {
+            onShowSnackbar("Nickname updated successfully!", SnackbarAction.NONE, null)
+        }
+    }
+
     StatefulComposable(
         state = editProfileState,
         onShowSnackbar = onShowSnackbar,
@@ -63,9 +70,7 @@ internal fun EditProfileScreen(
         EditProfileScreen(
             screenData = screenData,
             onNavigateBack = onNavigateBack,
-            onFullNameChange = viewModel::updateFullName,
-            onUsernameChange = viewModel::updateUsername,
-            onEmailChange = viewModel::updateEmail,
+            onNicknameChange = viewModel::updateNickname,
             onSaveClick = viewModel::saveProfile,
         )
     }
@@ -76,9 +81,6 @@ internal fun EditProfileScreen(
  *
  * @param screenData [EditProfileScreenData].
  * @param onNavigateBack Navigate back.
- * @param onFullNameChange Callback when full name changes.
- * @param onUsernameChange Callback when username changes.
- * @param onEmailChange Callback when email changes.
  * @param onSaveClick Callback when save is clicked.
  */
 @OptIn(ExperimentalMaterial3Api::class)
@@ -86,9 +88,7 @@ internal fun EditProfileScreen(
 private fun EditProfileScreen(
     screenData: EditProfileScreenData,
     onNavigateBack: () -> Unit,
-    onFullNameChange: (String) -> Unit,
-    onUsernameChange: (String) -> Unit,
-    onEmailChange: (String) -> Unit,
+    onNicknameChange: (String) -> Unit,
     onSaveClick: () -> Unit,
 ) {
     val focusManager = LocalFocusManager.current
@@ -145,47 +145,19 @@ private fun EditProfileScreen(
                 Spacer(modifier = Modifier.height(32.dp))
 
                 JetpackTextField(
-                    value = screenData.fullName.value,
-                    onValueChange = onFullNameChange,
-                    label = { Text("Full Name") },
+                    value = screenData.nickname.value,
+                    onValueChange = onNicknameChange,
+                    label = { Text("Nickname") },
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Person,
-                            contentDescription = "Full Name",
+                            contentDescription = "Nickname",
                         )
                     },
                     modifier = Modifier.fillMaxWidth(),
                 )
 
-                JetpackTextField(
-                    value = screenData.username.value,
-                    errorMessage = screenData.username.errorMessage,
-                    onValueChange = onUsernameChange,
-                    label = { Text("Username") },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.AlternateEmail,
-                            contentDescription = "Username",
-                        )
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                )
 
-                JetpackTextField(
-                    value = screenData.email.value,
-                    errorMessage = screenData.email.errorMessage,
-                    onValueChange = onEmailChange,
-                    label = { Text("Email") },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.Email,
-                            contentDescription = "Email",
-                        )
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
 
                 JetpackButton(
                     onClick = {

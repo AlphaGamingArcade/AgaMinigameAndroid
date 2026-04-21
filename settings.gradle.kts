@@ -65,6 +65,8 @@ include(":feature:changepassword")
 include(":feature:gamedetail")
 include(":feature:games")
 include(":feature:editprofile")
+include(":feature:legal")
+
 
 // ... Sync
 include(":sync")

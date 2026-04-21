@@ -26,4 +26,15 @@ interface ProfileRepository {
      * @return A Result indicating the success or failure of the operation.
      */
     suspend fun signOut(): Result<Unit>
+
+    /**
+     * Change the password of a user.
+     *
+     * @return A Result indicating the success or failure of the operation.
+     */
+    suspend fun changePassword(
+        currentPassword: String,
+        newPassword: String,
+        confirmPassword: String
+    ): Result<Unit>
 }

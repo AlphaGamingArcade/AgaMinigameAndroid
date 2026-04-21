@@ -25,6 +25,8 @@ interface UserPreferencesDataSource {
      */
     suspend fun getUserIdOrThrow(): String
 
+    suspend fun getMemberIdOrThrow(): Int
+
     suspend fun setUserProfile(userDataPreferences: UserDataPreferences)
 
     /**

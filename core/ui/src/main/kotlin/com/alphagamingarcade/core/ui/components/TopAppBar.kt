@@ -11,9 +11,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.AccountBalanceWallet
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material3.Text
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -222,17 +235,13 @@ fun AgamgActionBar(
 fun AgamgTopAppBarWithLogoAndActions(
     @DrawableRes logoRes: Int,
     logoContentDescription: String?,
-    avatarUri: String?,
-    avatarContentDescription: String?,
+    isLoggedIn: Boolean,
+    balance: String,                        // ← add balance
     modifier: Modifier = Modifier,
-    colors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(),
-    hasUnreadNotifications: Boolean = false,
-    onNotificationClick: () -> Unit = {},
-    onAvatarClick: () -> Unit = {},
+    onSettingsClick: () -> Unit = {},
 ) {
     TopAppBar(
         navigationIcon = {
-            // Put logo here instead — this slot has no clipping issues
             Image(
                 painter = painterResource(id = logoRes),
                 contentDescription = logoContentDescription,
@@ -245,47 +254,45 @@ fun AgamgTopAppBarWithLogoAndActions(
         },
         title = {},
         actions = {
-            // Notification Icon with optional badge
-            Box {
-                IconButton(onClick = onNotificationClick) {
+            if (isLoggedIn){
+                // Balance display
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .padding(start = 8.dp)
+                        .clip(RoundedCornerShape(50))
+                        .background(MaterialTheme.colorScheme.primaryContainer)
+                        .padding(horizontal = 12.dp, vertical = 6.dp),
+                ) {
                     Icon(
-                        imageVector = Icons.Outlined.Notifications,
-                        contentDescription = "Notifications",
+                        imageVector = Icons.Outlined.AccountBalanceWallet,
+                        contentDescription = "Balance",
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(16.dp),
                     )
-                }
-                if (hasUnreadNotifications) {
-                    Box(
-                        modifier = Modifier
-                            .size(8.dp)
-                            .background(
-                                color = MaterialTheme.colorScheme.error,
-                                shape = CircleShape,
-                            )
-                            .align(Alignment.TopEnd)
-                            .offset(x = (-40).dp, y = 10.dp),
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = balance,
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Bold,
                     )
                 }
             }
-
-            // Avatar
+            // Settings Icon
             IconButton(
-                onClick = onAvatarClick,
+                onClick = onSettingsClick,
                 modifier = Modifier.padding(end = 12.dp)
             ) {
-                AsyncImage(
-                    model = avatarUri,
-                    contentDescription = avatarContentDescription,
-                    placeholder = painterResource(id = R.drawable.ic_avatar),
-                    fallback = painterResource(id = R.drawable.ic_avatar),
-                    modifier = Modifier
-                        .size(30.dp)
-                        .clip(CircleShape),
+                Icon(
+                    imageVector = Icons.Outlined.Settings,
+                    contentDescription = "Settings",
                 )
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Color.White,
-            actionIconContentColor = Color.Black, // so icons are visible on white
+            actionIconContentColor = Color.Black,
         ),
         modifier = modifier,
     )
@@ -297,10 +304,9 @@ fun AgamgTopAppBarWithLogoAndActions(
 fun AgamgTopAppBarWithLogoAndActionsPreview() {
     AgamgTopAppBarWithLogoAndActions(
         logoRes = R.drawable.ic_avatar,
+        balance = "1000",
+        isLoggedIn = true,
         logoContentDescription = "App Logo",
-        avatarUri = null, // will show fallback ic_avatar
-        avatarContentDescription = "User Avatar",
-        hasUnreadNotifications = false,
     )
 }
 
@@ -310,9 +316,8 @@ fun AgamgTopAppBarWithLogoAndActionsPreview() {
 fun AgamgTopAppBarWithLogoAndActionsWithBadgePreview() {
     AgamgTopAppBarWithLogoAndActions(
         logoRes = R.drawable.ic_avatar,
-        logoContentDescription = "App Logo",
-        avatarUri = null,
-        avatarContentDescription = "User Avatar",
-        hasUnreadNotifications = true, // shows red dot
+        balance = "1000",
+        isLoggedIn = false,
+        logoContentDescription = "App Logo"
     )
 }

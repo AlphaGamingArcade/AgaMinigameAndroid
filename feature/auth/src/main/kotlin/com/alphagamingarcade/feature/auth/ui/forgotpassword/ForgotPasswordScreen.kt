@@ -20,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,9 +45,17 @@ internal fun ForgotPasswordScreen(
     onSignInClick: () -> Unit,
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
     forgotPasswordViewModel: ForgotPasswordViewModel = hiltViewModel(),
-    onSendResetEmailClick: (email: String) -> Unit
+    onResetLinkSent: (String) -> Unit
+
 ) {
-    val forgotPasswordState by forgotPasswordViewModel.signInUiState.collectAsStateWithLifecycle()
+    val forgotPasswordState by forgotPasswordViewModel.forgotPasswordUiState.collectAsStateWithLifecycle()
+
+    // ← outside StatefulComposable, it just watches the state
+    LaunchedEffect(forgotPasswordState.data.isResetLinkSent) {
+        if (forgotPasswordState.data.isResetLinkSent) {
+            onResetLinkSent(forgotPasswordState.data.email.value)
+        }
+    }
 
     StatefulComposable(
         state = forgotPasswordState,
@@ -56,7 +65,7 @@ internal fun ForgotPasswordScreen(
             screenData = forgotPasswordData,
             onEmailChange = forgotPasswordViewModel::updateEmail,
             onSignInClick = onSignInClick,
-            onSendResetEmailClick
+            onSendResetEmailClick = forgotPasswordViewModel::sendResetLink
         )
     }
 }
@@ -66,7 +75,7 @@ private fun ForgotPasswordScreen(
     screenData: ForgotPasswordData,
     onEmailChange: (String) -> Unit,
     onSignInClick: () -> Unit,
-    onSendResetEmailClick: (email: String) -> Unit,
+    onSendResetEmailClick: () -> Unit,
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -108,7 +117,7 @@ private fun ForgotPasswordScreen(
         JetpackButton(
             onClick = {
                 focusManager.clearFocus()
-                 onSendResetEmailClick(screenData.email.value)
+                 onSendResetEmailClick()
             },
             modifier = Modifier
                 .fillMaxWidth()

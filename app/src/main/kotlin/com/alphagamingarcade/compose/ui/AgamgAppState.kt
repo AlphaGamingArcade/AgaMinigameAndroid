@@ -14,12 +14,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.alphagamingarcade.compose.navigation.TopLevelDestination
-import com.alphagamingarcade.core.data.repository.AuthRepository
 import com.alphagamingarcade.core.extensions.stateInDelayed
 import com.alphagamingarcade.core.network.utils.NetworkState
 import com.alphagamingarcade.core.network.utils.NetworkUtils
-import com.alphagamingarcade.feature.auth.navigation.navigateToCheckYourEmailScreen
-import com.alphagamingarcade.feature.auth.navigation.navigateToSignInScreen
 import com.alphagamingarcade.feature.games.navigation.navigateToGamesScreen
 import com.alphagamingarcade.feature.browse.navigation.navigateToBrowseScreen
 import com.alphagamingarcade.feature.favorite.navigation.navigateToFavoriteScreen

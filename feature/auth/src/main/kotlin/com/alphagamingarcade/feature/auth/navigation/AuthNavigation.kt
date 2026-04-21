@@ -10,6 +10,7 @@ import androidx.navigation.toRoute
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.feature.auth.ui.checkyouremail.CheckYourEmailScreen
 import com.alphagamingarcade.feature.auth.ui.forgotpassword.ForgotPasswordScreen
+import com.alphagamingarcade.feature.auth.ui.resetlinksent.ResetLinkSentScreen
 import com.alphagamingarcade.feature.auth.ui.setupprofile.SetupProfileScreen
 import com.alphagamingarcade.feature.auth.ui.signin.SignInScreen
 import com.alphagamingarcade.feature.auth.ui.signup.SignUpScreen
@@ -38,6 +39,12 @@ data object SignUp
  */
 @Serializable
 data object ForgotPassword
+
+/**
+ * Forgot Password route.
+ */
+@Serializable
+data class ResetLinkSent(val email: String)
 
 
 /**
@@ -88,6 +95,16 @@ fun NavController.navigateToSignUpScreen(navOptions: NavOptions? = null) {
  */
 fun NavController.navigateToForgotPasswordScreen(navOptions: NavOptions? = null) {
     navigate(ForgotPassword, navOptions)
+}
+
+
+/**
+ * Navigate to the auth navigation graph.
+ *
+ * @param navOptions [NavOptions].
+ */
+fun NavController.navigateToResetLinkSentScreen(email: String, navOptions: NavOptions? = null) {
+    navigate(ResetLinkSent(email), navOptions)
 }
 
 
@@ -162,28 +179,49 @@ fun NavGraphBuilder.signUpScreen(
 fun NavGraphBuilder.forgotPasswordScreen(
     onSignInClick: () -> Unit,
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
-    onSendResetEmailClick: (email: String) -> Unit
+    onResetLinkSent: (String) -> Unit,
 ) {
     composable<ForgotPassword> {
         ForgotPasswordScreen(
             onSignInClick = onSignInClick,
             onShowSnackbar = onShowSnackbar,
-            onSendResetEmailClick = onSendResetEmailClick
+            onResetLinkSent = onResetLinkSent
+        )
+    }
+}
+
+/**
+ * Forgot password screen.
+ *
+ * @param onShowSnackbar Callback to show a snackbar.
+ */
+fun NavGraphBuilder.resetLinkSentScreen(
+    onBackToSignInClick: () -> Unit,
+    onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
+
+) {
+    composable<ResetLinkSent> { backStackEntry ->
+        val email = backStackEntry.toRoute<ResetLinkSent>();
+        ResetLinkSentScreen(
+            email = email.email,
+            onBackToSignInClick = onBackToSignInClick,
+            onShowSnackbar = onShowSnackbar,
         )
     }
 }
 
 
 fun NavGraphBuilder.setupProfileScreen(
-    onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean
+    onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
+    onProfileSetupComplete: () -> Unit
 ) {
     composable<SetupProfile> {
         SetupProfileScreen(
-            onShowSnackbar = onShowSnackbar
+            onShowSnackbar = onShowSnackbar,
+            onProfileSetupComplete = onProfileSetupComplete
         )
     }
 }
-
 
 
 fun NavController.navigateToCheckYourEmailScreen(

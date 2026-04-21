@@ -1,5 +1,6 @@
 package com.alphagamingarcade.feature.user.ui.changepassword
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -25,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -52,8 +54,16 @@ internal fun ChangePasswordScreen(
     onNavigateBack: () -> Unit,
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
     viewModel: ChangePasswordViewModel = hiltViewModel(),
+    onPopBackToStack: () -> Unit
 ) {
     val changePasswordState by viewModel.changePasswordUiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.successEvent.collect {
+            onShowSnackbar("Password changed successfully! Please re-login to continue.", SnackbarAction.NONE, null)
+            onPopBackToStack()
+        }
+    }
 
     StatefulComposable(
         state = changePasswordState,
@@ -108,7 +118,7 @@ private fun ChangePasswordScreen(
                 },
                 title = {
                     Text(
-                        text = "Edit Profile",
+                        text = "Change Password",
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
                         color = Color(0xFF1A1A2E),

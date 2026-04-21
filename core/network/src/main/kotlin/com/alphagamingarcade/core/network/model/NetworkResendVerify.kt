@@ -10,13 +10,4 @@ data class ResendVerifyEmailRequest(
 )
 
 @Serializable
-data class NetworkResendVerifyEmailResponse(
-    @SerialName("success")
-    val success: Boolean,
-    @SerialName("message")
-    val message: String,
-    @SerialName("data")
-    val data: AuthData? = null,
-    @SerialName("statusCode")
-    val statusCode: Int
-)
+data object NetworkResendVerifyEmail

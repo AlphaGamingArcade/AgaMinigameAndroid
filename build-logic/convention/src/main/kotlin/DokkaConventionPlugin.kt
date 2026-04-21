@@ -25,7 +25,7 @@ class DokkaConventionPlugin : Plugin<Project> {
                     suppressGeneratedFiles.set(true)
                 }
                 pluginsConfiguration.withType<DokkaHtmlPluginParameters> {
-                    footerMessage.set("Made with ❤\uFE0F by Atick Faisal")
+                    footerMessage.set("Made with Alpha Gaming Arcade Team")
                 }
             }
 

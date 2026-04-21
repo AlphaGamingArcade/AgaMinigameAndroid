@@ -4,19 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class NetworkAuthResponse(
-    @SerialName("success")
-    val success: Boolean,
-    @SerialName("message")
-    val message: String,
-    @SerialName("data")
-    val data: AuthData,
-    @SerialName("statusCode")
-    val statusCode: Int
-)
-
-@Serializable
-data class AuthData(
+data class NetworkAuthData(
     @SerialName("sub")
     val sub: Int,
     @SerialName("refreshToken")
@@ -28,8 +16,6 @@ data class AuthData(
     @SerialName("member")
     val member: NetworkMember? = null
 )
-
-
 
 @Serializable
 data class LoginRequest(

@@ -53,6 +53,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import com.alphagamingarcade.core.ui.components.FilterChips
+import com.alphagamingarcade.core.ui.components.SearchBar
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.core.ui.utils.StatefulComposable
 import com.alphagamingarcade.model.data.Game
@@ -123,7 +125,7 @@ private fun BrowseScreen(
         ) {
             // ── Search Bar ───────────────────────────────────────────────────
             item {
-                BrowseSearchBar(
+                SearchBar(
                     query = searchQuery,
                     onQueryChange = { searchQuery = it },
                     modifier = Modifier
@@ -134,7 +136,7 @@ private fun BrowseScreen(
 
             // ── Category Chips ───────────────────────────────────────────────
             item {
-                CategoryChips(
+                FilterChips(
                     categories = categories,
                     selected = selectedCategory,
                     onSelect = { selectedCategory = it },
@@ -198,98 +200,6 @@ private fun BrowseScreen(
                     modifier = Modifier.padding(horizontal = 20.dp),
                 )
             }
-        }
-    }
-}
-
-// ─── Search Bar ──────────────────────────────────────────────────────────────
-
-@Composable
-private fun BrowseSearchBar(
-    query: String,
-    onQueryChange: (String) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Box(
-        modifier = modifier
-            .clip(RoundedCornerShape(16.dp))
-            .background(SearchBarColor)
-            .padding(horizontal = 16.dp, vertical = 12.dp),
-        contentAlignment = Alignment.CenterStart,
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                imageVector = Icons.Default.Search,
-                contentDescription = null,
-                tint = TextSecondary,
-                modifier = Modifier.size(20.dp),
-            )
-            Spacer(Modifier.width(10.dp))
-            Box(modifier = Modifier.weight(1f)) {
-                if (query.isEmpty()) {
-                    Text(
-                        text = "Search games...",
-                        color = TextSecondary,
-                        fontSize = 14.sp,
-                    )
-                }
-                BasicTextField(
-                    value = query,
-                    onValueChange = onQueryChange,
-                    textStyle = TextStyle(fontSize = 14.sp, color = TextPrimary),
-                    cursorBrush = SolidColor(AccentBlue),
-                    singleLine = true,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-            }
-            if (query.isNotEmpty()) {
-                IconButton(
-                    onClick = { onQueryChange("") },
-                    modifier = Modifier.size(20.dp),
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Close,
-                        contentDescription = "Clear",
-                        tint = TextSecondary,
-                        modifier = Modifier.size(16.dp),
-                    )
-                }
-            }
-        }
-    }
-}
-
-// ─── Category Chips ──────────────────────────────────────────────────────────
-
-@Composable
-private fun CategoryChips(
-    categories: List<String>,
-    selected: String,
-    onSelect: (String) -> Unit,
-) {
-    LazyRow(
-        contentPadding = PaddingValues(horizontal = 20.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        items(categories) { category ->
-            FilterChip(
-                selected = category == selected,
-                onClick = { onSelect(category) },
-                label = {
-                    Text(
-                        text = category,
-                        fontWeight = if (category == selected) FontWeight.Bold else FontWeight.Normal,
-                        fontSize = 13.sp,
-                    )
-                },
-                colors = FilterChipDefaults.filterChipColors(
-                    selectedContainerColor = MaterialTheme.colorScheme.onBackground,
-                    selectedLabelColor = MaterialTheme.colorScheme.background,
-                    containerColor = SurfaceGray,
-                    labelColor = TextPrimary,
-                ),
-                border = null,
-            )
         }
     }
 }

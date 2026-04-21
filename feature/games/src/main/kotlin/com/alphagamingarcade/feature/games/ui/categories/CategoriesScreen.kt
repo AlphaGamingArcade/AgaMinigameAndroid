@@ -28,8 +28,10 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
@@ -62,7 +64,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
-import com.alphagamingarcade.core.ui.components.CategoryChips
+import com.alphagamingarcade.core.ui.components.FilterChips
+import com.alphagamingarcade.core.ui.components.SearchBar
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.core.ui.utils.StatefulComposable
 import com.alphagamingarcade.model.data.Game
@@ -122,10 +125,6 @@ private fun CategoriesScreen(
             }
     }
 
-    val featuredGame = remember(data.games) {
-        data.games.firstOrNull { it.isHot } ?: data.games.firstOrNull()
-    }
-
     Surface(color = Color.White, modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
 
@@ -167,10 +166,6 @@ private fun CategoriesScreen(
                     modifier = Modifier.fillMaxSize(),
                     userScrollEnabled = false, // disable scroll during loading
                 ) {
-                    // Shimmer featured banner
-                    item(span = { GridItemSpan(2) }) {
-                        ShimmerFeaturedBanner()
-                    }
                     // Shimmer search bar
                     item(span = { GridItemSpan(2) }) {
                         Box(
@@ -205,77 +200,21 @@ private fun CategoriesScreen(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    featuredGame?.let { game ->
-                        item(span = { GridItemSpan(2) }) {
-                            FeaturedGameBanner(
-                                game = game,
-                                onClick = { onGameClick(game.id.toString()) },
-                            )
-                        }
-                    }
                     item(span = { GridItemSpan(2) }) {
-                        OutlinedTextField(
-                            value = searchQuery,
-                            onValueChange = { searchQuery = it },
-                            placeholder = {
-                                Text(
-                                    text = "Search in $categoryName...",
-                                    fontSize = 14.sp,
-                                    color = Color(0xFF8A8A9A),
-                                )
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.Default.Search,
-                                    contentDescription = "Search",
-                                    tint = Color(0xFF8A8A9A),
-                                    modifier = Modifier.size(20.dp),
-                                )
-                            },
-                            singleLine = true,
-                            shape = RoundedCornerShape(12.dp),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                unfocusedBorderColor = Color(0xFFE5E7EB),
-                                focusedBorderColor = Color(0xFF1A1A2E),
-                                unfocusedContainerColor = Color(0xFFF9FAFB),
-                                focusedContainerColor = Color.White,
-                            ),
+                        SearchBar(
+                            query = searchQuery,
+                            onQueryChange = { searchQuery = it },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 16.dp),
                         )
                     }
                     item(span = { GridItemSpan(2) }) {
-                        LazyRow(
-                            contentPadding = PaddingValues(horizontal = 16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        ) {
-                            items(filters) { filter ->
-                                FilterChip(
-                                    selected = selectedFilter == filter,
-                                    onClick = { selectedFilter = filter },
-                                    label = {
-                                        Text(
-                                            text = filter,
-                                            fontSize = 12.sp,
-                                            fontWeight = if (selectedFilter == filter) FontWeight.Bold else FontWeight.Normal,
-                                        )
-                                    },
-                                    colors = FilterChipDefaults.filterChipColors(
-                                        selectedContainerColor = Color(0xFF1A1A2E),
-                                        selectedLabelColor = Color.White,
-                                        containerColor = Color(0xFFF5F6FA),
-                                        labelColor = Color(0xFF1A1A2E),
-                                    ),
-                                    border = FilterChipDefaults.filterChipBorder(
-                                        enabled = true,
-                                        selected = selectedFilter == filter,
-                                        borderColor = Color(0xFFE5E7EB),
-                                        selectedBorderColor = Color.Transparent,
-                                    ),
-                                )
-                            }
-                        }
+                        FilterChips(
+                            categories = filters,
+                            selected = selectedFilter,
+                            onSelect = { selectedFilter = it },
+                        )
                     }
                     item(span = { GridItemSpan(2) }) {
                         Text(
@@ -308,70 +247,6 @@ private fun CategoriesScreen(
     }
 }
 
-// ─── Featured Game Banner ─────────────────────────────────────────────────────
-
-@Composable
-private fun FeaturedGameBanner(
-    game: Game,
-    onClick: () -> Unit,
-) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(180.dp)
-            .clickable(onClick = onClick),
-    ) {
-        AsyncImage(
-            model = game.imageUrl,
-            contentDescription = game.name,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize(),
-        )
-        // Dark gradient overlay
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.7f)),
-                    ),
-                ),
-        )
-        // Labels
-        Column(
-            modifier = Modifier
-                .align(Alignment.BottomStart)
-                .padding(16.dp),
-        ) {
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(4.dp))
-                    .background(Color(0xFFFF6B35))
-                    .padding(horizontal = 8.dp, vertical = 3.dp),
-            ) {
-                Text(
-                    text = "⭐ FEATURED",
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    color = Color.White,
-                    letterSpacing = 0.5.sp,
-                )
-            }
-            Spacer(modifier = Modifier.height(6.dp))
-            Text(
-                text = game.name,
-                fontWeight = FontWeight.ExtraBold,
-                fontSize = 22.sp,
-                color = Color.White,
-            )
-            Text(
-                text = "Tap to play",
-                fontSize = 12.sp,
-                color = Color.White.copy(alpha = 0.7f),
-            )
-        }
-    }
-}
 
 // ─── Category Game Card ───────────────────────────────────────────────────────
 
@@ -542,17 +417,6 @@ private fun shimmerBrush(): Brush {
         colors = shimmerColors,
         start = Offset(translateAnim - 200f, 0f),
         end = Offset(translateAnim, 0f),
-    )
-}
-
-@Composable
-private fun ShimmerFeaturedBanner() {
-    val brush = shimmerBrush()
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(180.dp)
-            .background(brush),
     )
 }
 

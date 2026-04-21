@@ -2,13 +2,22 @@ package com.alphagamingarcade.feature.user.ui.editprofile
 
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.alphagamingarcade.core.data.repository.MemberRepository
+import com.alphagamingarcade.core.data.repository.MemberRepositoryImpl
+import com.alphagamingarcade.core.data.repository.ProfileRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import com.alphagamingarcade.core.extensions.isEmailValid
 import com.alphagamingarcade.core.ui.utils.TextFieldData
 import com.alphagamingarcade.core.ui.utils.UiState
 import com.alphagamingarcade.core.ui.utils.updateState
+import com.alphagamingarcade.core.ui.utils.updateWith
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -16,49 +25,27 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class EditProfileViewModel @Inject constructor(
-    // private val userRepository: UserRepository,
+    private  val memberRepository: MemberRepository,
+    private  val profileRepository: ProfileRepository
 ) : ViewModel() {
 
     private val _editProfileUiState = MutableStateFlow(UiState(EditProfileScreenData()))
     val editProfileUiState = _editProfileUiState.asStateFlow()
 
-    fun updateFullName(fullName: String) {
+    private val _successEvent = Channel<Unit>(Channel.BUFFERED)
+    val successEvent = _successEvent.receiveAsFlow()
+
+    fun updateNickname(nickname: String) {
         _editProfileUiState.updateState {
             copy(
-                fullName = TextFieldData(
-                    value = fullName,
+                nickname = TextFieldData(
+                    value = nickname,
                     errorMessage = when {
-                        fullName.isBlank() -> "Full name is required"
-                        fullName.length < 3 -> "Full name must be at least 3 characters"
+                        nickname.isBlank() -> "Username is required"
+                        nickname.length < 3 -> "Username must be at least 3 characters"
+                        nickname.contains(" ") -> "Username must not contain spaces"
                         else -> null
                     },
-                ),
-            )
-        }
-    }
-
-    fun updateUsername(username: String) {
-        _editProfileUiState.updateState {
-            copy(
-                username = TextFieldData(
-                    value = username,
-                    errorMessage = when {
-                        username.isBlank() -> "Username is required"
-                        username.length < 3 -> "Username must be at least 3 characters"
-                        username.contains(" ") -> "Username must not contain spaces"
-                        else -> null
-                    },
-                ),
-            )
-        }
-    }
-
-    fun updateEmail(email: String) {
-        _editProfileUiState.updateState {
-            copy(
-                email = TextFieldData(
-                    value = email,
-                    errorMessage = if (email.isEmailValid()) null else "Email Not Valid",
                 ),
             )
         }
@@ -67,68 +54,37 @@ class EditProfileViewModel @Inject constructor(
     fun saveProfile() {
         val screenData = _editProfileUiState.value.data
 
-        val fullNameError = when {
-            screenData.fullName.value.isBlank() -> "Full name is required"
-            screenData.fullName.value.length < 3 -> "Full name must be at least 3 characters"
+        val nicknameError = when {
+            screenData.nickname.value.isBlank() -> "Nickname is required"
+            screenData.nickname.value.length < 3 -> "Nickname must be at least 3 characters"
             else -> null
         }
-
-        val usernameError = when {
-            screenData.username.value.isBlank() -> "Username is required"
-            screenData.username.value.length < 3 -> "Username must be at least 3 characters"
-            screenData.username.value.contains(" ") -> "Username must not contain spaces"
-            else -> null
-        }
-
-        val emailError =
-            if (screenData.email.value.isEmailValid()) null else "Email Not Valid"
 
         _editProfileUiState.updateState {
             copy(
-                fullName = fullName.copy(errorMessage = fullNameError),
-                username = username.copy(errorMessage = usernameError),
-                email = email.copy(errorMessage = emailError),
+                nickname = nickname.copy(errorMessage = nicknameError),
             )
         }
 
-        val hasError = fullNameError != null || usernameError != null || emailError != null
+        val hasError = nicknameError != null
         if (hasError) return
 
-        // TODO:
-        // call repository here if needed
-        // example:
-        // viewModelScope.launch {
-        //     _editProfileUiState.update { it.copy(loading = true) }
-        //     runCatching {
-        //         userRepository.updateProfile(
-        //             fullName = screenData.fullName.value,
-        //             username = screenData.username.value,
-        //             email = screenData.email.value
-        //         )
-        //     }.onSuccess {
-        //         _editProfileUiState.update { it.copy(loading = false) }
-        //     }.onFailure { throwable ->
-        //         _editProfileUiState.update {
-        //             it.copy(
-        //                 loading = false,
-        //                 error = OneTimeEvent(throwable)
-        //             )
-        //         }
-        //     }
-        // }
+        _editProfileUiState.updateWith {
+            memberRepository.updateMember(
+                nickname = nickname.value
+            ).onSuccess {
+                _successEvent.send(Unit)
+            }
+        }
     }
 }
 
 /**
  * Data for [EditProfileScreen].
  *
- * @param fullName [TextFieldData].
- * @param username [TextFieldData].
- * @param email [TextFieldData].
+ * @param nickname [TextFieldData].
  */
 @Immutable
 data class EditProfileScreenData(
-    val fullName: TextFieldData = TextFieldData(String()),
-    val username: TextFieldData = TextFieldData(String()),
-    val email: TextFieldData = TextFieldData(String()),
+    val nickname: TextFieldData = TextFieldData(String()),
 )

@@ -22,6 +22,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,13 +36,24 @@ import com.alphagamingarcade.core.ui.components.JetpackButton
 import com.alphagamingarcade.core.ui.components.JetpackTextField
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.core.ui.utils.StatefulComposable
+import com.alphagamingarcade.feature.auth.ui.signin.SignInEvent
 
 @Composable
 internal fun SetupProfileScreen(
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
     setupProfileViewModel: SetupProfileViewModel = hiltViewModel(),
+    onProfileSetupComplete: () -> Unit
 ) {
     val setupProfileState by setupProfileViewModel.setUpProfileUiState.collectAsStateWithLifecycle()
+
+    // Listen for navigation events
+    LaunchedEffect(Unit) {
+        setupProfileViewModel.events.collect { event ->
+            when (event) {
+                is SetupProfileEvent.OnProfileSetupComplete -> onProfileSetupComplete()
+            }
+        }
+    }
 
     StatefulComposable(
         state = setupProfileState,

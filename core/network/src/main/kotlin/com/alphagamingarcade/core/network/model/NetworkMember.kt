@@ -15,16 +15,13 @@ data class NetworkCreateMemberRequest(
 )
 
 @Serializable
-data class NetworkCreateMemberResponse(
-    @SerialName("success")
-    val success: Boolean,
-    @SerialName("message")
-    val message: String,
-    @SerialName("data")
-    val data: NetworkMember,
-    @SerialName("statusCode")
-    val statusCode: Int
+data class  NetworkUpdateMemberRequest(
+    @SerialName("nickname")
+    val nickname: String,
 )
+
+@Serializable
+data object NetworkUpdateMemberResponse
 
 @Serializable
 data class NetworkMember(

@@ -6,6 +6,7 @@ import com.alphagamingarcade.core.datastore.data.TokenDataSource
 import com.alphagamingarcade.core.datastore.data.UserPreferencesDataSource
 import com.alphagamingarcade.core.network.data.AuthDataSource
 import com.alphagamingarcade.core.utils.suspendRunCatching
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -44,9 +45,28 @@ internal class ProfileRepositoryImpl @Inject constructor(
      */
     override suspend fun signOut(): Result<Unit> {
         return suspendRunCatching {
-            authDataSource.signOut()
+
+            val refreshToken = tokenDataSource.getRefreshToken()
+            if (refreshToken != null){
+                authDataSource.signOut(refreshToken)
+            }
+
             userPreferencesDataSource.resetUserPreferences()
             tokenDataSource.clearTokens()
+        }
+    }
+
+    override suspend fun changePassword(
+        currentPassword: String,
+        newPassword: String,
+        confirmPassword: String
+    ): Result<Unit> {
+        return  suspendRunCatching {
+            authDataSource.changePassword(
+                currentPassword,
+                newPassword,
+                confirmPassword
+            )
         }
     }
 }

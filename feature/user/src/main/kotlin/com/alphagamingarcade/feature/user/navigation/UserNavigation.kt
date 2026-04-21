@@ -39,7 +39,6 @@ data object EditProfile
 @Serializable
 data object Transaction
 
-
 /**
  * Navigate to the auth navigation graph.
  *
@@ -114,7 +113,8 @@ fun NavGraphBuilder.changePasswordScreen(
     onSignUpClick: () -> Unit,
     onSignInClick: () -> Unit,
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onPopBackToStack: () -> Unit
 ) {
     composable<ChangePassword> {
         if (!isLoggedIn){
@@ -128,6 +128,7 @@ fun NavGraphBuilder.changePasswordScreen(
         ChangePasswordScreen(
             onNavigateBack = onBackClick,
             onShowSnackbar = onShowSnackbar,
+            onPopBackToStack = onPopBackToStack
         )
     }
 }

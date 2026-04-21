@@ -488,7 +488,7 @@ private fun ProfileHero(profile: Profile) {
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text = profile.userEmail.firstOrNull()?.uppercaseChar()?.toString() ?: "?",
+                    text = profile.nickname.firstOrNull()?.uppercaseChar()?.toString() ?: "?",
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF111827),
@@ -497,7 +497,7 @@ private fun ProfileHero(profile: Profile) {
         }
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text(
-                text = profile.userEmail,
+                text = profile.nickname,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
                 color = Color(0xFF111827),

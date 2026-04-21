@@ -232,14 +232,6 @@ private fun ColumnScope.SettingsPanel(
             onClick = { onChangeDarkThemeConfig(DarkThemeConfig.DARK) },
         )
     }
-    JetpackOutlinedButton(
-        onClick = {
-            onDismiss()
-        },
-        modifier = Modifier.fillMaxWidth(),
-    ) {
-        Text(text = stringResource(R.string.sign_out))
-    }
 }
 
 /**

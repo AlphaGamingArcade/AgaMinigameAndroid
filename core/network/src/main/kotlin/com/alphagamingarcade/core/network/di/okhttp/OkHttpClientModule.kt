@@ -18,6 +18,7 @@ package com.alphagamingarcade.core.network.di.okhttp
 
 import com.alphagamingarcade.core.datastore.data.TokenDataSource
 import com.alphagamingarcade.core.network.interceptor.AuthInterceptor
+import com.alphagamingarcade.core.network.interceptor.TokenAuthenticator
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -58,6 +59,7 @@ object OkHttpClientModule {
     fun provideOkHttpClient(
         authInterceptor: AuthInterceptor,
         loggingInterceptor: HttpLoggingInterceptor,
+        tokenAuthenticator: TokenAuthenticator
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .connectTimeout(TIME_OUT, SECONDS)
@@ -65,6 +67,7 @@ object OkHttpClientModule {
             .writeTimeout(TIME_OUT, SECONDS)
             .addInterceptor(loggingInterceptor)
             .addInterceptor(authInterceptor)
+            .authenticator(tokenAuthenticator)
             .build()
     }
 

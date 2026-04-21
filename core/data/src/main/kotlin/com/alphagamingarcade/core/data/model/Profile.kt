@@ -1,6 +1,5 @@
 package com.alphagamingarcade.core.data.model
 
-import com.alphagamingarcade.core.datastore.model.MemberPreferences
 import com.alphagamingarcade.core.datastore.model.UserDataPreferences
 
 
@@ -8,6 +7,7 @@ data class Profile(
     val userId: String = String(),
     val userEmail: String = String(),
     val isEmailVerified: Boolean = false,
+    val nickname: String = String()
 )
 
 /**
@@ -20,5 +20,6 @@ fun UserDataPreferences.toProfile(): Profile {
         userId = id,
         userEmail = email,
         isEmailVerified = isEmailVerified,
+        nickname =  member?.nickname ?: String()
     )
 }
