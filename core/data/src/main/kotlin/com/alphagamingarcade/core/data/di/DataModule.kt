@@ -12,6 +12,8 @@ import com.alphagamingarcade.core.data.repository.ProfileRepository
 import com.alphagamingarcade.core.data.repository.ProfileRepositoryImpl
 import com.alphagamingarcade.core.data.repository.SettingsRepository
 import com.alphagamingarcade.core.data.repository.SettingsRepositoryImpl
+import com.alphagamingarcade.core.data.repository.TransactionRepository
+import com.alphagamingarcade.core.data.repository.TransactionRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -61,4 +63,10 @@ abstract class DataModule {
     internal abstract fun bindMemberRepository(
         memberRepositoryImpl: MemberRepositoryImpl
     ): MemberRepository
+
+    @Binds
+    @Singleton
+    internal abstract fun bindTransactionRepository(
+        transactionRepositoryImpl: TransactionRepositoryImpl
+    ): TransactionRepository
 }

@@ -56,7 +56,7 @@ object RetrofitModule {
     ): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.BACKEND_URL)
-            .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+            .addConverterFactory(converterFactory)
             .client(okHttpClient)
             .build()
     }

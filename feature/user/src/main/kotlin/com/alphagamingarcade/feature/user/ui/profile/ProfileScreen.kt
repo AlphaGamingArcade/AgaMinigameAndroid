@@ -1,5 +1,11 @@
 package com.alphagamingarcade.feature.user.ui.profile
 
+import androidx.compose.animation.core.EaseInOut
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -62,25 +68,18 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.core.ui.utils.StatefulComposable
 import com.alphagamingarcade.core.data.model.Profile
-import com.alphagamingarcade.core.ui.components.LoginRequired
-import kotlinx.coroutines.delay
+import com.alphagamingarcade.core.ui.utils.CurrencyFormatter
 import kotlinx.coroutines.launch
 
 // ─── Palette ─────────────────────────────────────────────────────────────────
 
 private val AccentPurple  = Color(0xFF7B2FBE)
 private val AccentGold    = Color(0xFFFFBF00)
-private val AccentBlue    = Color(0xFF2563EB)
 private val AccentRed     = Color(0xFFE53935)
 private val SurfaceGray   = Color(0xFFF5F6FA)
 private val BorderGray    = Color(0xFFEEEEF5)
 private val TextPrimary   = Color(0xFF1A1A2E)
 private val TextSecondary = Color(0xFF8A8A9A)
-private val IconBgPurple  = Color(0xFFEDE9FE)
-private val IconBgGreen   = Color(0xFFD1FAE5)
-private val IconBgAmber   = Color(0xFFFEF3C7)
-private val IconBgBlue    = Color(0xFFDBEAFE)
-private val IconBgRed     = Color(0xFFFFE4E4)
 
 // ─── Entry Point ─────────────────────────────────────────────────────────────
 
@@ -95,6 +94,8 @@ internal fun ProfileScreen(
     onTransactionClick: () -> Unit,
 ) {
     val profileState by profileViewModel.profileUiState.collectAsStateWithLifecycle()
+    val freeDepositStatus by profileViewModel.freeDepositStatus.collectAsStateWithLifecycle()
+    val isFreeDepositClaimed = freeDepositStatus.data.claimed
 
 
     StatefulComposable(
@@ -108,7 +109,9 @@ internal fun ProfileScreen(
             onTermsAndPrivacyClick =  onTermsAndPrivacyClick,
             onContactSupportClick = onContactSupportClick,
             onTransactionClick = onTransactionClick,
-            onSignOut = profileViewModel::signOut
+            onSignOut = profileViewModel::signOut,
+            isFreeDepositClaimed = isFreeDepositClaimed,
+            onClaimFreeDeposit = profileViewModel::claimFreeDeposit
         )
     }
 }
@@ -124,13 +127,14 @@ private fun ProfileScreen(
     onTermsAndPrivacyClick: () -> Unit,
     onContactSupportClick: () -> Unit,
     onTransactionClick: () -> Unit,
-    onSignOut: () -> Unit
+    onSignOut: () -> Unit,
+    isFreeDepositClaimed: Boolean,
+    onClaimFreeDeposit: () -> Unit
 ) {
     var showDialog by remember { mutableStateOf(false) }
     var showDailyReward by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
-
 
     Surface(color = Color.White, modifier = Modifier.fillMaxSize()) {
         Box(modifier = Modifier.fillMaxSize()) {
@@ -143,19 +147,18 @@ private fun ProfileScreen(
                 ProfileHero(profile = profile)
 
                 WalletCard(
-                    balance = "1000",
+                    balance = CurrencyFormatter.format(profile.balance, profile.currency),
                     onRechargeClick = { showDailyReward = true },
-                    onTransactionClick = onTransactionClick
+                    onTransactionClick = onTransactionClick,
+                    isFreeDepositClaimed = isFreeDepositClaimed
                 )
-                Spacer(Modifier.height(24.dp))
-                StatsRow(balance = "1000")
                 Spacer(Modifier.height(24.dp))
                 SectionLabel(title = "Account")
                 MenuCard {
                     MenuItem(
                         icon = Icons.Default.Person,
-                        iconBg = IconBgPurple,
-                        iconTint = AccentPurple,
+                        iconBg = Color.Transparent,
+                        iconTint = Color.Black,
                         title = "Edit Profile",
                         subtitle = "Update your personal info",
                         onClick = onEditProfileClick,
@@ -163,8 +166,8 @@ private fun ProfileScreen(
                     MenuDivider()
                     MenuItem(
                         icon = Icons.Default.Lock,
-                        iconBg = IconBgGreen,
-                        iconTint = Color(0xFF059669),
+                        iconBg = Color.Transparent,
+                        iconTint = Color.Black,
                         title = "Change Password",
                         subtitle = "Manage security settings",
                         onClick = onChangePasswordClick,
@@ -172,8 +175,8 @@ private fun ProfileScreen(
                     MenuDivider()
                     MenuItem(
                         icon = Icons.Default.Description,
-                        iconBg = IconBgAmber,
-                        iconTint = Color(0xFFD97706),
+                        iconBg = Color.Transparent,
+                        iconTint = Color.Black,
                         title = "Terms & Privacy",
                         subtitle = "Read legal documents",
                         onClick = onTermsAndPrivacyClick,
@@ -184,8 +187,8 @@ private fun ProfileScreen(
                 MenuCard {
                     MenuItem(
                         icon = Icons.Default.SupportAgent,
-                        iconBg = IconBgBlue,
-                        iconTint = AccentBlue,
+                        iconBg = Color.Transparent,
+                        iconTint = Color.Black,
                         title = "Contact Support",
                         subtitle = "Get help from our team",
                         onClick = onContactSupportClick,
@@ -196,7 +199,7 @@ private fun ProfileScreen(
                 MenuCard {
                     MenuItem(
                         icon = Icons.AutoMirrored.Filled.Logout,
-                        iconBg = IconBgRed,
+                        iconBg = Color.Transparent,
                         iconTint = AccentRed,
                         title = "Sign Out",
                         subtitle = "Log out of your account",
@@ -211,6 +214,9 @@ private fun ProfileScreen(
     if (showDailyReward) {
         DailyRewardBottomSheet(
             sheetState = sheetState,
+            isClaimed = isFreeDepositClaimed,
+            remainingSeconds = 0,
+            onClaimFreeDeposit = onClaimFreeDeposit,
             onDismiss = {
                 scope.launch { sheetState.hide() }.invokeOnCompletion {
                     showDailyReward = false
@@ -248,19 +254,9 @@ private fun ProfileScreen(
                     text = "SIGN OUT",
                     color = AccentRed,
                     fontWeight = FontWeight.ExtraBold,
-                    fontSize = 13.sp,
+                    fontSize = 16.sp,
                     letterSpacing = 1.5.sp,
                 )
-
-                Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(20.dp))
-                        .background(IconBgRed)
-                        .padding(24.dp),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(text = "👋", fontSize = 48.sp)
-                }
 
                 Text(
                     text = "Are you sure you want to sign out?",
@@ -322,38 +318,29 @@ private fun ProfileScreen(
 @Composable
 private fun DailyRewardBottomSheet(
     sheetState: SheetState,
+    onClaimFreeDeposit: () -> Unit,
+    isClaimed: Boolean,
+    remainingSeconds: Int,
     onDismiss: () -> Unit,
 ) {
-    var isClaimed by remember { mutableStateOf(false) }
-    var remainingSeconds by remember { mutableIntStateOf(28800) }
-
-    LaunchedEffect(isClaimed) {
-        if (isClaimed) {
-            while (remainingSeconds > 0) {
-                delay(1000L)
-                remainingSeconds--
-            }
-        }
-    }
-
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
-        containerColor = Color.White,                        // 👈 white background
+        containerColor = Color.White,
         dragHandle = {
             Box(
                 modifier = Modifier
                     .padding(top = 12.dp, bottom = 4.dp)
                     .size(width = 40.dp, height = 4.dp)
                     .clip(RoundedCornerShape(2.dp))
-                    .background(BorderGray),                 // 👈 subtle gray handle
+                    .background(BorderGray),
             )
         },
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.White)                     // 👈 white sheet
+                .background(Color.White)
                 .padding(horizontal = 24.dp, vertical = 28.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -361,7 +348,7 @@ private fun DailyRewardBottomSheet(
             // Header label
             Text(
                 text = "DAILY REWARD",
-                color = AccentPurple,                        // 👈 purple on white
+                color = AccentPurple,
                 fontWeight = FontWeight.ExtraBold,
                 fontSize = 13.sp,
                 letterSpacing = 1.5.sp,
@@ -373,7 +360,7 @@ private fun DailyRewardBottomSheet(
                     .clip(RoundedCornerShape(20.dp))
                     .background(
                         Brush.linearGradient(
-                            colors = listOf(AccentPurple, Color(0xFF3A1078)), // 👈 gradient accent on white bg
+                            colors = listOf(AccentPurple, Color(0xFF3A1078)),
                         ),
                     )
                     .padding(horizontal = 40.dp, vertical = 24.dp),
@@ -416,7 +403,7 @@ private fun DailyRewardBottomSheet(
 
             // Claim / Claimed button
             Button(
-                onClick = { isClaimed = true },
+                onClick = onClaimFreeDeposit,
                 enabled = !isClaimed,
                 shape = RoundedCornerShape(14.dp),
                 colors = ButtonDefaults.buttonColors(
@@ -430,7 +417,7 @@ private fun DailyRewardBottomSheet(
                     .height(52.dp),
             ) {
                 Text(
-                    text = if (isClaimed) "✅ Claimed" else "⚡ Claim Now",
+                    text = if (isClaimed) "Claimed" else "Claim Now",
                     fontSize = 15.sp,
                     fontWeight = FontWeight.ExtraBold,
                 )
@@ -534,34 +521,6 @@ private fun ProfileHero(profile: Profile) {
     HorizontalDivider(color = Color(0xFFF3F4F6))
 }
 
-// ─── Stats Row ────────────────────────────────────────────────────────────────
-
-@Composable
-private fun StatsRow(balance: String) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 20.dp)
-            .padding(top = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
-    ) {
-        StatCard(
-            label = "Games Played",
-            value = "128",
-            emoji = "🎮",
-            iconBg = IconBgPurple,
-            modifier = Modifier.weight(1f),
-        )
-        StatCard(
-            label = "Favorites",
-            value = "24",
-            emoji = "❤️",
-            iconBg = IconBgRed,
-            modifier = Modifier.weight(1f),
-        )
-    }
-}
-
 @Composable
 private fun StatCard(
     label: String,
@@ -608,12 +567,12 @@ private fun StatCard(
 }
 
 // ─── Wallet Card ─────────────────────────────────────────────────────────────
-
 @Composable
 private fun WalletCard(
     balance: String,
     onRechargeClick: () -> Unit,
-    onTransactionClick: () -> Unit
+    onTransactionClick: () -> Unit,
+    isFreeDepositClaimed: Boolean
 ) {
     Box(
         modifier = Modifier
@@ -652,7 +611,7 @@ private fun WalletCard(
             Spacer(Modifier.height(16.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 Button(
-                    onClick = onRechargeClick,   // 👈 wired up
+                    onClick = onRechargeClick,
                     shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.White.copy(alpha = 0.15f),
@@ -660,8 +619,13 @@ private fun WalletCard(
                     ),
                     modifier = Modifier.weight(1f),
                 ) {
-                    Text(text = "🎁 Daily Reward", fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                    Text(
+                        text = "Daily Reward",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
+
                 OutlinedButton(
                     onClick = onTransactionClick,
                     shape = RoundedCornerShape(12.dp),
@@ -671,15 +635,16 @@ private fun WalletCard(
                     ),
                     modifier = Modifier.weight(1f),
                 ) {
-                    Text(text = "Transactions", fontSize = 13.sp, fontWeight = FontWeight.Medium)
+                    Text(
+                        text = "Transactions",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Medium
+                    )
                 }
             }
         }
     }
 }
-
-// ─── Section Label ────────────────────────────────────────────────────────────
-
 @Composable
 private fun SectionLabel(title: String) {
     Text(
@@ -735,7 +700,7 @@ private fun MenuItem(
                 imageVector = icon,
                 contentDescription = null,
                 tint = iconTint,
-                modifier = Modifier.size(20.dp),
+                modifier = Modifier.size(25.dp),
             )
         }
         Column(

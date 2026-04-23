@@ -58,6 +58,6 @@ data class BrowseScreenData(
     val allGames: List<Game> = emptyList(),
 ) {
     val featuredGames get() = allGames.take(5)
-    val hotGames get() = allGames.filter { it.isHot }
-    val newGames get() = allGames.filter { it.isNew }
+    val hotGames get() = allGames.filter { it.isTrending }
+    val newGames get() = allGames.filter { it.isLatest }
 }

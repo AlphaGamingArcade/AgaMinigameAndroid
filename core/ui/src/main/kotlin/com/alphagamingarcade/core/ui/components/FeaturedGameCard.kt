@@ -64,8 +64,8 @@ public fun FeaturedGameCard(game: Game, onClick: () -> Unit) {
                 .padding(10.dp),
         ) {
             Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                if (game.isHot) GameBadge(label = "HOT", color = Color(0xFFFF4500))
-                if (game.isNew) GameBadge(label = "NEW", color = Color(0xFF00C853))
+                if (game.isTrending) GameBadge(label = "HOT", color = Color(0xFFFF4500))
+                if (game.isLatest) GameBadge(label = "NEW", color = Color(0xFF00C853))
             }
             Spacer(modifier = Modifier.height(2.dp))
             Text(

@@ -107,6 +107,7 @@ internal fun GameDetailScreen(
     }
 }
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun GameDetailScreen(

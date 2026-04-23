@@ -117,8 +117,8 @@ private fun CategoriesScreen(
             }
             .let { games ->
                 when (selectedFilter) {
-                    "New" -> games.filter { it.isNew }
-                    "Popular" -> games.filter { it.isHot }
+                    "New" -> games.filter { it.isLatest }
+                    "Popular" -> games.filter { it.isTrending }
                     "Top Rated" -> games.sortedByDescending { it.id }
                     else -> games
                 }
@@ -281,8 +281,8 @@ private fun CategoryGameCard(
                     .padding(8.dp),
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
             ) {
-                if (game.isNew) GameTag(label = "NEW", color = Color(0xFF00C48C))
-                if (game.isHot) GameTag(label = "HOT", color = Color(0xFFFF4757))
+                if (game.isLatest) GameTag(label = "NEW", color = Color(0xFF00C48C))
+                if (game.isTrending) GameTag(label = "HOT", color = Color(0xFFFF4757))
             }
         }
 

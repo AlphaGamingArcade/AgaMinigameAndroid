@@ -498,7 +498,7 @@ private fun TrendingCard(game: Game, onClick: () -> Unit) {
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize(),
                 )
-                if (game.isHot) {
+                if (game.isTrending) {
                     GameTag(
                         label = "HOT",
                         color = TagHot,
@@ -650,7 +650,7 @@ private fun TopRatedListItem(
             }
 
             // Hot tag if applicable
-            if (game.isHot) {
+            if (game.isTrending) {
                 GameTag(label = "HOT", color = TagHot)
             }
         }

@@ -1,6 +1,7 @@
 package com.alphagamingarcade.core.network.interceptor
 
 import com.alphagamingarcade.core.datastore.data.TokenDataSource
+import com.alphagamingarcade.core.datastore.data.UserPreferencesDataSource
 import com.alphagamingarcade.core.network.api.AuthRestApi
 import com.alphagamingarcade.core.network.model.NetworkRefreshTokenRequest
 import dagger.Lazy
@@ -13,8 +14,17 @@ import javax.inject.Inject
 
 class TokenAuthenticator @Inject constructor(
     private val tokenDataSource: TokenDataSource,
+    private val  userPreferencesDataSource: UserPreferencesDataSource,
     private val authRestApi: Lazy<AuthRestApi>
 ) : Authenticator {
+
+    private fun clearSession() {
+        runBlocking {
+            tokenDataSource.clearTokens()
+            userPreferencesDataSource.resetUserPreferences()
+        }
+    }
+
 
     override fun authenticate(route: Route?, response: Response): Request? {
         if (responseCount(response) >= 2) return null
@@ -33,9 +43,16 @@ class TokenAuthenticator @Inject constructor(
             return null
         }
 
-        if (!refreshResponse.isSuccessful) return null
+        if (!refreshResponse.isSuccessful) {
+            clearSession()
+            return null
+        }
 
-        val body = refreshResponse.body() ?: return null
+        val body = refreshResponse.body() ?: run {
+            clearSession()
+            return null
+        }
+
         val data = body.data
 
         val newAccessToken = data.accessToken

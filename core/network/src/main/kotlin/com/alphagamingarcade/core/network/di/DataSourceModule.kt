@@ -8,6 +8,8 @@ import com.alphagamingarcade.core.network.data.GameDataSource
 import com.alphagamingarcade.core.network.data.GameDataSourceImpl
 import com.alphagamingarcade.core.network.data.MemberDataSource
 import com.alphagamingarcade.core.network.data.MemberDataSourceImpl
+import com.alphagamingarcade.core.network.data.TransactionDataSource
+import com.alphagamingarcade.core.network.data.TransactionDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -44,4 +46,10 @@ abstract class DataSourceModule {
     internal abstract fun bindMemberDataSource(
         memberDataSourceImpl: MemberDataSourceImpl,
     ): MemberDataSource
+
+    @Binds
+    @Singleton
+    internal abstract fun bindTransactionDataSource(
+        transactionDataSourceImpl: TransactionDataSourceImpl,
+    ): TransactionDataSource
 }

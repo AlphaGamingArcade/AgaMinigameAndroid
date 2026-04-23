@@ -7,7 +7,9 @@ data class Profile(
     val userId: String = String(),
     val userEmail: String = String(),
     val isEmailVerified: Boolean = false,
-    val nickname: String = String()
+    val nickname: String = String(),
+    val balance: Double = 0.0,
+    val currency: String = "USD",
 )
 
 /**
@@ -20,6 +22,8 @@ fun UserDataPreferences.toProfile(): Profile {
         userId = id,
         userEmail = email,
         isEmailVerified = isEmailVerified,
-        nickname =  member?.nickname ?: String()
+        nickname =  member?.nickname ?: String(),
+        balance = member?.gameMoney ?: 0.0,
+        currency = member?.agent?.currency ?: "USD",
     )
 }

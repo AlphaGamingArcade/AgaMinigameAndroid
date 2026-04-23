@@ -13,7 +13,7 @@ internal class GameDataSourceImpl @Inject constructor(
 
     override suspend fun getGames(): List<NetworkGame> {
         return try {
-            val response = gameRestApi.getTrendingGames()
+            val response = gameRestApi.getGames()
             return response.data.items
         } catch (e: Exception) {
             emptyList()

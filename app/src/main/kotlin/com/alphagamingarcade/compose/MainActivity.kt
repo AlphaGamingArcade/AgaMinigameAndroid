@@ -17,6 +17,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.alphagamingarcade.compose.ui.AgamgApp
+import com.alphagamingarcade.compose.ui.UserState
 import com.alphagamingarcade.compose.ui.rememberAgamgAppState
 import com.alphagamingarcade.core.datastore.model.DarkThemeConfigPreferences
 import com.alphagamingarcade.core.datastore.model.UserDataPreferences
@@ -112,9 +113,7 @@ class MainActivity : AppCompatActivity() {
 
             val appState = rememberAgamgAppState(
                 isUserLoggedIn = isUserLoggedIn(uiState),
-                isUserEmailVerified = isUserEmailVerified(uiState),
-                userEmail = getUserEmail(uiState),
-                userProfilePictureUri = getUserProfilePictureUri(uiState),
+                userState = toUserState(uiState),
                 windowSizeClass = calculateWindowSizeClass(this),
                 networkUtils = networkUtils,
             )
@@ -192,12 +191,6 @@ private fun isUserEmailVerified(uiState: UiState<UserDataPreferences>): Boolean 
     return uiState.data.isEmailVerified || uiState.loading
 }
 
-/**
- * Returns the user profile picture URI string from the provided [UiState].
- *
- * @param uiState The UI state representing the user data.
- * @return The user profile picture URI string, or `null` if the user is not logged in or an error occurred.
- */
 private fun getUserProfilePictureUri(uiState: UiState<UserDataPreferences>): String? {
     return null
 //    return if (uiState.loading || uiState.error.peekContent() != null) {
@@ -207,6 +200,13 @@ private fun getUserProfilePictureUri(uiState: UiState<UserDataPreferences>): Str
 //    }
 }
 
+private  fun getUserBalance(uiState: UiState<UserDataPreferences>): Double {
+    return uiState.data.member?.gameMoney ?: 0.0
+}
+
+private  fun getUserCurrency(uiState: UiState<UserDataPreferences>): String {
+    return uiState.data.member?.agent?.currency ?: "USD"
+}
 
 /**
  * Returns the user profile picture URI string from the provided [UiState].
@@ -243,3 +243,13 @@ data class ThemeSettings(
     val darkTheme: Boolean,
     val disableDynamicTheming: Boolean = true,
 )
+
+private fun toUserState(uiState: UiState<UserDataPreferences>): UserState {
+    return UserState(
+        isEmailVerified = isUserEmailVerified(uiState),
+        email = getUserEmail(uiState),
+        profilePictureUri = getUserProfilePictureUri(uiState),
+        balance = getUserBalance(uiState),
+        currency = getUserCurrency(uiState),
+    )
+}

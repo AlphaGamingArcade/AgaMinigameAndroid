@@ -1,6 +1,8 @@
 package com.alphagamingarcade.core.data.repository
 
+import com.alphagamingarcade.core.data.model.Member
 import com.alphagamingarcade.core.data.model.Profile
+import com.alphagamingarcade.core.data.model.toMember
 import com.alphagamingarcade.core.data.model.toProfile
 import com.alphagamingarcade.core.datastore.data.TokenDataSource
 import com.alphagamingarcade.core.datastore.data.UserPreferencesDataSource
@@ -36,7 +38,14 @@ internal class ProfileRepositoryImpl @Inject constructor(
     /**
      * Create member profile
      */
-
+    /**
+     * Retrieves the user profile as a Flow.
+     *
+     * @return A Flow emitting the user profile.
+     */
+    override fun getProfileMember(): Flow<Member> {
+        return userPreferencesDataSource.getUserDataPreferences().map { it.toMember() }
+    }
 
     /**
      * Signs out the user and resets user preferences.

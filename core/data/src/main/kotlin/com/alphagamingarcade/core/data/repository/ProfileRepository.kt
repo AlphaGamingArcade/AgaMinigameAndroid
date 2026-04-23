@@ -1,5 +1,6 @@
 package com.alphagamingarcade.core.data.repository
 
+import com.alphagamingarcade.core.data.model.Member
 import com.alphagamingarcade.core.data.model.Profile
 import kotlinx.coroutines.flow.Flow
 
@@ -21,11 +22,19 @@ interface ProfileRepository {
     fun getProfile(): Flow<Profile>
 
     /**
+     * Retrieves the profile information.
+     *
+     * @return A Flow emitting the Profile object.
+     */
+    fun getProfileMember(): Flow<Member>
+
+    /**
      * Signs out the current user.
      *
      * @return A Result indicating the success or failure of the operation.
      */
     suspend fun signOut(): Result<Unit>
+
 
     /**
      * Change the password of a user.

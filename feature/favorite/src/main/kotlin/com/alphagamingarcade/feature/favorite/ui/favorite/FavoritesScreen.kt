@@ -463,8 +463,8 @@ private fun FavoriteGridCard(game: Game, onClick: () -> Unit) {
                     .padding(6.dp),
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
             ) {
-                if (game.isHot) GameTag(label = "HOT", color = TagHot)
-                if (game.isNew) GameTag(label = "NEW", color = TagNew)
+                if (game.isTrending) GameTag(label = "HOT", color = TagHot)
+                if (game.isLatest) GameTag(label = "NEW", color = TagNew)
             }
             // Favorite heart overlay
             Box(

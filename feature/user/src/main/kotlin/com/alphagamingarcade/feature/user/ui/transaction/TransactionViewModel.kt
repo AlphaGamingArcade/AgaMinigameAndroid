@@ -3,145 +3,127 @@ package com.alphagamingarcade.feature.user.ui.transaction
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alphagamingarcade.core.data.repository.ProfileRepository
+import com.alphagamingarcade.core.data.repository.TransactionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import com.alphagamingarcade.core.ui.utils.UiState
 import com.alphagamingarcade.core.utils.OneTimeEvent
+import com.alphagamingarcade.model.data.Transaction
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class TransactionsViewModel @Inject constructor(
+    private val transactionRepository: TransactionRepository,
+    private val profileRepository: ProfileRepository
 ) : ViewModel() {
 
-    private val _transactionsUiState = MutableStateFlow(UiState(TransactionsScreenData()))
+    private var memberId: Int? = null
+
+    private val _transactionsUiState = MutableStateFlow(
+        UiState(
+            data = TransactionsScreenData(),
+            loading = true
+        )
+    )
     val transactionsUiState = _transactionsUiState.asStateFlow()
 
     init {
-        getTransactions()
+        loadInitial()
     }
 
-    fun getTransactions() {
+    private fun loadInitial() {
         viewModelScope.launch {
-            _transactionsUiState.value = _transactionsUiState.value.copy(
-                loading = true,
-                error = OneTimeEvent(null),
-            )
+            try {
+                val resolvedMemberId = profileRepository
+                    .getProfileMember()
+                    .map { it.memberId }
+                    .first()
 
-            runCatching {
-                // Replace this with your actual repository method.
-                // Example:
-                // rechargeRepository.getRechargeTransactions()
+                memberId = resolvedMemberId
 
-                mockTransactions()
-            }.onSuccess { transactions ->
-                _transactionsUiState.value = UiState(
-                    data = TransactionsScreenData(
-                        transactions = transactions,
-                    ),
-                    loading = false,
-                )
-            }.onFailure { throwable ->
+                val pageSize = _transactionsUiState.value.data.pageSize
+
                 _transactionsUiState.value = _transactionsUiState.value.copy(
+                    data = _transactionsUiState.value.data.copy(
+                        pageNumber = 1,
+                        endReached = false,
+                        transactions = emptyList()
+                    )
+                )
+
+                val transactions = transactionRepository
+                    .getTransactions(resolvedMemberId, 1, pageSize)
+
+                _transactionsUiState.value = UiState(
+                    data = _transactionsUiState.value.data.copy(
+                        transactions = transactions,
+                        pageNumber = 2,
+                        endReached = transactions.size < pageSize
+                    ),
+                    loading = false
+                )
+
+            } catch (e: Exception) {
+                _transactionsUiState.value = UiState(
+                    data = _transactionsUiState.value.data.copy(),
                     loading = false,
-                    error = OneTimeEvent(throwable),
+                    error = OneTimeEvent(e)
                 )
             }
         }
     }
 
-    private fun mockTransactions(): List<RechargeTransaction> {
-        return listOf(
-            RechargeTransaction(
-                id = "1",
-                amount = "₱500.00",
-                method = "GCash",
-                status = RechargeTransactionStatus.SUCCESS,
-                referenceNumber = "RCG-20260408-0001",
-                date = "Apr 08, 2026 • 10:15 AM",
-            ),
-            RechargeTransaction(
-                id = "2",
-                amount = "₱250.00",
-                method = "PayMaya",
-                status = RechargeTransactionStatus.PENDING,
-                referenceNumber = "RCG-20260407-0002",
-                date = "Apr 07, 2026 • 08:42 PM",
-            ),
-            RechargeTransaction(
-                id = "3",
-                amount = "₱1,000.00",
-                method = "Credit Card",
-                status = RechargeTransactionStatus.FAILED,
-                referenceNumber = "RCG-20260406-0003",
-                date = "Apr 06, 2026 • 01:03 PM",
-            ),
-            RechargeTransaction(
-                id = "4",
-                amount = "₱1,000.00",
-                method = "Credit Card",
-                status = RechargeTransactionStatus.FAILED,
-                referenceNumber = "RCG-20260406-0003",
-                date = "Apr 06, 2026 • 01:03 PM",
-            ),
-            RechargeTransaction(
-                id = "5",
-                amount = "₱1,000.00",
-                method = "Credit Card",
-                status = RechargeTransactionStatus.FAILED,
-                referenceNumber = "RCG-20260406-0003",
-                date = "Apr 06, 2026 • 01:03 PM",
-            ),
-            RechargeTransaction(
-                id = "6",
-                amount = "₱1,000.00",
-                method = "Credit Card",
-                status = RechargeTransactionStatus.FAILED,
-                referenceNumber = "RCG-20260406-0003",
-                date = "Apr 06, 2026 • 01:03 PM",
-            ),
+    fun loadMore() {
+        val state = _transactionsUiState.value.data
+        val currentMemberId = memberId ?: return
 
-            RechargeTransaction(
-                id = "7",
-                amount = "₱1,000.00",
-                method = "Credit Card",
-                status = RechargeTransactionStatus.FAILED,
-                referenceNumber = "RCG-20260406-0003",
-                date = "Apr 06, 2026 • 01:03 PM",
-            ),
-        )
+        if (state.isLoadingMore || state.endReached) return
+
+        viewModelScope.launch {
+            try {
+                _transactionsUiState.value = _transactionsUiState.value.copy(
+                    data = state.copy(isLoadingMore = true)
+                )
+
+                val nextPage = state.pageNumber
+                val pageSize = state.pageSize
+
+                val newTransactions = transactionRepository
+                    .getTransactions(currentMemberId, nextPage, pageSize) // ✅ no .first()
+
+                val updatedList = state.transactions + newTransactions
+
+                _transactionsUiState.value = UiState(
+                    data = state.copy(
+                        transactions = updatedList,
+                        pageNumber = nextPage + 1,
+                        isLoadingMore = false,
+                        endReached = newTransactions.size < pageSize
+                    ),
+                    loading = false
+                )
+
+            } catch (e: Exception) {
+                _transactionsUiState.value = UiState(
+                    data = state.copy(isLoadingMore = false),
+                    loading = false,
+                    error = OneTimeEvent(e)
+                )
+            }
+        }
     }
 }
 
-/**
- * Data for [TransactionsScreen].
- *
- * @param transactions Recharge transaction list.
- */
 @Immutable
 data class TransactionsScreenData(
-    val transactions: List<RechargeTransaction> = emptyList(),
+    val transactions: List<Transaction> = emptyList(),
+    val pageNumber: Int = 1,
+    val pageSize: Int = 5,
+    val isLoadingMore: Boolean = false,
+    val endReached: Boolean = false,
 )
-
-/**
- * Recharge transaction model for UI.
- */
-@Immutable
-data class RechargeTransaction(
-    val id: String,
-    val amount: String,
-    val method: String,
-    val status: RechargeTransactionStatus,
-    val referenceNumber: String,
-    val date: String,
-)
-
-/**
- * Recharge transaction status.
- */
-enum class RechargeTransactionStatus {
-    SUCCESS,
-    PENDING,
-    FAILED,
-}

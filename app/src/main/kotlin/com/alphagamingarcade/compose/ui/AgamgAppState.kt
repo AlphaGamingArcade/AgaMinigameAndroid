@@ -35,7 +35,6 @@ import kotlinx.coroutines.flow.stateIn
  * @param isUserLoggedIn Indicates if the user is logged in.
  * @param windowSizeClass The current window size class.
  * @param networkUtils Utility for network state management.
- * @param userProfilePictureUri The URI of the user's profile picture.
  * @param coroutineScope The coroutine scope for managing coroutines.
  * @param navController The navigation controller for managing navigation.
  * @return An instance of [AgamgAppState].
@@ -43,19 +42,15 @@ import kotlinx.coroutines.flow.stateIn
 @Composable
 fun rememberAgamgAppState(
     isUserLoggedIn: Boolean,
-    isUserEmailVerified: Boolean,
-    userEmail: String?,
+    userState: UserState,
     windowSizeClass: WindowSizeClass,
     networkUtils: NetworkUtils,
-    userProfilePictureUri: String? = null,
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     navController: NavHostController = rememberNavController(),
 ): AgamgAppState {
     return remember(
         isUserLoggedIn,
-        isUserEmailVerified,
-        userEmail,
-        userProfilePictureUri,
+        userState,
         navController,
         windowSizeClass,
         coroutineScope,
@@ -63,9 +58,7 @@ fun rememberAgamgAppState(
     ) {
         AgamgAppState(
             isUserLoggedIn = isUserLoggedIn,
-            isUserEmailVerified = isUserEmailVerified,
-            userEmail = userEmail,
-            userProfilePictureUri = userProfilePictureUri,
+            userState = userState,
             navController = navController,
             windowSizeClass = windowSizeClass,
             coroutineScope = coroutineScope,
@@ -74,11 +67,20 @@ fun rememberAgamgAppState(
     }
 }
 
+
+data class UserState(
+    val isEmailVerified: Boolean = false,
+    val email: String? = null,
+    val profilePictureUri: String? = null,
+    val balance: Double = 0.0,
+    val currency: String = "USD",
+)
+
 /**
  * State holder class for the Jetpack Compose application.
  *
  * @property isUserLoggedIn Indicates if the user is logged in.
- * @property userProfilePictureUri The URI of the user's profile picture.
+ * @property userState The URI of the user's profile picture.
  * @property navController The navigation controller for managing navigation.
  * @property windowSizeClass The current window size class.
  * @param coroutineScope The coroutine scope for managing coroutines.
@@ -87,9 +89,7 @@ fun rememberAgamgAppState(
 @Stable
 class AgamgAppState(
     val isUserLoggedIn: Boolean,
-    val isUserEmailVerified: Boolean,
-    val userEmail: String?,
-    val userProfilePictureUri: String?,
+    val userState: UserState,
     val navController: NavHostController,
     val windowSizeClass: WindowSizeClass,
     coroutineScope: CoroutineScope,

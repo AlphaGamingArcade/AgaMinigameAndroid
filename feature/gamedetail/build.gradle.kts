@@ -28,4 +28,6 @@ dependencies {
     // ... Modules
     implementation(project(":core:ui"))
     implementation(project(":core:data"))
+
+    implementation(libs.compose.parallax.toolbar.kmp)
 }

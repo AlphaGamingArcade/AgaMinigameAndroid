@@ -21,17 +21,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.FilterChipDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,9 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -69,7 +57,7 @@ private val SearchBarColor = Color(0xFFF0F1F5)
 private val TextPrimary    = Color(0xFF1A1A2E)
 private val TextSecondary  = Color(0xFF8A8A9A)
 
-private val categories = listOf("All", "Hot", "New", "Slots", "Table")
+private val categories = listOf("All", "Hot", "New", "Trending", "Coming Soon")
 
 @Composable
 internal fun BrowseScreen(
@@ -104,10 +92,10 @@ private fun BrowseScreen(
         data.allGames
             .filter { game ->
                 when (selectedCategory) {
-                    "Hot" -> game.isHot
-                    "New" -> game.isNew
-                    "Slots" -> game.category == "Slots"
-                    "Table" -> game.category == "Table"
+                    "Hot" -> game.isTrending
+                    "New" -> game.isLatest
+                    "Top" -> game.isTop
+                    "Coming Soon" -> game.isComingSoon
                     else -> true
                 }
             }
@@ -158,33 +146,6 @@ private fun BrowseScreen(
                 }
             }
 
-            // ── Hot Right Now — only when not filtering ───────────────────────
-            if (!isFiltering && data.hotGames.isNotEmpty()) {
-                item {
-                    SectionHeader(
-                        title = "Hot Right Now",
-                        subtitle = "Most played this hour",
-                        modifier = Modifier.padding(horizontal = 20.dp),
-                    )
-                    Spacer(Modifier.height(12.dp))
-                    HotGamesRow(games = data.hotGames, onGameClick = onGameClick)
-                    Spacer(Modifier.height(24.dp))
-                }
-            }
-
-            // ── New Arrivals — only when not filtering ────────────────────────
-            if (!isFiltering && data.newGames.isNotEmpty()) {
-                item {
-                    SectionHeader(
-                        title = "New Releases",
-                        subtitle = "Fresh drops this week",
-                        modifier = Modifier.padding(horizontal = 20.dp),
-                    )
-                    Spacer(Modifier.height(12.dp))
-                    NewArrivalsRow(games = data.newGames, onGameClick = onGameClick)
-                    Spacer(Modifier.height(24.dp))
-                }
-            }
 
             // ── All / Filtered Games Grid ─────────────────────────────────────
             item {
@@ -240,7 +201,7 @@ private fun FeaturedRow(games: List<Game>, onGameClick: (String) -> Unit) {
                         .align(Alignment.BottomStart)
                         .padding(12.dp),
                 ) {
-                    if (game.isNew) GameTag(label = "NEW", color = TagNew)
+                    if (game.isLatest) GameTag(label = "NEW", color = TagNew)
                     Spacer(Modifier.height(4.dp))
                     Text(
                         text = game.name,
@@ -399,8 +360,8 @@ private fun GridGameCard(game: Game, onClick: () -> Unit) {
                     .padding(6.dp),
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
             ) {
-                if (game.isHot) GameTag(label = "HOT", color = TagHot)
-                if (game.isNew) GameTag(label = "NEW", color = TagNew)
+                if (game.isTrending) GameTag(label = "HOT", color = TagHot)
+                if (game.isLatest) GameTag(label = "NEW", color = TagNew)
             }
         }
         Spacer(Modifier.height(6.dp))

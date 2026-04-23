@@ -1,6 +1,7 @@
 [versions]
 
 # ... PROJECT ...
+composeParallaxToolbarKmp = "1.3.0"
 java = "21"
 kotlin = "2.2.21"
 androidGradlePlugin = "8.13.2"
@@ -94,6 +95,7 @@ jetpack-dokka = { id = "com.alphagamingarcade.dokka" }
 
 # ... CORE:ANDROID ...
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
+compose-parallax-toolbar-kmp = { module = "am.highapps.parallaxtoolbar:compose-parallax-toolbar-kmp", version.ref = "composeParallaxToolbarKmp" }
 kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinxDatetime" }

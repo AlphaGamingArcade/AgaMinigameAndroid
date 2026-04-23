@@ -8,16 +8,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -25,6 +23,7 @@ import androidx.compose.material.icons.filled.AccountBalanceWallet
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -34,7 +33,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,8 +45,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.alphagamingarcade.core.ui.components.JetpackOverlayLoadingWheel
+import com.alphagamingarcade.core.ui.utils.CurrencyFormatter
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.core.ui.utils.StatefulComposable
+import com.alphagamingarcade.model.data.Transaction
+import com.alphagamingarcade.model.data.TransactionStatus
 
 private val ScreenBackground = Color.White
 private val CardBackground = Color.White
@@ -75,6 +80,8 @@ internal fun TransactionScreen(
         TransactionsScreen(
             screenData = screenData,
             onBackClick = onBackClick,
+            onLoadMore = viewModel::loadMore,
+            isInitialLoading = transactionsState.loading,
         )
     }
 }
@@ -90,7 +97,31 @@ internal fun TransactionScreen(
 private fun TransactionsScreen(
     screenData: TransactionsScreenData,
     onBackClick: () -> Unit,
+    onLoadMore: () -> Unit,
+    isInitialLoading: Boolean,
 ) {
+
+    val listState = rememberLazyListState()
+
+    LaunchedEffect(
+        listState,
+        screenData.transactions.size,
+        screenData.isLoadingMore,
+        screenData.endReached,
+    ) {
+        snapshotFlow {
+            val layoutInfo = listState.layoutInfo
+            val totalItemsCount = layoutInfo.totalItemsCount
+            val lastVisibleItemIndex = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
+
+            totalItemsCount > 0 && lastVisibleItemIndex >= totalItemsCount - 3
+        }.collect { shouldLoadMore ->
+            if (shouldLoadMore && !screenData.isLoadingMore && !screenData.endReached) {
+                onLoadMore()
+            }
+        }
+    }
+
     Surface(
         color = ScreenBackground,
         modifier = Modifier.fillMaxSize(),
@@ -122,42 +153,60 @@ private fun TransactionsScreen(
                 ),
             )
 
-            if (screenData.transactions.isEmpty()) {
-                EmptyTransactionsContent()
-            } else {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(horizontal = 20.dp, vertical = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                ) {
-                    item {
-                        Text(
-                            text = "Your recharge transactions",
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = TextPrimary,
-                        )
+            if (!isInitialLoading) {
+                if (screenData.transactions.isEmpty()) {
+                    EmptyTransactionsContent()
+                } else {
+                    LazyColumn(
+                        state = listState,
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(horizontal = 20.dp, vertical = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                    ) {
+                        item {
+                            Text(
+                                text = "Your recharge transactions",
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = TextPrimary,
+                            )
 
-                        Spacer(modifier = Modifier.height(6.dp))
+                            Spacer(modifier = Modifier.height(6.dp))
 
-                        Text(
-                            text = "Review your recent top-ups and payment status.",
-                            fontSize = 14.sp,
-                            color = TextSecondary,
-                        )
+                            Text(
+                                text = "Review your recent top-ups and payment status.",
+                                fontSize = 14.sp,
+                                color = TextSecondary,
+                            )
 
-                        Spacer(modifier = Modifier.height(12.dp))
-                    }
+                            Spacer(modifier = Modifier.height(12.dp))
+                        }
 
-                    items(
-                        items = screenData.transactions,
-                        key = { it.id },
-                    ) { transaction ->
-                        TransactionItem(transaction = transaction)
-                    }
+                        items(
+                            items = screenData.transactions,
+                            key = { it.id },
+                        ) { transaction ->
+                            TransactionItem(transaction = transaction)
+                        }
 
-                    item {
-                        Spacer(modifier = Modifier.height(24.dp))
+                        if (screenData.isLoadingMore) {
+                            item {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 12.dp),
+                                    contentAlignment = Alignment.Center,
+                                ) {
+                                    JetpackOverlayLoadingWheel(
+                                        contentDesc = "Loading more transactions",
+                                    )
+                                }
+                            }
+                        }
+
+                        item {
+                            Spacer(modifier = Modifier.height(24.dp))
+                        }
                     }
                 }
             }
@@ -205,7 +254,7 @@ private fun EmptyTransactionsContent() {
 
 @Composable
 private fun TransactionItem(
-    transaction: RechargeTransaction,
+    transaction: Transaction,
 ) {
     Box(
         modifier = Modifier
@@ -226,7 +275,7 @@ private fun TransactionItem(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = transaction.amount,
+                    text = CurrencyFormatter.format(transaction.amount, transaction.currency),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = TextPrimary,
@@ -254,35 +303,35 @@ private fun TransactionItem(
 
             TransactionInfoRow(
                 label = "Reference No.",
-                value = transaction.referenceNumber,
+                value = transaction.id.toString(),
             )
 
             TransactionInfoRow(
                 label = "Date",
-                value = transaction.date,
+                value = transaction.datetime,
             )
         }
     }
 }
 
 @Composable
-private fun StatusChip(status: RechargeTransactionStatus) {
+private fun StatusChip(status: TransactionStatus) {
     val (icon, text, containerColor, contentColor) = when (status) {
-        RechargeTransactionStatus.SUCCESS -> Quadruple(
+        TransactionStatus.SUCCESS -> Quadruple(
             Icons.Default.CheckCircle,
             "Success",
             Color(0xFFE8F8F1),
             Color(0xFF059669),
         )
 
-        RechargeTransactionStatus.PENDING -> Quadruple(
+        TransactionStatus.PENDING -> Quadruple(
             Icons.Default.Schedule,
             "Pending",
             Color(0xFFFFF7E0),
             Color(0xFFD97706),
         )
 
-        RechargeTransactionStatus.FAILED -> Quadruple(
+        TransactionStatus.FAILED -> Quadruple(
             Icons.Default.Warning,
             "Failed",
             Color(0xFFFFEFEF),

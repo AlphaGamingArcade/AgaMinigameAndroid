@@ -48,6 +48,7 @@ import com.alphagamingarcade.core.ui.components.AgamgNavigationSuiteScope
 import com.alphagamingarcade.core.ui.components.AgamgTopAppBarWithLogoAndActions
 import com.alphagamingarcade.core.ui.theme.GradientColors
 import com.alphagamingarcade.core.ui.theme.LocalGradientColors
+import com.alphagamingarcade.core.ui.utils.CurrencyFormatter
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.feature.settings.ui.SettingsDialog
 
@@ -228,7 +229,7 @@ private fun AgamgScaffold(
                     logoRes = R.drawable.ic_app_logo,
                     logoContentDescription = "App Logo",
                     isLoggedIn = appState.isUserLoggedIn,
-                    balance = "10000",
+                    balance = CurrencyFormatter.format(appState.userState.balance, appState.userState.currency),
                     onSettingsClick = { onTopAppBarActionClick() },
                 )
             }

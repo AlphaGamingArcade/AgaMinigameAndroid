@@ -43,8 +43,6 @@ object ConverterModule {
         val json = Json {
             ignoreUnknownKeys = true
         }
-        return json.asConverterFactory(
-            "application/json; charset=UTF8".toMediaType(),
-        )
+        return json.asConverterFactory("application/json".toMediaType())
     }
 }

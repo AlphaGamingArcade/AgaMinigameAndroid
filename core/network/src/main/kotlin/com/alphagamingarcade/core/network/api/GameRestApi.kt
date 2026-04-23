@@ -6,7 +6,7 @@ import com.alphagamingarcade.core.network.model.PaginatedResponse
 import retrofit2.http.GET
 
 interface GameRestApi {
-    @GET("/games/games")
+    @GET("/games")
     suspend fun getGames(): ApiResponse<PaginatedResponse<NetworkGame>>
     @GET("/games/trending")
     suspend fun getTrendingGames(): ApiResponse<PaginatedResponse<NetworkGame>>

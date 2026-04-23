@@ -5,6 +5,7 @@ import com.alphagamingarcade.core.network.api.AuthRestApi
 import com.alphagamingarcade.core.network.api.BannerRestApi
 import com.alphagamingarcade.core.network.api.GameRestApi
 import com.alphagamingarcade.core.network.api.MemberRestApi
+import com.alphagamingarcade.core.network.api.TransactionRestApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -46,4 +47,9 @@ object NetworkModule {
         return retrofit.create(MemberRestApi::class.java)
     }
 
+    @Provides
+    @Singleton
+    fun provideTransactionRestApi(retrofit: Retrofit): TransactionRestApi {
+        return retrofit.create(TransactionRestApi::class.java)
+    }
 }

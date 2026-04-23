@@ -85,7 +85,7 @@ fun FavoriteGameCard(
                 .padding(10.dp),
             horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-            if (game.isHot) {
+            if (game.isTrending) {
                 GameBadge(
                     label = "HOT",
                     containerColor = Color(0xFF7C1D1D),
@@ -93,7 +93,7 @@ fun FavoriteGameCard(
                     icon = "🔥"
                 )
             }
-            if (game.isNew) {
+            if (game.isLatest) {
                 GameBadge(
                     label = "NEW",
                     containerColor = Color(0xFF0F2D28),

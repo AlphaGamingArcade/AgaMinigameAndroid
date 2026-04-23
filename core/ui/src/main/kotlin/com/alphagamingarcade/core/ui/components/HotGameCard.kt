@@ -47,7 +47,7 @@ public fun HotGameCard(game: Game, onClick: () -> Unit) {
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize(),
             )
-            if (game.isHot) {
+            if (game.isTrending) {
                 Icon(
                     imageVector = Icons.Default.Whatshot,
                     contentDescription = null,
