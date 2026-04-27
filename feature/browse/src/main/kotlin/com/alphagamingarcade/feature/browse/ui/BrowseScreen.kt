@@ -323,7 +323,7 @@ private fun AllGamesGrid(
 ) {
     val gridHeight = ((games.size + 1) / 2) * 180
     LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
+        columns = GridCells.Adaptive(minSize = 160.dp),
         modifier = modifier.height(gridHeight.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),

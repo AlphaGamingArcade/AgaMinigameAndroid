@@ -1,24 +1,17 @@
 package com.alphagamingarcade.core.network.data
 
-import com.alphagamingarcade.core.di.IoDispatcher
 import com.alphagamingarcade.core.network.api.BannerRestApi
+import com.alphagamingarcade.core.network.model.ApiResponse
 import com.alphagamingarcade.core.network.model.NetworkBanner
-import kotlinx.coroutines.CoroutineDispatcher
+import com.alphagamingarcade.core.network.model.PaginatedResponse
 import javax.inject.Inject
 
 
 internal class BannerDataSourceImpl @Inject constructor(
-    private val bannerRestApi: BannerRestApi,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    private val bannerRestApi: BannerRestApi
 ) : BannerDataSource {
 
-    override suspend fun getBanners(): List<NetworkBanner> {
-        return try {
-            bannerRestApi.getBanners()
-                .data
-                .items
-        } catch (e: Exception) {
-            emptyList()
-        }
+    override suspend fun getBanners(): ApiResponse<PaginatedResponse<NetworkBanner>> {
+        return bannerRestApi.getBanners()
     }
 }

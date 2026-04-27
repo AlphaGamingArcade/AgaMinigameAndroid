@@ -13,10 +13,6 @@ class BannersRepositoryImpl @Inject constructor(
 ) : BannersRepository {
 
     override fun getBanners(): Flow<List<Banner>> = flow {
-        emit(bannerDataSource.getBanners().map { it.toExternalModel() })
-    }
-
-    override suspend fun sync(): Flow<SyncProgress> = flow {
-        emit(SyncProgress(total = 1, current = 1, message = "Banners synced"))
+        emit(bannerDataSource.getBanners().data.items.map { it.toExternalModel() })
     }
 }

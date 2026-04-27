@@ -3,89 +3,148 @@ package com.alphagamingarcade.feature.favorite.ui.favorite
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alphagamingarcade.core.data.repository.MemberRepository
+import com.alphagamingarcade.core.data.repository.ProfileRepository
 import com.alphagamingarcade.core.extensions.stateInDelayed
 import com.alphagamingarcade.core.ui.utils.UiState
+import com.alphagamingarcade.core.utils.OneTimeEvent
 import com.alphagamingarcade.model.data.Game
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class FavoriteViewModel @Inject constructor() : ViewModel() {
+class FavoriteViewModel @Inject constructor(
+    private val memberRepository: MemberRepository,
+    private val profileRepository: ProfileRepository
+) : ViewModel() {
     private val _favoriteUiState = MutableStateFlow(UiState(FavoriteScreenData()))
     val homeUiState = _favoriteUiState
-        .onStart { }
+        .onStart {}
         .stateInDelayed(UiState(FavoriteScreenData()), viewModelScope)
+
+    init {
+        loadMemberRecentPlayed()
+        loadMemberFavorites()
+    }
+
+    private fun loadMemberFavorites() {
+        viewModelScope.launch {
+            try {
+                val resolvedMemberId = profileRepository
+                    .getProfileMember()
+                    .map { it.memberId }
+                    .first()
+
+                val result = memberRepository.getMemberFavorites(
+                    memberId = resolvedMemberId,
+                    pageNumber = 1,
+                    pageSize = 10
+                )
+
+                result.onSuccess { games ->
+                    val currentData = _favoriteUiState.value.data
+                    _favoriteUiState.value = UiState(
+                        data = currentData.copy(games = games)
+                    )
+                }.onFailure { e ->
+                    _favoriteUiState.value = UiState(
+                        data = FavoriteScreenData(),
+                        error = OneTimeEvent(e)
+                    )
+                }
+            } catch (e: Exception) {
+                _favoriteUiState.value = UiState(
+                    data = FavoriteScreenData(),
+                    error = OneTimeEvent(e)
+                )
+            }
+        }
+    }
+
+    private fun loadMemberRecentPlayed() {
+        viewModelScope.launch {
+            try {
+                val resolvedMemberId = profileRepository
+                    .getProfileMember()
+                    .map { it.memberId }
+                    .first()
+
+                val result = memberRepository.getMemberRecentPlayed(
+                    memberId = resolvedMemberId,
+                    pageNumber = 1,
+                    pageSize = 10
+                )
+
+                result.onSuccess { games ->
+                    val currentData = _favoriteUiState.value.data
+                    _favoriteUiState.value = UiState(
+                        data = currentData.copy(recentGames = games)
+                    )
+                }.onFailure { e ->
+                    _favoriteUiState.value = UiState(
+                        data = FavoriteScreenData(),
+                        error = OneTimeEvent(e)
+                    )
+                }
+            } catch (e: Exception) {
+                _favoriteUiState.value = UiState(
+                    data = FavoriteScreenData(),
+                    error = OneTimeEvent(e)
+                )
+            }
+        }
+    }
+
+    fun removeFavorite(gameId: Int) {
+        viewModelScope.launch {
+            val currentData = _favoriteUiState.value.data
+
+            try {
+                val resolvedMemberId = profileRepository
+                    .getProfileMember()
+                    .map { it.memberId }
+                    .first()
+
+                val result = memberRepository.removeFavorite(
+                    memberId = resolvedMemberId,
+                    gameId = gameId,
+                )
+
+                result.onSuccess {
+                    _favoriteUiState.value = UiState(
+                        data = currentData.copy(
+                            games = currentData.games.filter { it.id.toInt() != gameId }
+                        ),
+                    )
+                }.onFailure { e ->
+                    _favoriteUiState.value = UiState(
+                        data = currentData,
+                        error = OneTimeEvent(e),
+                    )
+                }
+            } catch (e: Exception) {
+                _favoriteUiState.value = UiState(
+                    data = currentData,
+                    error = OneTimeEvent(e),
+                )
+            }
+        }
+    }
 }
 
 /**
  * Favorite screen data.
  *
  * @param games      Full list of favorited games.
- * @param recentGame Most recently played favorite game.
+ * @param recentGames Most recently played favorite game.
  */
 @Immutable
 data class FavoriteScreenData(
-    val games: List<Game> = listOf(
-        Game(
-            id = "1",
-            name = "Snow Peak",
-            imageUrl = "https://fastly.picsum.photos/id/786/400/400.jpg?hmac=-i28je2Fi45DID1aEqglQHJ1VpLE-UUwamtmczeUkbs",
-            isTrending = true,
-            isLatest = true,
-        ),
-        Game(
-            id = "2",
-            name = "Desert Rally",
-            imageUrl = "https://fastly.picsum.photos/id/175/400/400.jpg?hmac=3R0ZitObzzLehq0hkXQfNWbf5fw7aHArfw8OxdKsPZI",
-            isTrending = false,
-            isLatest = true,
-        ),
-        Game(
-            id = "3",
-            name = "Neon Rush",
-            imageUrl = "https://fastly.picsum.photos/id/392/400/400.jpg?hmac=Gzjp3oBMWRgSXg5Rqe5yT1LlSz0YkIjxG1vKVH7T0k",
-            isTrending = true,
-            isLatest = false,
-        ),
-        Game(
-            id = "4",
-            name = "Dragon Clash",
-            imageUrl = "https://fastly.picsum.photos/id/433/400/400.jpg?hmac=R7jy6RI6GvJ0W4sEFAh-LKxrDy5xkABLvEy3YgCEb2M",
-            isTrending = true,
-            isLatest = true,
-        ),
-        Game(
-            id = "5",
-            name = "Golden Spin",
-            imageUrl = "https://fastly.picsum.photos/id/503/400/400.jpg?hmac=l5eDUoHHlqVoA2PrjJ3pFKKvhRdvUHmIF9V2Z5XGZdI",
-            isTrending = false,
-            isLatest = true,
-        ),
-        Game(
-            id = "6",
-            name = "Wild Jungle",
-            imageUrl = "https://fastly.picsum.photos/id/582/400/400.jpg?hmac=V6Hf3fLnCXdO6hLm3xY_h5uPbYKvZZcPDzH5q-Jkq6Y",
-            isTrending = true,
-            isLatest = false,
-        ),
-        Game(
-            id = "7",
-            name = "Sky Pirates",
-            imageUrl = "https://fastly.picsum.photos/id/614/400/400.jpg?hmac=7vA3H6zWJPOJXC2ZhK5VgFgTfFYfCHq9JdOHxC9RnMY",
-            isTrending = false,
-            isLatest = false,
-        ),
-        Game(
-            id = "8",
-            name = "Ice Queen",
-            imageUrl = "https://fastly.picsum.photos/id/659/400/400.jpg?hmac=GqE-7HJLS1w5Kh7bLjE_Ap1hqOhgVf3iRgbJEy_gxQ0",
-            isTrending = false,
-            isLatest = true,
-        ),
-    ),
-) {
-    val recentGame get() = games.firstOrNull()
-    val hotFavorites get() = games.filter { it.isLatest }
-}
+    val games: List<Game> = emptyList(),
+    val recentGames: List<Game>  = emptyList()
+)

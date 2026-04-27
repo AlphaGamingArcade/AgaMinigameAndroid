@@ -47,6 +47,10 @@ internal class ProfileRepositoryImpl @Inject constructor(
         return userPreferencesDataSource.getUserDataPreferences().map { it.toMember() }
     }
 
+    override suspend fun updateUserBalance(amount: Double) {
+        userPreferencesDataSource.setUserMemberGameMoney(amount)
+    }
+
     /**
      * Signs out the user and resets user preferences.
      *

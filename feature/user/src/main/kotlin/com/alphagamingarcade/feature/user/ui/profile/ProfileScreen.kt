@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -33,6 +34,11 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.SupportAgent
+import androidx.compose.material.icons.rounded.CardGiftcard
+import androidx.compose.material.icons.rounded.CheckCircle
+import androidx.compose.material.icons.rounded.Info
+import androidx.compose.material.icons.rounded.MonetizationOn
+import androidx.compose.material.icons.rounded.Redeem
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -73,10 +79,8 @@ import kotlinx.coroutines.launch
 
 // ─── Palette ─────────────────────────────────────────────────────────────────
 
-private val AccentPurple  = Color(0xFF7B2FBE)
 private val AccentGold    = Color(0xFFFFBF00)
 private val AccentRed     = Color(0xFFE53935)
-private val SurfaceGray   = Color(0xFFF5F6FA)
 private val BorderGray    = Color(0xFFEEEEF5)
 private val TextPrimary   = Color(0xFF1A1A2E)
 private val TextSecondary = Color(0xFF8A8A9A)
@@ -94,8 +98,10 @@ internal fun ProfileScreen(
     onTransactionClick: () -> Unit,
 ) {
     val profileState by profileViewModel.profileUiState.collectAsStateWithLifecycle()
-    val freeDepositStatus by profileViewModel.freeDepositStatus.collectAsStateWithLifecycle()
+    val freeDepositStatus by profileViewModel.freeDeposit.collectAsStateWithLifecycle()
     val isFreeDepositClaimed = freeDepositStatus.data.claimed
+    val freeDepositAmount = freeDepositStatus.data.amount
+    val freeDepositCurrency = freeDepositStatus.data.currency
 
 
     StatefulComposable(
@@ -110,6 +116,8 @@ internal fun ProfileScreen(
             onContactSupportClick = onContactSupportClick,
             onTransactionClick = onTransactionClick,
             onSignOut = profileViewModel::signOut,
+            freeDepositAmount = freeDepositAmount,
+            freeDepositCurrency = freeDepositCurrency,
             isFreeDepositClaimed = isFreeDepositClaimed,
             onClaimFreeDeposit = profileViewModel::claimFreeDeposit
         )
@@ -128,6 +136,8 @@ private fun ProfileScreen(
     onContactSupportClick: () -> Unit,
     onTransactionClick: () -> Unit,
     onSignOut: () -> Unit,
+    freeDepositAmount: Double,
+    freeDepositCurrency: String,
     isFreeDepositClaimed: Boolean,
     onClaimFreeDeposit: () -> Unit
 ) {
@@ -215,7 +225,8 @@ private fun ProfileScreen(
         DailyRewardBottomSheet(
             sheetState = sheetState,
             isClaimed = isFreeDepositClaimed,
-            remainingSeconds = 0,
+            freeDepositAmount = freeDepositAmount,
+            freeDepositCurrency = freeDepositCurrency,
             onClaimFreeDeposit = onClaimFreeDeposit,
             onDismiss = {
                 scope.launch { sheetState.hide() }.invokeOnCompletion {
@@ -312,15 +323,16 @@ private fun ProfileScreen(
     }
 }
 
-// ─── Daily Reward Bottom Sheet ────────────────────────────────────────────────
+val SurfaceGray = Color(0xFFEEEEEE)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DailyRewardBottomSheet(
     sheetState: SheetState,
+    freeDepositAmount: Double,
+    freeDepositCurrency: String,
     onClaimFreeDeposit: () -> Unit,
     isClaimed: Boolean,
-    remainingSeconds: Int,
     onDismiss: () -> Unit,
 ) {
     ModalBottomSheet(
@@ -341,65 +353,53 @@ private fun DailyRewardBottomSheet(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.White)
-                .padding(horizontal = 24.dp, vertical = 28.dp),
+                .padding(horizontal = 24.dp, vertical = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
-            // Header label
-            Text(
-                text = "DAILY REWARD",
-                color = AccentPurple,
-                fontWeight = FontWeight.ExtraBold,
-                fontSize = 13.sp,
-                letterSpacing = 1.5.sp,
-            )
 
-            // Coin badge — purple gradient pill on white bg
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(20.dp))
-                    .background(
-                        Brush.linearGradient(
-                            colors = listOf(AccentPurple, Color(0xFF3A1078)),
-                        ),
-                    )
-                    .padding(horizontal = 40.dp, vertical = 24.dp),
-                contentAlignment = Alignment.Center,
+            // Header
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
             ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
-                ) {
-                    Text(text = "🪙", fontSize = 48.sp)
+                Icon(
+                    imageVector = Icons.Rounded.CardGiftcard,
+                    contentDescription = null,
+                    tint = AccentGold,
+                    modifier = Modifier.size(16.dp),
+                )
+                Text(
+                    text = "DAILY REWARD",
+                    color = AccentGold,
+                    fontWeight = FontWeight.ExtraBold,
+                    fontSize = 16.sp,
+                    letterSpacing = 1.5.sp,
+                )
+            }
+
+            // Coin amount card
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(Color.White)
+                    .padding(horizontal = 20.dp, vertical = 18.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
+            ) {
+                Column {
                     Text(
-                        text = "+ 500",
-                        fontSize = 36.sp,
+                        text = CurrencyFormatter.format(freeDepositAmount, freeDepositCurrency),
+                        fontSize = 28.sp,
                         fontWeight = FontWeight.ExtraBold,
-                        color = Color.White,
+                        color = Color(0xFF061C20),
                         fontFamily = FontFamily.Monospace,
-                    )
-                    Text(
-                        text = "Coins",
-                        fontSize = 14.sp,
-                        color = AccentGold,
-                        fontWeight = FontWeight.Medium,
                     )
                 }
             }
 
-            // Description
-            Text(
-                text = "Come back every day to claim\nyour free coins!",
-                fontSize = 13.sp,
-                color = TextSecondary,                       // 👈 gray on white
-                textAlign = TextAlign.Center,
-                lineHeight = 20.sp,
-            )
-
-            // Divider
             HorizontalDivider(color = BorderGray)
-
-            Spacer(Modifier.height(4.dp))
 
             // Claim / Claimed button
             Button(
@@ -407,15 +407,21 @@ private fun DailyRewardBottomSheet(
                 enabled = !isClaimed,
                 shape = RoundedCornerShape(14.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = AccentPurple,           // 👈 purple button on white bg
+                    containerColor = Color(0xFF061C20),
                     contentColor = Color.White,
-                    disabledContainerColor = SurfaceGray,    // 👈 gray when disabled
+                    disabledContainerColor = SurfaceGray,
                     disabledContentColor = TextSecondary,
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(52.dp),
             ) {
+                Icon(
+                    imageVector = if (isClaimed) Icons.Rounded.CheckCircle else Icons.Rounded.Redeem,
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp),
+                )
+                Spacer(Modifier.width(8.dp))
                 Text(
                     text = if (isClaimed) "Claimed" else "Claim Now",
                     fontSize = 15.sp,
@@ -423,24 +429,35 @@ private fun DailyRewardBottomSheet(
                 )
             }
 
-            // Countdown timer — only visible after claiming
-            if (isClaimed) {
-                val hours = remainingSeconds / 3600
-                val minutes = (remainingSeconds % 3600) / 60
-                val seconds = remainingSeconds % 60
-                Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(SurfaceGray)             // 👈 subtle gray pill
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                ) {
-                    Text(
-                        text = "⏱ Next claim in: %02d:%02d:%02d".format(hours, minutes, seconds),
-                        fontSize = 12.sp,
-                        color = TextSecondary,               // 👈 gray text on gray pill
-                        fontFamily = FontFamily.Monospace,
-                    )
-                }
+            // Come back tomorrow notice — only visible after claiming
+            // Otherwise show the daily description
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(SurfaceGray)
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
+            ) {
+                Icon(
+                    imageVector = Icons.Rounded.Info,
+                    contentDescription = null,
+                    tint = TextSecondary,
+                    modifier = Modifier.size(15.dp),
+                )
+                Spacer(Modifier.width(6.dp))
+                Text(
+                    text = if (isClaimed)
+                        "Come back tomorrow to claim your next daily reward!"
+                    else
+                        "Come back every day to claim your free coins!",
+                    fontSize = 12.sp,
+                    color = TextSecondary,
+                    fontWeight = FontWeight.Medium,
+                    textAlign = TextAlign.Center,
+                    lineHeight = 18.sp,
+                )
             }
 
             Spacer(Modifier.height(8.dp))

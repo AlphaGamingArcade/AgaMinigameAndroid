@@ -9,7 +9,7 @@ import com.alphagamingarcade.core.extensions.asOneTimeEvent
 import com.alphagamingarcade.core.extensions.stateInDelayed
 import com.alphagamingarcade.core.ui.utils.UiState
 import com.alphagamingarcade.core.ui.utils.updateWith
-import com.alphagamingarcade.model.data.TransactionFreeDepositStatus
+import com.alphagamingarcade.model.data.TransactionFreeDeposit
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
@@ -33,12 +33,12 @@ class ProfileViewModel @Inject constructor(
         .onStart { updateProfileData() }
         .stateInDelayed(UiState(Profile()), viewModelScope)
 
-    private val _freeDepositStatus =
-        MutableStateFlow(UiState(TransactionFreeDepositStatus(claimed = false, amount = 0.0)))
-    val freeDepositStatus = _freeDepositStatus
+    private val _freeDeposit =
+        MutableStateFlow(UiState(TransactionFreeDeposit(claimed = false, amount = 0.0, currency = "USD")))
+    val freeDeposit = _freeDeposit
         .onStart { checkRewardClaimed() }
         .stateInDelayed(
-            UiState(TransactionFreeDepositStatus(claimed = false, amount = 0.0)),
+            UiState(TransactionFreeDeposit(claimed = false, amount = 0.0, currency = "USD")),
             viewModelScope
         )
 
@@ -60,7 +60,7 @@ class ProfileViewModel @Inject constructor(
 
     private fun checkRewardClaimed() {
         viewModelScope.launch {
-            _freeDepositStatus.update { current ->
+            _freeDeposit.update { current ->
                 current.copy(loading = true)
             }
 
@@ -70,17 +70,17 @@ class ProfileViewModel @Inject constructor(
                 .first()
 
             runCatching {
-                transactionRepository.getTransactionFreeDepositStatus(
+                transactionRepository.getTransactionFreeDeposit(
                     memberId = resolvedMemberId
                 )
             }.onSuccess { status ->
-                _freeDepositStatus.update {
+                _freeDeposit.update {
                     UiState(data = status)
                 }
             }.onFailure { e ->
-                _freeDepositStatus.update {
+                _freeDeposit.update {
                     UiState(
-                        data = TransactionFreeDepositStatus(claimed = false, amount = 0.0),
+                        data = TransactionFreeDeposit(claimed = false, amount = 0.0, currency = "USD"),
                         error = e.asOneTimeEvent()
                     )
                 }
@@ -89,9 +89,9 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun claimFreeDeposit() {
-        if (_freeDepositStatus.value.loading) return
+        if (_freeDeposit.value.loading) return
         viewModelScope.launch {
-            _freeDepositStatus.update { current ->
+            _freeDeposit.update { current ->
                 current.copy(loading = true)
             }
 
@@ -105,13 +105,21 @@ class ProfileViewModel @Inject constructor(
                     memberId = resolvedMemberId
                 )
             }.onSuccess { status ->
-                _freeDepositStatus.update {
-                    UiState(data = status) // ✅ API returns updated status directly
+                _freeDeposit.update {
+                    UiState(data = status)
                 }
+
+                val currentBalance = profileRepository
+                    .getProfileMember()
+                    .map { it.gameMoney }
+                    .first()
+
+                profileRepository.updateUserBalance(currentBalance + status.amount)
+
             }.onFailure { e ->
-                _freeDepositStatus.update {
+                _freeDeposit.update {
                     UiState(
-                        data = TransactionFreeDepositStatus(claimed = false, amount = 0.0),
+                        data = TransactionFreeDeposit(claimed = false, amount = 0.0, currency = "USD"),
                         error = e.asOneTimeEvent()
                     )
                 }

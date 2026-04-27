@@ -36,34 +36,20 @@ internal class AuthDataSourceImpl @Inject constructor(
     override suspend fun signInWithEmailAndPassword(
         email: String,
         password: String
-    ): Result<ApiResponse<NetworkAuthData>> = withContext(ioDispatcher) {
-        try {
-            val request = LoginRequest(
-                email = email,
-                password = password
-            )
-            val response = authRestApi.signIn(request)
-            Result.success(response)
-        } catch (e: HttpException) {
-            Result.failure(e) // 4xx/5xx errors (wrong password, not found, etc.)
-        } catch (e: IOException) {
-            Result.failure(e) // No internet, timeout
-        }
+    ): ApiResponse<NetworkAuthData> {
+        val request = LoginRequest(
+            email = email,
+            password = password
+        )
+        return authRestApi.signIn(request)
     }
 
     override suspend fun signOut(refreshToken: String
-    ): Result<ApiResponseNullable<NetworkLogoutResponse?>> = withContext(ioDispatcher) {
-        try {
-            val request = NetworkLogoutRequest(
-                refreshToken = refreshToken
-            )
-            val response = authRestApi.signOut(request)
-            Result.success(response)
-        } catch (e: HttpException) {
-            Result.failure(e) // 4xx/5xx errors (wrong password, not found, etc.)
-        } catch (e: IOException) {
-            Result.failure(e) // No internet, timeout
-        }
+    ): ApiResponseNullable<NetworkLogoutResponse?> {
+        val request = NetworkLogoutRequest(
+            refreshToken = refreshToken
+        )
+        return authRestApi.signOut(request)
     }
 
 
@@ -72,77 +58,42 @@ internal class AuthDataSourceImpl @Inject constructor(
         email: String,
         password: String,
         confirmPassword: String
-    ): Result<ApiResponse<NetworkAuthData>> = withContext(ioDispatcher) {
-        try {
-
-            val request = RegisterRequest(
-                email = email,
-                password = password,
-                confirmPassword = confirmPassword
-            )
-
-            val response = authRestApi.register(request)
-
-            Result.success(response)
-        } catch (e: HttpException) {
-            Result.failure(e) // 4xx/5xx errors (wrong password, not found, etc.)
-        } catch (e: IOException) {
-            Result.failure(e) // No internet, timeout
-        }
+    ): ApiResponse<NetworkAuthData> {
+        val request = RegisterRequest(
+            email = email,
+            password = password,
+            confirmPassword = confirmPassword
+        )
+        return authRestApi.register(request)
     }
 
     // Resend verify email
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     override suspend fun resendVerifyEmail(
         email: String
-    ): Result<ApiResponseNullable<NetworkResendVerifyEmail?>> = withContext(ioDispatcher) {
-        try {
-            val request = ResendVerifyEmailRequest(
-                email = email
-            )
-
-            val response = authRestApi.resendVerifyEmail(request)
-
-            Result.success(response)
-        } catch (e: HttpException) {
-            Result.failure(e)
-        } catch (e: IOException) {
-            Result.failure(e)
-        }
+    ): ApiResponseNullable<NetworkResendVerifyEmail?> {
+        val request = ResendVerifyEmailRequest(
+            email = email
+        )
+        return authRestApi.resendVerifyEmail(request)
     }
 
     // Network email status
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     override suspend fun getEmailStatus(
         email: String
-    ): Result<ApiResponse<NetworkEmailStatus>> = withContext(ioDispatcher) {
-        try {
-            val response = authRestApi.getEmailStatus(email)
-            Result.success(response)
-        } catch (e: HttpException) {
-            Result.failure(e)
-        } catch (e: IOException) {
-            Result.failure(e)
-        }
+    ): ApiResponse<NetworkEmailStatus> {
+        return authRestApi.getEmailStatus(email)
     }
-
-
 
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     override suspend fun sendForgotPasswordResetLink(
         email: String
-    ): Result<ApiResponseNullable<NetworkForgotPassword?>> = withContext(ioDispatcher){
-        try {
-            val request = NetworkForgotPasswordRequest(
-                email = email
-            )
-            val response = authRestApi.forgotPassword(request)
-            Result.success(response)
-        } catch (e: HttpException) {
-            Result.failure(e)
-        } catch (e: IOException) {
-            Result.failure(e)
-        }
+    ): ApiResponseNullable<NetworkForgotPassword?> {
+        val request = NetworkForgotPasswordRequest(
+            email = email
+        )
+        return authRestApi.forgotPassword(request)
     }
 
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
@@ -150,21 +101,13 @@ internal class AuthDataSourceImpl @Inject constructor(
         currentPassword: String,
         newPassword: String,
         confirmPassword: String
-    ): Result<ApiResponseNullable<NetworkChangePasswordResponse?>> = withContext(ioDispatcher){
-        try {
-            val request = NetworkChangePasswordRequest(
-                currentPassword,
-                newPassword,
-                confirmPassword
-            )
-            val response = authRestApi.changePassword(request)
-
-            Result.success(response)
-        } catch (e: HttpException) {
-            Result.failure(e)
-        } catch (e: IOException) {
-            Result.failure(e)
-        }
+    ): ApiResponseNullable<NetworkChangePasswordResponse?> {
+        val request = NetworkChangePasswordRequest(
+            currentPassword,
+            newPassword,
+            confirmPassword
+        )
+        return authRestApi.changePassword(request)
     }
 
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)

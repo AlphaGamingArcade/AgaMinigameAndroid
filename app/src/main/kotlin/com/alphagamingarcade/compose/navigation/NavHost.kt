@@ -113,6 +113,7 @@ fun AgamgNavHost(
             },
         )
         gameDetailScreen(
+            isLoggedIn = appState.isUserLoggedIn,
             onShowSnackbar = onShowSnackbar,
             onBackClick = { navController.popBackStack() },
             onPlayClick = { }
@@ -128,7 +129,9 @@ fun AgamgNavHost(
         )
         categoriesScreen(
             onShowSnackbar = onShowSnackbar,
-            onGameClick = {},
+            onGameClick = { gameId ->
+                navController.navigateToGameDetailScreen(gameId = gameId)
+            },
             onBackClick = { navController.popBackStack() },
         )
         browseScreen(

@@ -20,45 +20,46 @@ interface AuthDataSource {
     suspend fun signInWithEmailAndPassword(
         email: String,
         password: String
-    ): Result<ApiResponse<NetworkAuthData>>
+    ): ApiResponse<NetworkAuthData>
 
     // Email/password sign in
     suspend fun signOut(
         refreshToken: String
-    ): Result<ApiResponseNullable<NetworkLogoutResponse?>>
+    ): ApiResponseNullable<NetworkLogoutResponse?>
 
     // Email/password register
     suspend fun registerWithEmailAndPassword(
         email: String,
         password: String,
         confirmPassword: String
-    ): Result<ApiResponse<NetworkAuthData>>
+    ): ApiResponse<NetworkAuthData>
 
     // Resend verify email
     suspend fun resendVerifyEmail(
         email: String
-    ): Result<ApiResponseNullable<NetworkResendVerifyEmail?>>
+    ): ApiResponseNullable<NetworkResendVerifyEmail?>
 
     // Resend verify email
     suspend fun getEmailStatus(
         email: String
-    ): Result<ApiResponse<NetworkEmailStatus>>
+    ): ApiResponse<NetworkEmailStatus>
 
 
     // Resend verify email
     suspend fun sendForgotPasswordResetLink(
         email: String
-    ): Result<ApiResponseNullable<NetworkForgotPassword?>>
-
-    // Resend verify email
-    fun refreshToken(
-        refreshToken: String
-    ): Call<ApiResponse<NetworkRefreshToken>>
+    ): ApiResponseNullable<NetworkForgotPassword?>
 
     // Change password
     suspend fun changePassword(
         currentPassword: String,
         newPassword: String,
         confirmPassword: String
-    ): Result<ApiResponseNullable<NetworkChangePasswordResponse?>>
+    ): ApiResponseNullable<NetworkChangePasswordResponse?>
+
+    // Resend verify email
+    fun refreshToken(
+        refreshToken: String
+    ): Call<ApiResponse<NetworkRefreshToken>>
+
 }

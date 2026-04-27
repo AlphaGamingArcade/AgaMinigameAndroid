@@ -29,11 +29,11 @@ interface UserPreferencesDataSource {
 
     suspend fun setUserProfile(userDataPreferences: UserDataPreferences)
 
-    /**
-     * Sets the dark theme configuration in the user preferences.
-     *
-     * @param darkThemeConfigPreferences The dark theme configuration to be set.
-     */
+
+    suspend fun setUserMember(memberPreferences: MemberPreferences)
+
+    suspend fun setUserMemberGameMoney(amount: Double)
+
     suspend fun setDarkThemeConfig(darkThemeConfigPreferences: DarkThemeConfigPreferences)
 
     /**
@@ -47,6 +47,4 @@ interface UserPreferencesDataSource {
      * Resets the user preferences to their default values.
      */
     suspend fun resetUserPreferences()
-
-    suspend fun setUserMember(memberPreferences: MemberPreferences)
 }

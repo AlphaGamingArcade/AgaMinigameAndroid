@@ -18,8 +18,8 @@ interface TransactionRestApi {
         @Query ("pageSize") pageSize: Int
     ): ApiResponse<PaginatedResponse<NetworkTransaction>>
 
-    @GET("/transactions/free-deposit/status")
-    suspend fun getTransactionFreeDepositStatus(
+    @GET("/transactions/free-deposit")
+    suspend fun getTransactionFreeDeposit(
         @Query("memberId") memberId: Int
     ): ApiResponse<NetworkFreeDepositStatus>
 

@@ -20,6 +20,7 @@ data class  NetworkUpdateMemberRequest(
     val nickname: String,
 )
 
+
 @Serializable
 data object NetworkUpdateMemberResponse
 
@@ -55,4 +56,3 @@ fun NetworkMember.asMemberPreferences() = MemberPreferences(
     userId = userId,
     agent = agent.asAgentPreferences(),
 )
-

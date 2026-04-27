@@ -7,6 +7,6 @@ import kotlinx.coroutines.flow.Flow
 /**
  * Interface for managing home-related operations.
  */
-interface BannersRepository : Syncable {
+interface BannersRepository {
     fun getBanners(): Flow<List<Banner>>
 }

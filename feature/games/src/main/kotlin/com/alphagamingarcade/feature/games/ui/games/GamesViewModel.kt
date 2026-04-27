@@ -145,40 +145,12 @@ data class GamesScreenData(
     val topRated: List<Game> = emptyList(),
     val jackpotGames: List<Game> = listOf(
         Game(
-            id = "501",
+            id = 501,
             name = "Mega Millions",
             imageUrl = "https://picsum.photos/seed/megamillions/400/400",
             isTrending = true,
             isLatest = false,
-        ),
-        Game(
-            id = "502",
-            name = "Grand Jackpot",
-            imageUrl = "https://picsum.photos/seed/grandjackpot/400/400",
-            isTrending = true,
-            isLatest = false,
-        ),
-        Game(
-            id = "503",
-            name = "Cash Explosion",
-            imageUrl = "https://picsum.photos/seed/cashexplosion/400/400",
-            isTrending = true,
-            isLatest = true,
-        ),
-        Game(
-            id = "503",
-            name = "Cash Explosion",
-            imageUrl = "https://picsum.photos/seed/cashexplosion/400/400",
-            isTrending = true,
-            isLatest = true,
-        ),
-        Game(
-            id = "503",
-            name = "Cash Explosion",
-            imageUrl = "https://picsum.photos/seed/cashexplosion/400/400",
-            isTrending = true,
-            isLatest = true,
-        ),
+        )
     ),
     val comingSoonGames: List<Game> = emptyList()
 )

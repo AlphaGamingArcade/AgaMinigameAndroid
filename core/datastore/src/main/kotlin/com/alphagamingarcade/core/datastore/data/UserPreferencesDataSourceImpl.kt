@@ -84,6 +84,18 @@ internal class UserPreferencesDataSourceImpl @Inject constructor(
         }
     }
 
+    override suspend fun setUserMemberGameMoney(amount: Double) {
+        withContext(ioDispatcher) {
+            datastore.updateData { userData ->
+                userData.copy(
+                    member = userData.member?.copy(
+                        gameMoney = amount
+                    )
+                )
+            }
+        }
+    }
+
     /**
      * Sets the dark theme configuration in the user preferences.
      *

@@ -28,10 +28,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -83,6 +85,9 @@ internal fun FavoriteScreen(
         FavoriteScreen(
             data = homeScreenData,
             onGameClick = onGameClick,
+            onRemoveFavoriteClick = { game ->
+                browseViewModel.removeFavorite(game.id.toInt())
+            }
         )
     }
 }
@@ -93,8 +98,10 @@ internal fun FavoriteScreen(
 private fun FavoriteScreen(
     data: FavoriteScreenData,
     onGameClick: (String) -> Unit,
+    onRemoveFavoriteClick: (Game) -> Unit
 ) {
     var searchQuery by remember { mutableStateOf("") }
+    var selectedGameToRemove by remember { mutableStateOf<Game?>(null) }
 
     val filteredGames = remember(searchQuery, data.games) {
         if (searchQuery.isBlank()) data.games
@@ -102,6 +109,31 @@ private fun FavoriteScreen(
     }
 
     val isSearching = searchQuery.isNotBlank()
+
+    selectedGameToRemove?.let { game ->
+        AlertDialog(
+            onDismissRequest = {
+                selectedGameToRemove = null
+            },
+            title = { Text("Remove from favorites?") },
+            text = { Text("Do you want to remove ${game.name} from your favorites?") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        selectedGameToRemove = null
+                        onRemoveFavoriteClick(game)
+                    }
+                ) {
+                    Text("Remove")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { selectedGameToRemove = null }) {
+                    Text("Cancel")
+                }
+            },
+        )
+    }
 
     Surface(color = Color.White, modifier = Modifier.fillMaxSize()) {
         LazyColumn(
@@ -122,7 +154,7 @@ private fun FavoriteScreen(
 
             // ── Resume Playing card — only when not searching ─────────────────
             if (!isSearching) {
-                data.recentGame?.let { recent ->
+                data.recentGames.firstOrNull()?.let { recent ->
                     item {
                         SectionLabel(
                             title = "Continue Playing",
@@ -139,21 +171,26 @@ private fun FavoriteScreen(
                 }
             }
 
-            // ── Hot Favorites — only when not searching ───────────────────────
-            if (!isSearching && data.hotFavorites.isNotEmpty()) {
-                item {
-                    SectionLabel(
-                        title = "🔥 Hot Favorites",
-                        modifier = Modifier.padding(horizontal = 20.dp),
-                    )
-                    Spacer(Modifier.height(10.dp))
-                    HotFavoritesRow(
-                        games = data.hotFavorites,
-                        onGameClick = onGameClick,
-                    )
-                    Spacer(Modifier.height(24.dp))
-                }
-            }
+//            if (!isSearching && data.recentGames.isNotEmpty()) {
+//                item {
+//                    SectionLabel(
+//                        title = "Continue Playing",
+//                        modifier = Modifier.padding(horizontal = 20.dp),
+//                    )
+//                    Spacer(Modifier.height(10.dp))
+//                }
+//                items(data.recentGames) { recent ->
+//                    ResumeCard(
+//                        game = recent,
+//                        onClick = { onGameClick(recent.id.toString()) },
+//                        modifier = Modifier.padding(horizontal = 20.dp),
+//                    )
+//                    Spacer(Modifier.height(10.dp))
+//                }
+//                item {
+//                    Spacer(Modifier.height(14.dp))
+//                }
+//            }
 
             // ── All Favorites grid ────────────────────────────────────────────
             item {
@@ -174,6 +211,9 @@ private fun FavoriteScreen(
                         games = filteredGames,
                         onGameClick = onGameClick,
                         modifier = Modifier.padding(horizontal = 20.dp),
+                        onRemoveFavoriteClick = { game ->
+                            selectedGameToRemove = game
+                        }
                     )
                 }
             }
@@ -418,7 +458,8 @@ private fun HotFavoritesRow(games: List<Game>, onGameClick: (String) -> Unit) {
 private fun FavoritesGrid(
     games: List<Game>,
     onGameClick: (String) -> Unit,
-    modifier: Modifier = Modifier,
+    onRemoveFavoriteClick: (Game) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val gridHeight = ((games.size + 1) / 2) * 190
     LazyVerticalGrid(
@@ -431,17 +472,23 @@ private fun FavoritesGrid(
         items(items = games, key = { it.id }) { game ->
             FavoriteGridCard(
                 game = game,
-                onClick = { onGameClick(game.id.toString()) },
+                onClick = { onGameClick(game.gameCode) },
+                onRemoveFavoriteClick = { onRemoveFavoriteClick(game) }
             )
         }
     }
 }
 
 @Composable
-private fun FavoriteGridCard(game: Game, onClick: () -> Unit) {
+private fun FavoriteGridCard(
+    game: Game,
+    onClick: () -> Unit,
+    onRemoveFavoriteClick: () -> Unit,
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
             .clickable(onClick = onClick),
     ) {
         Box(
@@ -456,7 +503,7 @@ private fun FavoriteGridCard(game: Game, onClick: () -> Unit) {
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize(),
             )
-            // Tags row
+
             Row(
                 modifier = Modifier
                     .align(Alignment.TopStart)
@@ -466,25 +513,28 @@ private fun FavoriteGridCard(game: Game, onClick: () -> Unit) {
                 if (game.isTrending) GameTag(label = "HOT", color = TagHot)
                 if (game.isLatest) GameTag(label = "NEW", color = TagNew)
             }
-            // Favorite heart overlay
+
             Box(
                 modifier = Modifier
                     .align(Alignment.TopEnd)
                     .padding(6.dp)
-                    .size(26.dp)
+                    .size(32.dp)
                     .clip(CircleShape)
-                    .background(Color.White.copy(alpha = 0.9f)),
+                    .background(Color.White.copy(alpha = 0.9f))
+                    .clickable(onClick = onRemoveFavoriteClick),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
                     imageVector = Icons.Default.Favorite,
-                    contentDescription = null,
+                    contentDescription = "Remove from favorites",
                     tint = AccentPink,
-                    modifier = Modifier.size(14.dp),
+                    modifier = Modifier.size(16.dp),
                 )
             }
         }
+
         Spacer(Modifier.height(6.dp))
+
         Text(
             text = game.name,
             fontWeight = FontWeight.SemiBold,
@@ -493,6 +543,7 @@ private fun FavoriteGridCard(game: Game, onClick: () -> Unit) {
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
+
         Text(
             text = "⭐ 4.8 · Favorited",
             fontSize = 11.sp,
@@ -522,7 +573,7 @@ private fun FavoriteEmptyState(isSearching: Boolean) {
             Icon(
                 imageVector = Icons.Default.Favorite,
                 contentDescription = null,
-                tint = Color(0xFFE0D0E8),
+                tint = Color.Black,
                 modifier = Modifier.size(36.dp),
             )
         }

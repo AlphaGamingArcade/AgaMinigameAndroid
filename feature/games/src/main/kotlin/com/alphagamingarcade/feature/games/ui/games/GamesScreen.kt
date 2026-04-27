@@ -23,10 +23,23 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Casino
+import androidx.compose.material.icons.rounded.ChevronRight
+import androidx.compose.material.icons.rounded.Diamond
+import androidx.compose.material.icons.rounded.GridView
+import androidx.compose.material.icons.rounded.LiveTv
+import androidx.compose.material.icons.rounded.MonetizationOn
+import androidx.compose.material.icons.rounded.SportsEsports
+import androidx.compose.material.icons.rounded.SportsSoccer
+import androidx.compose.material.icons.rounded.Toll
+import androidx.compose.material.icons.rounded.ViewColumn
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -130,6 +143,7 @@ private fun GamesScreen(
                     title = "Trending Now",
                     subtitle = "Most played today",
                     modifier = Modifier.padding(horizontal = 20.dp),
+                    onSeeMoreClick = {}
                 )
                 Spacer(Modifier.height(12.dp))
                 TrendingRow(games = data.trendingGames, onGameClick = onGameClick)
@@ -142,6 +156,7 @@ private fun GamesScreen(
                     title = "New Releases",
                     subtitle = "Fresh off the press",
                     modifier = Modifier.padding(horizontal = 20.dp),
+                    onSeeMoreClick = {}
                 )
                 Spacer(Modifier.height(12.dp))
                 NewReleasesRow(games = data.newReleases, onGameClick = onGameClick)
@@ -167,6 +182,7 @@ private fun GamesScreen(
                     title = "Top Rated",
                     subtitle = "Players' all-time favourites",
                     modifier = Modifier.padding(horizontal = 20.dp),
+                    onSeeMoreClick = {}
                 )
                 Spacer(Modifier.height(12.dp))
             }
@@ -268,14 +284,13 @@ private fun HeroBannerCarousel(
 }
 
 // ─── Quick Category Pills ────────────────────────────────────────────────────
-
 private val quickCategories = listOf(
-    "🎰" to "Slots",
-    "🃏" to "Table",
-    "🎲" to "Live",
-    "⚽" to "Sports",
-    "🎮" to "Arcade",
-    "💎" to "VIP",
+    Icons.Rounded.ViewColumn to "Slots",
+    Icons.Rounded.GridView to "Table",
+    Icons.Rounded.SportsEsports to "Arcade",
+    Icons.Rounded.LiveTv to "Live",
+    Icons.Rounded.SportsSoccer to "Sports",
+    Icons.Rounded.Diamond to "VIP",
 )
 
 @Composable
@@ -293,7 +308,12 @@ private fun QuickCategoryPills(onCategoryClick: (String) -> Unit) {
                     .background(SurfaceGray)
                     .padding(horizontal = 16.dp, vertical = 12.dp),
             ) {
-                Text(text = icon, fontSize = 24.sp)
+                Icon(
+                    imageVector = icon,
+                    contentDescription = label,
+                    tint = Color(0xFF0A3535),
+                    modifier = Modifier.size(24.dp),
+                )
                 Spacer(Modifier.height(4.dp))
                 Text(
                     text = label,
@@ -480,10 +500,10 @@ private fun TrendingRow(games: List<Game>, onGameClick: (String) -> Unit) {
 @Composable
 private fun TrendingCard(game: Game, onClick: () -> Unit) {
     Card(
-        onClick = onClick,             // 👈 use Card's built-in onClick
+        onClick = onClick,
         modifier = Modifier.width(140.dp),
         shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
     ) {
         Column {
@@ -675,19 +695,47 @@ private fun SectionHeader(
     title: String,
     subtitle: String,
     modifier: Modifier = Modifier,
+    onSeeMoreClick: (() -> Unit)? = null,
 ) {
-    Column(modifier = modifier) {
-        Text(
-            text = title,
-            fontWeight = FontWeight.Bold,
-            fontSize = 18.sp,
-            color = TextPrimary,
-        )
-        Text(
-            text = subtitle,
-            fontSize = 12.sp,
-            color = TextSecondary,
-        )
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.Bottom,
+    ) {
+        Column {
+            Text(
+                text = title,
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp,
+                color = TextPrimary,
+            )
+            Text(
+                text = subtitle,
+                fontSize = 12.sp,
+                color = TextSecondary,
+            )
+        }
+
+        if (onSeeMoreClick != null) {
+            TextButton(
+                onClick = onSeeMoreClick,
+                contentPadding = PaddingValues(horizontal = 8.dp),
+            ) {
+                Text(
+                    text = "See More",
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color(0xFF0A3535),
+                )
+                Spacer(Modifier.width(2.dp))
+                Icon(
+                    imageVector = Icons.Rounded.ChevronRight,
+                    contentDescription = null,
+                    tint = Color(0xFF0A3535),
+                    modifier = Modifier.size(16.dp),
+                )
+            }
+        }
     }
 }
 

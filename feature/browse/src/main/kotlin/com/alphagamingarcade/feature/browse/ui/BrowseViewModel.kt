@@ -28,7 +28,10 @@ class BrowseViewModel @Inject constructor(
 
     private fun loadGames(){
         viewModelScope.launch {
-            gamesRepository.getGames()
+            gamesRepository.getGames(
+                pageNumber = 1,
+                pageSize = 50,
+            )
                 .catch { e ->
                     _browseUiState.value = UiState(
                         data = BrowseScreenData(),

@@ -42,8 +42,6 @@ internal class AuthRepositoryImpl @Inject constructor(
     ): Result<Unit> {
         return suspendRunCatching {
             val result = authDataSource.signInWithEmailAndPassword(email, password)
-                .getOrThrow()
-
             userPreferencesDataSource.setUserProfile(
                 UserDataPreferences(
                     id = result.data.user.id.toString(),
@@ -67,7 +65,7 @@ internal class AuthRepositoryImpl @Inject constructor(
         confirmPassword: String
     ): Result<Unit> {
         return suspendRunCatching {
-            val result = authDataSource.registerWithEmailAndPassword(email, password, confirmPassword).getOrThrow();
+            val result = authDataSource.registerWithEmailAndPassword(email, password, confirmPassword)
 
             userPreferencesDataSource.setUserProfile(
                 UserDataPreferences(
@@ -90,14 +88,12 @@ internal class AuthRepositoryImpl @Inject constructor(
         return suspendRunCatching {
             authDataSource
                 .resendVerifyEmail(email)
-                .getOrThrow()
         }
     }
 
     override suspend fun getEmailStatus(email: String): Result<Boolean> {
         return suspendRunCatching {
             authDataSource.getEmailStatus(email)
-                .getOrThrow()
                 .data
                 .isVerified
         }

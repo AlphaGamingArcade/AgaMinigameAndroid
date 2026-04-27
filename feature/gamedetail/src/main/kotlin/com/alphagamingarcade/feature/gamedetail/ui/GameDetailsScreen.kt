@@ -12,26 +12,21 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -43,7 +38,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -57,7 +51,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -85,6 +78,7 @@ private val AccentSoft = Color(0xFFE8F7FA)
  */
 @Composable
 internal fun GameDetailScreen(
+    isLoggedIn: Boolean,
     onBackClick: () -> Unit,
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
     onPlayClick: (String) -> Unit,
@@ -97,11 +91,12 @@ internal fun GameDetailScreen(
         onShowSnackbar = onShowSnackbar,
     ) { screenData ->
         GameDetailScreen(
+            isLoggedIn = isLoggedIn,
             screenData = screenData,
             onBackClick = onBackClick,
             onFavoriteClick = viewModel::toggleFavorite,
             onScreenshotClick = viewModel::selectScreenshot,
-            onPlayClick = { onPlayClick(screenData.game.id) },
+            onPlayClick = { onPlayClick(screenData.game.id.toString()) },
             onSimilarGameClick = viewModel::openSimilarGame,
         )
     }
@@ -111,6 +106,7 @@ internal fun GameDetailScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun GameDetailScreen(
+    isLoggedIn: Boolean,
     screenData: GameDetailScreenData,
     onBackClick: () -> Unit,
     onFavoriteClick: () -> Unit,
@@ -140,6 +136,7 @@ private fun GameDetailScreen(
         ) {
             item {
                 GameHeroSection(
+                    isLoggedIn = isLoggedIn,
                     game = screenData.game,
                     onBackClick = onBackClick,
                     onFavoriteClick = onFavoriteClick,
@@ -217,6 +214,7 @@ private fun GameDetailScreen(
 
 @Composable
 private fun GameHeroSection(
+    isLoggedIn: Boolean,
     game: GameDetailUiModel,
     onBackClick: () -> Unit,
     onFavoriteClick: () -> Unit,
@@ -319,15 +317,17 @@ private fun GameHeroSection(
                         )
                     }
 
-                    IconButton(
-                        onClick = onFavoriteClick,
-                        modifier = Modifier.padding(top = 2.dp),
-                    ) {
-                        Icon(
-                            imageVector = if (game.isFavorite) Icons.Filled.Star else Icons.Outlined.StarBorder,
-                            contentDescription = "Favorite",
-                            tint = if (game.isFavorite) AccentColor else TextSecondary,
-                        )
+                    if (isLoggedIn){
+                        IconButton(
+                            onClick = onFavoriteClick,
+                            modifier = Modifier.padding(top = 2.dp),
+                        ) {
+                            Icon(
+                                imageVector = if (game.isFavorite) Icons.Filled.Star else Icons.Outlined.StarBorder,
+                                contentDescription = "Favorite",
+                                tint = if (game.isFavorite) AccentColor else TextSecondary,
+                            )
+                        }
                     }
                 }
 

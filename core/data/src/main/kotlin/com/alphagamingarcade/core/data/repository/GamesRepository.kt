@@ -1,10 +1,20 @@
 package com.alphagamingarcade.core.data.repository
 
 import com.alphagamingarcade.model.data.Game
+import com.alphagamingarcade.model.data.Transaction
 import kotlinx.coroutines.flow.Flow
 
 interface GamesRepository {
-    fun getGames():Flow<List<Game>>
+    suspend fun getGame(gameId: Int): Result<Game>
+
+    fun getGames(
+        pageNumber: Int,
+        pageSize: Int,
+        category: String? = null,
+        search: String? = null,
+        sortBy: String? = null,
+        orderBy: String? = null,
+    ):Flow<List<Game>>
 
     fun getTrendingGames(): Flow<List<Game>>
 

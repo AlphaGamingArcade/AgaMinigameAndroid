@@ -26,25 +26,20 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.icons.rounded.SportsEsports
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -57,7 +52,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -83,6 +77,10 @@ internal fun CategoriesScreen(
     viewModel: CategoriesViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(categoryName) {
+        viewModel.initialize(categoryName)
+    }
 
     StatefulComposable(
         state = state,
@@ -152,11 +150,7 @@ private fun CategoriesScreen(
                 ),
             )
 
-            if (data.isComingSoon) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    ComingSoonBanner()
-                }
-            } else if (data.isLoading) {
+           if (data.isLoading) {
                 // ── Shimmer Loading State ────────────────────────────────────
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
@@ -307,39 +301,6 @@ private fun CategoryGameCard(
     }
 }
 
-// ─── Coming Soon Banner ───────────────────────────────────────────────────────
-
-@Composable
-private fun ComingSoonBanner() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
-            .background(Color(0xFFF5F6FA))
-            .padding(24.dp),
-        contentAlignment = Alignment.Center,
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            Text(text = "🚧", fontSize = 36.sp)
-            Text(
-                text = "Coming Soon",
-                fontWeight = FontWeight.ExtraBold,
-                fontSize = 18.sp,
-                color = Color(0xFF1A1A2E),
-            )
-            Text(
-                text = "We're working on something exciting.\nStay tuned!",
-                fontSize = 13.sp,
-                color = Color(0xFF8A8A9A),
-                textAlign = TextAlign.Center,
-            )
-        }
-    }
-}
-
 // ─── Empty State ─────────────────────────────────────────────────────────────
 
 @Composable
@@ -354,7 +315,12 @@ private fun EmptyState(isSearching: Boolean = false) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            Text(text = if (isSearching) "🔍" else "🎮", fontSize = 48.sp)
+            Icon(
+                imageVector = if (isSearching) Icons.Rounded.Search else Icons.Rounded.SportsEsports,
+                contentDescription = null,
+                tint = Color(0xFF0A3535),
+                modifier = Modifier.size(48.dp),
+            )
             Text(
                 text = if (isSearching) "No results found" else "No games yet",
                 fontWeight = FontWeight.Bold,

@@ -82,17 +82,17 @@ class SyncWorker @AssistedInject constructor(
             try {
                 setForeground(getForegroundInfo())
                 // REAL: Uncomment when repository is ready
-                 bannersRepository.sync()
-                     .flowOn(ioDispatcher)
-                     .collect { progress ->
-                         Timber.d("SyncWorker: Progress: $progress")
-                         setForeground(
-                             foregroundInfo = getForegroundInfo(
-                                 total = progress.total,
-                                 current = progress.current,
-                             ),
-                         )
-                     }
+//                 bannersRepository.sync()
+//                     .flowOn(ioDispatcher)
+//                     .collect { progress ->
+//                         Timber.d("SyncWorker: Progress: $progress")
+//                         setForeground(
+//                             foregroundInfo = getForegroundInfo(
+//                                 total = progress.total,
+//                                 current = progress.current,
+//                             ),
+//                         )
+//                     }
 
                 Result.success()
             } catch (e: Exception) {

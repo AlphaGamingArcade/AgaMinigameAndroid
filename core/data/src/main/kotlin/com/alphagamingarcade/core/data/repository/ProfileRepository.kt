@@ -35,6 +35,7 @@ interface ProfileRepository {
      */
     suspend fun signOut(): Result<Unit>
 
+    suspend fun updateUserBalance(amount: Double)
 
     /**
      * Change the password of a user.

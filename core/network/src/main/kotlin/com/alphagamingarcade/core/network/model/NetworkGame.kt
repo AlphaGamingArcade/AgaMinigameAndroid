@@ -29,7 +29,8 @@ data class GameCode(
 )
 
 fun NetworkGame.toExternalModel() = Game(
-    id = code,
+    id = gamecode.id,
+    gameCode = gamecode.code,
     name = gamecode.name,
     imageUrl = image,
     isTop = top == "y",

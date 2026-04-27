@@ -1,8 +1,7 @@
 package com.alphagamingarcade.core.network.model
 
-import com.alphagamingarcade.model.data.Game
 import com.alphagamingarcade.model.data.Transaction
-import com.alphagamingarcade.model.data.TransactionFreeDepositStatus
+import com.alphagamingarcade.model.data.TransactionFreeDeposit
 import com.alphagamingarcade.model.data.TransactionStatus
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -35,7 +34,10 @@ data class NetworkFreeDepositStatus(
     val claimed: Boolean,
 
     @SerialName("amount")
-    val amount: Double
+    val amount: Double,
+
+    @SerialName("currency")
+    val currency: String
 )
 
 @Serializable
@@ -56,7 +58,8 @@ fun NetworkTransaction.toExternalModel() = Transaction(
     datetime = datetime
 )
 
-fun NetworkFreeDepositStatus.toExternalModel() = TransactionFreeDepositStatus(
+fun NetworkFreeDepositStatus.toExternalModel() = TransactionFreeDeposit(
     claimed = claimed,
-    amount = amount
+    amount = amount,
+    currency = currency
 )

@@ -11,9 +11,10 @@ data class Transaction(
     val datetime: String,
 )
 
-data class TransactionFreeDepositStatus(
+data class TransactionFreeDeposit(
     val claimed: Boolean,
-    val amount: Double
+    val amount: Double,
+    val currency: String
 )
 
 /**

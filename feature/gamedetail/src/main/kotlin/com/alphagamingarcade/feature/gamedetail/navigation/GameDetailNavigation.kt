@@ -29,12 +29,14 @@ fun NavController.navigateToGameDetailScreen(gameId: String, navOptions: NavOpti
  * @param onShowSnackbar Callback to show a snackbar.
  */
 fun NavGraphBuilder.gameDetailScreen(
+    isLoggedIn: Boolean,
     onBackClick: () -> Unit,
     onPlayClick: (String) -> Unit,
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
 ) {
     composable<GameDetail> {
         GameDetailScreen(
+            isLoggedIn = isLoggedIn,
             onBackClick = onBackClick,
             onPlayClick = onPlayClick,
             onShowSnackbar = onShowSnackbar,
