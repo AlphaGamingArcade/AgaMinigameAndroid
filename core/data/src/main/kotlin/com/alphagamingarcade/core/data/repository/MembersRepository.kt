@@ -2,7 +2,7 @@ package com.alphagamingarcade.core.data.repository
 
 import com.alphagamingarcade.model.data.Game
 
-interface MemberRepository {
+interface MembersRepository {
     suspend fun createMember(
         account: String,
         nickname: String,

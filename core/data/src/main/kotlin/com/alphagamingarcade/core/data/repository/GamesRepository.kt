@@ -1,7 +1,6 @@
 package com.alphagamingarcade.core.data.repository
 
 import com.alphagamingarcade.model.data.Game
-import com.alphagamingarcade.model.data.Transaction
 import kotlinx.coroutines.flow.Flow
 
 interface GamesRepository {

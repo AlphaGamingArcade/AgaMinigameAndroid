@@ -2,12 +2,9 @@ package com.alphagamingarcade.feature.user.ui.editprofile
 
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.alphagamingarcade.core.data.repository.MemberRepository
-import com.alphagamingarcade.core.data.repository.MemberRepositoryImpl
+import com.alphagamingarcade.core.data.repository.MembersRepository
 import com.alphagamingarcade.core.data.repository.ProfileRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import com.alphagamingarcade.core.extensions.isEmailValid
 import com.alphagamingarcade.core.ui.utils.TextFieldData
 import com.alphagamingarcade.core.ui.utils.UiState
 import com.alphagamingarcade.core.ui.utils.updateState
@@ -16,8 +13,6 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -25,7 +20,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class EditProfileViewModel @Inject constructor(
-    private  val memberRepository: MemberRepository,
+    private  val membersRepository: MembersRepository,
     private  val profileRepository: ProfileRepository
 ) : ViewModel() {
 
@@ -70,7 +65,7 @@ class EditProfileViewModel @Inject constructor(
         if (hasError) return
 
         _editProfileUiState.updateWith {
-            memberRepository.updateMember(
+            membersRepository.updateMember(
                 nickname = nickname.value
             ).onSuccess {
                 _successEvent.send(Unit)

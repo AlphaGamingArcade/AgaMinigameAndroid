@@ -1,7 +1,6 @@
 package com.alphagamingarcade.feature.games.ui.categories
 
 import androidx.compose.runtime.Immutable
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alphagamingarcade.core.data.repository.GamesRepository
@@ -10,10 +9,8 @@ import com.alphagamingarcade.core.ui.utils.UiState
 import com.alphagamingarcade.core.utils.OneTimeEvent
 import com.alphagamingarcade.model.data.Game
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

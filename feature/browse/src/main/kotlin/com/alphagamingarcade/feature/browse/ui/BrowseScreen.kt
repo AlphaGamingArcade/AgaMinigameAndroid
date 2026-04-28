@@ -124,11 +124,15 @@ private fun BrowseScreen(
 
             // ── Category Chips ───────────────────────────────────────────────
             item {
-                FilterChips(
-                    categories = categories,
-                    selected = selectedCategory,
-                    onSelect = { selectedCategory = it },
-                )
+                Box(
+                    modifier = Modifier.padding(horizontal = 20.dp),
+                ) {
+                    FilterChips(
+                        categories = categories,
+                        selected = selectedCategory,
+                        onSelect = { selectedCategory = it }
+                    )
+                }
                 Spacer(Modifier.height(20.dp))
             }
 

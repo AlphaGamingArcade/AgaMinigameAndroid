@@ -5,11 +5,15 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alphagamingarcade.core.data.repository.GamesRepository
+import com.alphagamingarcade.core.data.repository.MembersRepository
+import com.alphagamingarcade.core.data.repository.ProfileRepository
 import com.alphagamingarcade.core.ui.utils.UiState
 import com.alphagamingarcade.core.utils.OneTimeEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,7 +23,9 @@ import javax.inject.Inject
 @HiltViewModel
 class GameDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val gamesRepository: GamesRepository
+    private val gamesRepository: GamesRepository,
+    private val membersRepository: MembersRepository,
+    private val profileRepository: ProfileRepository
 ) : ViewModel() {
     private val gameId: String = savedStateHandle["gameId"] ?: ""
     private val _gameDetailUiState = MutableStateFlow(UiState(GameDetailScreenData()))
@@ -50,7 +56,7 @@ class GameDetailViewModel @Inject constructor(
                                 iconUrl = game.imageUrl,
                                 screenshotUrls = emptyList(),
                                 description = game.name,
-                                isFavorite = false,
+                                isFavorite = game.isFavorite ?: false,
                             )),
                             loading = false,
                         )
@@ -72,15 +78,52 @@ class GameDetailViewModel @Inject constructor(
     }
 
     fun toggleFavorite() {
-        val current = _gameDetailUiState.value.data
+        viewModelScope.launch {
+            val currentState = _gameDetailUiState.value
+            val currentGame = currentState.data.game
+            val newFavoriteState = !currentGame.isFavorite
 
-        _gameDetailUiState.value = _gameDetailUiState.value.copy(
-            data = current.copy(
-                game = current.game.copy(
-                    isFavorite = !current.game.isFavorite,
-                ),
-            ),
-        )
+            // ✅ 1. Optimistic UI update (instant feedback)
+            _gameDetailUiState.value = currentState.copy(
+                data = currentState.data.copy(
+                    game = currentGame.copy(
+                        isFavorite = newFavoriteState
+                    )
+                )
+            )
+
+            try {
+                val resolvedMemberId = profileRepository
+                    .getProfileMember()
+                    .map { it.memberId }
+                    .first()
+
+                val result = if (newFavoriteState) {
+                    membersRepository.addFavorite(resolvedMemberId, gameId.toInt())
+                } else {
+                    membersRepository.removeFavorite(resolvedMemberId, gameId.toInt())
+                }
+
+                result.onFailure { e ->
+                    // ❌ rollback if API fails
+                    _gameDetailUiState.value = currentState.copy(
+                        data = currentState.data.copy(
+                            game = currentGame
+                        ),
+                        error = OneTimeEvent(e)
+                    )
+                }
+
+            } catch (e: Exception) {
+                // ❌ rollback on exception
+                _gameDetailUiState.value = currentState.copy(
+                    data = currentState.data.copy(
+                        game = currentGame
+                    ),
+                    error = OneTimeEvent(e)
+                )
+            }
+        }
     }
 
     fun selectScreenshot(imageUrl: String) {
@@ -93,6 +136,16 @@ class GameDetailViewModel @Inject constructor(
 
     fun openSimilarGame(gameId: String) {
         // optional hook if you want analytics or preload later
+    }
+
+    fun play(){
+        viewModelScope.launch {
+            try {
+
+            } catch (e: Exception){
+
+            }
+        }
     }
 }
 

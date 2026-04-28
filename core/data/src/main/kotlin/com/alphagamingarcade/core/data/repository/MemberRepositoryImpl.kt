@@ -8,10 +8,10 @@ import com.alphagamingarcade.core.utils.suspendRunCatching
 import com.alphagamingarcade.model.data.Game
 import javax.inject.Inject
 
-class MemberRepositoryImpl @Inject constructor(
+class MembersRepositoryImpl @Inject constructor(
     private  val memberDataSource: MemberDataSource,
     private val userPreferencesDataSource: UserPreferencesDataSource,
-) : MemberRepository {
+) : MembersRepository {
     /**
      * Signs out the user and resets user preferences.
      *

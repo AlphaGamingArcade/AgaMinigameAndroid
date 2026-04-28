@@ -26,6 +26,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -153,64 +154,57 @@ private fun CategoriesScreen(
            if (data.isLoading) {
                 // ── Shimmer Loading State ────────────────────────────────────
                 LazyVerticalGrid(
-                    columns = GridCells.Fixed(2),
-                    contentPadding = PaddingValues(bottom = 32.dp),
+                    columns = GridCells.Adaptive(minSize = 160.dp),
+                    contentPadding = PaddingValues(start = 16.dp, top = 0.dp, end = 16.dp, bottom = 32.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier.fillMaxSize(),
                     userScrollEnabled = false, // disable scroll during loading
                 ) {
                     // Shimmer search bar
-                    item(span = { GridItemSpan(2) }) {
+                    item(span = { GridItemSpan(maxLineSpan) }) {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(52.dp)
-                                .padding(horizontal = 16.dp)
                                 .clip(RoundedCornerShape(12.dp))
                                 .background(shimmerBrush()),
                         )
                     }
                     // Shimmer filter chips
-                    item(span = { GridItemSpan(2) }) {
+                    item(span = { GridItemSpan(maxLineSpan) }) {
                         ShimmerFilterChips()
                     }
                     // Shimmer game cards — 6 placeholders
                     items(6) { index ->
-                        ShimmerGameCard(
-                            modifier = Modifier.padding(
-                                start = if (index % 2 == 0) 16.dp else 0.dp,
-                                end = if (index % 2 != 0) 16.dp else 0.dp,
-                            ),
-                        )
+                        ShimmerGameCard()
                     }
                 }
             } else {
                 // ── Actual Content ───────────────────────────────────────────
                 LazyVerticalGrid(
-                    columns = GridCells.Fixed(2),
-                    contentPadding = PaddingValues(bottom = 32.dp),
+                    columns = GridCells.Adaptive(minSize = 160.dp),
+                    contentPadding = PaddingValues(start = 16.dp, top = 0.dp, end = 16.dp, bottom = 32.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    item(span = { GridItemSpan(2) }) {
+                    item(span = { GridItemSpan(maxLineSpan) }) {
                         SearchBar(
                             query = searchQuery,
                             onQueryChange = { searchQuery = it },
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp),
+                                .fillMaxWidth(),
                         )
                     }
-                    item(span = { GridItemSpan(2) }) {
+                    item(span = { GridItemSpan(maxLineSpan) }) {
                         FilterChips(
                             categories = filters,
                             selected = selectedFilter,
                             onSelect = { selectedFilter = it },
                         )
                     }
-                    item(span = { GridItemSpan(2) }) {
+                    item(span = { GridItemSpan(maxLineSpan) }) {
                         Text(
                             text = "${filteredGames.size} Game${if (filteredGames.size != 1) "s" else ""} Available",
                             fontSize = 13.sp,
@@ -220,18 +214,14 @@ private fun CategoriesScreen(
                         )
                     }
                     if (filteredGames.isEmpty()) {
-                        item(span = { GridItemSpan(2) }) {
+                        item(span = { GridItemSpan(maxLineSpan) }) {
                             EmptyState(isSearching = searchQuery.isNotEmpty())
                         }
                     } else {
-                        items(items = filteredGames, key = { it.id }) { game ->
+                        itemsIndexed(items = filteredGames, key = { _, game -> game.id }) { index, game ->
                             CategoryGameCard(
                                 game = game,
-                                onClick = { onGameClick(game.id.toString()) },
-                                modifier = Modifier.padding(
-                                    start = if (filteredGames.indexOf(game) % 2 == 0) 16.dp else 0.dp,
-                                    end = if (filteredGames.indexOf(game) % 2 != 0) 16.dp else 0.dp,
-                                ),
+                                onClick = { onGameClick(game.id.toString()) }
                             )
                         }
                     }
@@ -425,7 +415,6 @@ private fun ShimmerGameCard(modifier: Modifier = Modifier) {
 private fun ShimmerFilterChips() {
     val brush = shimmerBrush()
     LazyRow(
-        contentPadding = PaddingValues(horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         items(4) {

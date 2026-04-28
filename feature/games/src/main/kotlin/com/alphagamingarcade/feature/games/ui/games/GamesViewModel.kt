@@ -20,7 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class GamesViewModel @Inject constructor(
     private val bannersRepository: BannersRepository,
-    private val gamesRepository: GamesRepository,
+    private val gamesRepository: GamesRepository
 ) : ViewModel() {
     private val _gamesUiState = MutableStateFlow(UiState(GamesScreenData()))
     val gamesUiState = _gamesUiState

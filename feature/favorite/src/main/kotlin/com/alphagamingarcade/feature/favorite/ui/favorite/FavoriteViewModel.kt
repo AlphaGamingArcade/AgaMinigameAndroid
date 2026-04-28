@@ -3,7 +3,7 @@ package com.alphagamingarcade.feature.favorite.ui.favorite
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alphagamingarcade.core.data.repository.MemberRepository
+import com.alphagamingarcade.core.data.repository.MembersRepository
 import com.alphagamingarcade.core.data.repository.ProfileRepository
 import com.alphagamingarcade.core.extensions.stateInDelayed
 import com.alphagamingarcade.core.ui.utils.UiState
@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FavoriteViewModel @Inject constructor(
-    private val memberRepository: MemberRepository,
+    private val membersRepository: MembersRepository,
     private val profileRepository: ProfileRepository
 ) : ViewModel() {
     private val _favoriteUiState = MutableStateFlow(UiState(FavoriteScreenData()))
@@ -40,7 +40,7 @@ class FavoriteViewModel @Inject constructor(
                     .map { it.memberId }
                     .first()
 
-                val result = memberRepository.getMemberFavorites(
+                val result = membersRepository.getMemberFavorites(
                     memberId = resolvedMemberId,
                     pageNumber = 1,
                     pageSize = 10
@@ -74,7 +74,7 @@ class FavoriteViewModel @Inject constructor(
                     .map { it.memberId }
                     .first()
 
-                val result = memberRepository.getMemberRecentPlayed(
+                val result = membersRepository.getMemberRecentPlayed(
                     memberId = resolvedMemberId,
                     pageNumber = 1,
                     pageSize = 10
@@ -110,7 +110,7 @@ class FavoriteViewModel @Inject constructor(
                     .map { it.memberId }
                     .first()
 
-                val result = memberRepository.removeFavorite(
+                val result = membersRepository.removeFavorite(
                     memberId = resolvedMemberId,
                     gameId = gameId,
                 )

@@ -30,7 +30,9 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -323,7 +325,10 @@ private fun GameHeroSection(
                             modifier = Modifier.padding(top = 2.dp),
                         ) {
                             Icon(
-                                imageVector = if (game.isFavorite) Icons.Filled.Star else Icons.Outlined.StarBorder,
+                                imageVector = if (game.isFavorite)
+                                    Icons.Filled.Favorite
+                                else
+                                    Icons.Outlined.FavoriteBorder,
                                 contentDescription = "Favorite",
                                 tint = if (game.isFavorite) AccentColor else TextSecondary,
                             )

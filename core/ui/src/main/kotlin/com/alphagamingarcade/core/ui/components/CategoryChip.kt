@@ -25,7 +25,6 @@ fun FilterChips(
     onSelect: (String) -> Unit,
 ) {
     LazyRow(
-        contentPadding = PaddingValues(horizontal = 20.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         items(categories) { category ->

@@ -2,14 +2,13 @@ package com.alphagamingarcade.feature.auth.ui.setupprofile
 
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
-import com.alphagamingarcade.core.data.repository.MemberRepository
+import com.alphagamingarcade.core.data.repository.MembersRepository
 import com.alphagamingarcade.core.data.repository.ProfileRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import com.alphagamingarcade.core.ui.utils.TextFieldData
 import com.alphagamingarcade.core.ui.utils.UiState
 import com.alphagamingarcade.core.ui.utils.updateState
 import com.alphagamingarcade.core.ui.utils.updateWith
-import com.alphagamingarcade.feature.auth.ui.signin.SignInEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -20,7 +19,7 @@ import java.util.Locale
 
 @HiltViewModel
 class SetupProfileViewModel @Inject constructor(
-    private  val memberRepository: MemberRepository
+    private  val membersRepository: MembersRepository
 ) : ViewModel() {
 
     private val _setUpProfileUiState = MutableStateFlow(UiState(SetupProfileScreenData()))
@@ -91,7 +90,7 @@ class SetupProfileViewModel @Inject constructor(
 
     fun onSetupProfile() {
         _setUpProfileUiState.updateWith {
-            val result =memberRepository.createMember(
+            val result = membersRepository.createMember(
                 account = account.value,
                 nickname = nickname.value,
                 dateOfBirth = dob.value

@@ -13,4 +13,5 @@ data class Game(
     val category: String = String(),
     val rating: Float = 0.0f,
     val playerCount: Int = 0,
+    val isFavorite: Boolean? = null
 )
