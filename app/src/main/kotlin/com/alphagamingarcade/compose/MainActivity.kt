@@ -121,7 +121,10 @@ class MainActivity : AppCompatActivity() {
                 darkTheme = themeSettings.darkTheme,
                 disableDynamicTheming = themeSettings.disableDynamicTheming,
             ) {
-                AgamgApp(appState)
+                AgamgApp(
+                    appState = appState,
+                    isDarkTheme = themeSettings.darkTheme,
+                )
             }
         }
 

@@ -10,6 +10,8 @@ import com.alphagamingarcade.core.utils.OneTimeEvent
 import com.alphagamingarcade.model.data.Game
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,6 +20,9 @@ import javax.inject.Inject
 class CategoriesViewModel @Inject constructor(
     private  val gamesRepository: GamesRepository
 ) : ViewModel() {
+
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
     private var categoryName: String? = null
 
@@ -28,6 +33,17 @@ class CategoriesViewModel @Inject constructor(
         if (categoryName != null) return // prevent re-fetch on recomposition
         categoryName = category
         fetchGames()
+    }
+
+    fun refresh(){
+        viewModelScope.launch {
+            _isRefreshing.value = true
+            try {
+                fetchGames()
+            } finally {
+                _isRefreshing.value = false
+            }
+        }
     }
 
     private fun fetchGames() {

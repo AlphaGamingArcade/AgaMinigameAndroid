@@ -31,6 +31,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalUriHandler
@@ -236,7 +238,7 @@ private fun SignUpScreen(
         )
 
         // Password Field
-        JetpackTextField(
+        JetpackPasswordField(
             value = screenData.password.value,
             errorMessage = screenData.password.errorMessage,
             onValueChange = onPasswordChange,
@@ -278,6 +280,7 @@ private fun SignUpScreen(
                 .padding(vertical = 8.dp)
                 .height(56.dp),
             text = { Text(stringResource(R.string.sign_up)) },
+
         )
 
 //        DividerWithText(text = R.string.or, modifier = Modifier.padding(vertical = 16.dp))

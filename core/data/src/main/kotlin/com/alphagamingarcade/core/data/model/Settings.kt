@@ -35,9 +35,11 @@ enum class DarkThemeConfig {
  *
  * @property code The language code.
  */
-enum class Language(val code: String) {
-    ENGLISH("en"),
-    ARABIC("ar"),
+enum class Language(val code: String, val flag: String) {
+    ENGLISH("en", "🇺🇸"),
+    KOREAN("ko", "🇰🇷"),
+    CHINESE("zh", "🇨🇳"),
+    JAPANESE("ja", "🇯🇵"),
 }
 
 /**

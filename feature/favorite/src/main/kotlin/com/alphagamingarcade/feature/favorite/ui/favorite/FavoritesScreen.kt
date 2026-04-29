@@ -34,6 +34,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -77,6 +78,7 @@ internal fun FavoriteScreen(
     browseViewModel: FavoriteViewModel = hiltViewModel(),
 ) {
     val homeState by browseViewModel.homeUiState.collectAsStateWithLifecycle()
+    val isRefreshing by browseViewModel.isRefreshing.collectAsStateWithLifecycle()
 
     StatefulComposable(
         state = homeState,
@@ -84,6 +86,8 @@ internal fun FavoriteScreen(
     ) { homeScreenData ->
         FavoriteScreen(
             data = homeScreenData,
+            isRefreshing = isRefreshing,
+            onRefresh = browseViewModel::refresh,
             onGameClick = onGameClick,
             onRemoveFavoriteClick = { game ->
                 browseViewModel.removeFavorite(game.id.toInt())
@@ -97,6 +101,8 @@ internal fun FavoriteScreen(
 @Composable
 private fun FavoriteScreen(
     data: FavoriteScreenData,
+    isRefreshing: Boolean,
+    onRefresh: () -> Unit,
     onGameClick: (String) -> Unit,
     onRemoveFavoriteClick: (Game) -> Unit
 ) {
@@ -136,40 +142,45 @@ private fun FavoriteScreen(
     }
 
     Surface(color = Color.White, modifier = Modifier.fillMaxSize()) {
-        LazyColumn(
+        PullToRefreshBox(
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(bottom = 32.dp),
+            onRefresh = onRefresh,
+            isRefreshing = isRefreshing
         ) {
-            // ── Search Bar ───────────────────────────────────────────────────
-            item {
-                FavoriteSearchBar(
-                    query = searchQuery,
-                    onQueryChange = { searchQuery = it },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp, vertical = 8.dp),
-                )
-                Spacer(Modifier.height(8.dp))
-            }
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(bottom = 32.dp),
+            ) {
+                // ── Search Bar ───────────────────────────────────────────────────
+                item {
+                    FavoriteSearchBar(
+                        query = searchQuery,
+                        onQueryChange = { searchQuery = it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 20.dp, vertical = 8.dp),
+                    )
+                    Spacer(Modifier.height(8.dp))
+                }
 
-            // ── Resume Playing card — only when not searching ─────────────────
-            if (!isSearching) {
-                data.recentGames.firstOrNull()?.let { recent ->
-                    item {
-                        SectionLabel(
-                            title = "Continue Playing",
-                            modifier = Modifier.padding(horizontal = 20.dp),
-                        )
-                        Spacer(Modifier.height(10.dp))
-                        ResumeCard(
-                            game = recent,
-                            onClick = { onGameClick(recent.id.toString()) },
-                            modifier = Modifier.padding(horizontal = 20.dp),
-                        )
-                        Spacer(Modifier.height(24.dp))
+                // ── Resume Playing card — only when not searching ─────────────────
+                if (!isSearching) {
+                    data.recentGames.firstOrNull()?.let { recent ->
+                        item {
+                            SectionLabel(
+                                title = "Continue Playing",
+                                modifier = Modifier.padding(horizontal = 20.dp),
+                            )
+                            Spacer(Modifier.height(10.dp))
+                            ResumeCard(
+                                game = recent,
+                                onClick = { onGameClick(recent.id.toString()) },
+                                modifier = Modifier.padding(horizontal = 20.dp),
+                            )
+                            Spacer(Modifier.height(24.dp))
+                        }
                     }
                 }
-            }
 
 //            if (!isSearching && data.recentGames.isNotEmpty()) {
 //                item {
@@ -192,29 +203,30 @@ private fun FavoriteScreen(
 //                }
 //            }
 
-            // ── All Favorites grid ────────────────────────────────────────────
-            item {
-                SectionLabel(
-                    title = if (isSearching) "Results (${filteredGames.size})" else "All Favorites",
-                    modifier = Modifier.padding(horizontal = 20.dp),
-                )
-                Spacer(Modifier.height(10.dp))
-            }
-
-            if (filteredGames.isEmpty()) {
+                // ── All Favorites grid ────────────────────────────────────────────
                 item {
-                    FavoriteEmptyState(isSearching = isSearching)
-                }
-            } else {
-                item {
-                    FavoritesGrid(
-                        games = filteredGames,
-                        onGameClick = onGameClick,
+                    SectionLabel(
+                        title = if (isSearching) "Results (${filteredGames.size})" else "All Favorites",
                         modifier = Modifier.padding(horizontal = 20.dp),
-                        onRemoveFavoriteClick = { game ->
-                            selectedGameToRemove = game
-                        }
                     )
+                    Spacer(Modifier.height(10.dp))
+                }
+
+                if (filteredGames.isEmpty()) {
+                    item {
+                        FavoriteEmptyState(isSearching = isSearching)
+                    }
+                } else {
+                    item {
+                        FavoritesGrid(
+                            games = filteredGames,
+                            onGameClick = onGameClick,
+                            modifier = Modifier.padding(horizontal = 20.dp),
+                            onRemoveFavoriteClick = { game ->
+                                selectedGameToRemove = game
+                            }
+                        )
+                    }
                 }
             }
         }

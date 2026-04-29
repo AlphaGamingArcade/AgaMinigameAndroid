@@ -1,5 +1,6 @@
 package com.alphagamingarcade.feature.games.ui.categories
 
+import androidx.annotation.StringRes
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -39,6 +40,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -52,6 +54,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -64,8 +67,16 @@ import com.alphagamingarcade.core.ui.components.SearchBar
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.core.ui.utils.StatefulComposable
 import com.alphagamingarcade.model.data.Game
+import com.alphagamingarcade.feature.games.R
 
-private val filters = listOf("All", "Popular", "New", "Top Rated")
+enum class CategoryFilter(
+    @StringRes val labelRes: Int,
+) {
+    All(R.string.all_filter),
+    Popular(R.string.popular_filter),
+    New(R.string.new_filter),
+    TopRated(R.string.top_rated_filter),
+}
 
 // ─── Entry Point ─────────────────────────────────────────────────────────────
 
@@ -78,6 +89,7 @@ internal fun CategoriesScreen(
     viewModel: CategoriesViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
 
     LaunchedEffect(categoryName) {
         viewModel.initialize(categoryName)
@@ -88,8 +100,10 @@ internal fun CategoriesScreen(
         onShowSnackbar = onShowSnackbar,
     ) { data ->
         CategoriesScreen(
-            categoryName = categoryName,
             data = data,
+            onRefresh = viewModel::refresh,
+            isRefreshing = isRefreshing,
+            categoryName = categoryName,
             onGameClick = onGameClick,
             onBackClick = onBackClick,
         )
@@ -105,9 +119,11 @@ private fun CategoriesScreen(
     data: CategoriesScreenData,
     onGameClick: (String) -> Unit,
     onBackClick: () -> Unit,
+    isRefreshing: Boolean,
+    onRefresh: () -> Unit,
 ) {
     var searchQuery by remember { mutableStateOf("") }
-    var selectedFilter by remember { mutableStateOf("All") }
+    var selectedFilter by remember { mutableStateOf(CategoryFilter.All) }
 
     val filteredGames = remember(searchQuery, selectedFilter, data.games) {
         data.games
@@ -116,117 +132,129 @@ private fun CategoriesScreen(
             }
             .let { games ->
                 when (selectedFilter) {
-                    "New" -> games.filter { it.isLatest }
-                    "Popular" -> games.filter { it.isTrending }
-                    "Top Rated" -> games.sortedByDescending { it.id }
-                    else -> games
+                    CategoryFilter.All -> games
+                    CategoryFilter.New -> games.filter { it.isLatest }
+                    CategoryFilter.Popular -> games.filter { it.isTrending }
+                    CategoryFilter.TopRated -> games.sortedByDescending { it.id }
                 }
             }
     }
 
+    val filterLabels = CategoryFilter.entries.map { filter ->
+        filter to stringResource(id = filter.labelRes)
+    }
+
+
     Surface(color = Color.White, modifier = Modifier.fillMaxSize()) {
-        Column(modifier = Modifier.fillMaxSize()) {
+            Column(modifier = Modifier.fillMaxSize()) {
 
-            // ── Top App Bar ──────────────────────────────────────────────────
-            TopAppBar(
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
-                        )
-                    }
-                },
-                title = {
-                    Text(
-                        text = categoryName,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp,
-                        color = Color(0xFF1A1A2E),
-                    )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.White,
-                    navigationIconContentColor = Color(0xFF1A1A2E),
-                ),
-            )
-
-           if (data.isLoading) {
-                // ── Shimmer Loading State ────────────────────────────────────
-                LazyVerticalGrid(
-                    columns = GridCells.Adaptive(minSize = 160.dp),
-                    contentPadding = PaddingValues(start = 16.dp, top = 0.dp, end = 16.dp, bottom = 32.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    modifier = Modifier.fillMaxSize(),
-                    userScrollEnabled = false, // disable scroll during loading
-                ) {
-                    // Shimmer search bar
-                    item(span = { GridItemSpan(maxLineSpan) }) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(52.dp)
-                                .clip(RoundedCornerShape(12.dp))
-                                .background(shimmerBrush()),
-                        )
-                    }
-                    // Shimmer filter chips
-                    item(span = { GridItemSpan(maxLineSpan) }) {
-                        ShimmerFilterChips()
-                    }
-                    // Shimmer game cards — 6 placeholders
-                    items(6) { index ->
-                        ShimmerGameCard()
-                    }
-                }
-            } else {
-                // ── Actual Content ───────────────────────────────────────────
-                LazyVerticalGrid(
-                    columns = GridCells.Adaptive(minSize = 160.dp),
-                    contentPadding = PaddingValues(start = 16.dp, top = 0.dp, end = 16.dp, bottom = 32.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    modifier = Modifier.fillMaxSize(),
-                ) {
-                    item(span = { GridItemSpan(maxLineSpan) }) {
-                        SearchBar(
-                            query = searchQuery,
-                            onQueryChange = { searchQuery = it },
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                        )
-                    }
-                    item(span = { GridItemSpan(maxLineSpan) }) {
-                        FilterChips(
-                            categories = filters,
-                            selected = selectedFilter,
-                            onSelect = { selectedFilter = it },
-                        )
-                    }
-                    item(span = { GridItemSpan(maxLineSpan) }) {
-                        Text(
-                            text = "${filteredGames.size} Game${if (filteredGames.size != 1) "s" else ""} Available",
-                            fontSize = 13.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = Color(0xFF8A8A9A),
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                        )
-                    }
-                    if (filteredGames.isEmpty()) {
-                        item(span = { GridItemSpan(maxLineSpan) }) {
-                            EmptyState(isSearching = searchQuery.isNotEmpty())
-                        }
-                    } else {
-                        itemsIndexed(items = filteredGames, key = { _, game -> game.id }) { index, game ->
-                            CategoryGameCard(
-                                game = game,
-                                onClick = { onGameClick(game.id.toString()) }
+                // ── Top App Bar ──────────────────────────────────────────────────
+                TopAppBar(
+                    navigationIcon = {
+                        IconButton(onClick = onBackClick) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Back",
                             )
                         }
+                    },
+                    title = {
+                        Text(
+                            text = categoryName,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp,
+                            color = Color(0xFF1A1A2E),
+                        )
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color.White,
+                        navigationIconContentColor = Color(0xFF1A1A2E),
+                    ),
+                )
+
+                PullToRefreshBox(
+                    modifier = Modifier.fillMaxSize(),
+                    isRefreshing = isRefreshing,
+                    onRefresh = onRefresh,
+                ){
+                    if (data.isLoading) {
+                        // ── Shimmer Loading State ────────────────────────────────────
+                        LazyVerticalGrid(
+                            columns = GridCells.Adaptive(minSize = 160.dp),
+                            contentPadding = PaddingValues(start = 16.dp, top = 0.dp, end = 16.dp, bottom = 32.dp),
+                            verticalArrangement = Arrangement.spacedBy(16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(16.dp),
+                            modifier = Modifier.fillMaxSize(),
+                            userScrollEnabled = false, // disable scroll during loading
+                        ) {
+                            // Shimmer search bar
+                            item(span = { GridItemSpan(maxLineSpan) }) {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(52.dp)
+                                        .clip(RoundedCornerShape(12.dp))
+                                        .background(shimmerBrush()),
+                                )
+                            }
+                            // Shimmer filter chips
+                            item(span = { GridItemSpan(maxLineSpan) }) {
+                                ShimmerFilterChips()
+                            }
+                            // Shimmer game cards — 6 placeholders
+                            items(6) { index ->
+                                ShimmerGameCard()
+                            }
+                        }
+                    } else {
+                        // ── Actual Content ───────────────────────────────────────────
+                        LazyVerticalGrid(
+                            columns = GridCells.Adaptive(minSize = 160.dp),
+                            contentPadding = PaddingValues(start = 16.dp, top = 0.dp, end = 16.dp, bottom = 32.dp),
+                            verticalArrangement = Arrangement.spacedBy(16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(16.dp),
+                            modifier = Modifier.fillMaxSize(),
+                        ) {
+                            item(span = { GridItemSpan(maxLineSpan) }) {
+                                SearchBar(
+                                    query = searchQuery,
+                                    onQueryChange = { searchQuery = it },
+                                    modifier = Modifier
+                                        .fillMaxWidth(),
+                                )
+                            }
+                            item(span = { GridItemSpan(maxLineSpan) }) {
+                                FilterChips(
+                                    categories = filterLabels.map { it.second },
+                                    selected = stringResource(id = selectedFilter.labelRes),
+                                    onSelect = { selectedLabel ->
+                                        selectedFilter = filterLabels.first { it.second == selectedLabel }.first
+                                    },
+                                )
+                            }
+                            item(span = { GridItemSpan(maxLineSpan) }) {
+                                Text(
+                                    text = "${filteredGames.size} Game${if (filteredGames.size != 1) "s" else ""} Available",
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    color = Color(0xFF8A8A9A)
+                                )
+                            }
+                            if (filteredGames.isEmpty()) {
+                                item(span = { GridItemSpan(maxLineSpan) }) {
+                                    EmptyState(isSearching = searchQuery.isNotEmpty())
+                                }
+                            } else {
+                                itemsIndexed(items = filteredGames, key = { _, game -> game.id }) { index, game ->
+                                    CategoryGameCard(
+                                        game = game,
+                                        onClick = { onGameClick(game.id.toString()) }
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
-            }
         }
     }
 }

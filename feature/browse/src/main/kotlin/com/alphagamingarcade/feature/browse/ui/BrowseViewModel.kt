@@ -10,6 +10,8 @@ import com.alphagamingarcade.core.utils.OneTimeEvent
 import com.alphagamingarcade.model.data.Game
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
@@ -19,12 +21,26 @@ import javax.inject.Inject
 class BrowseViewModel @Inject constructor(
     private val gamesRepository: GamesRepository
 ) : ViewModel() {
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
+
     private val _browseUiState = MutableStateFlow(UiState(BrowseScreenData()))
     val browseUiState = _browseUiState
         .onStart {
             loadGames()
         }
         .stateInDelayed(UiState(BrowseScreenData()), viewModelScope)
+
+    fun refresh(){
+        viewModelScope.launch {
+            _isRefreshing.value = true
+            try {
+                loadGames()
+            } finally {
+                _isRefreshing.value = false
+            }
+        }
+    }
 
     private fun loadGames(){
         viewModelScope.launch {

@@ -6,6 +6,7 @@ import com.alphagamingarcade.core.network.model.asMemberPreferences
 import com.alphagamingarcade.core.network.model.toExternalModel
 import com.alphagamingarcade.core.utils.suspendRunCatching
 import com.alphagamingarcade.model.data.Game
+import com.alphagamingarcade.model.data.Play
 import javax.inject.Inject
 
 class MembersRepositoryImpl @Inject constructor(
@@ -79,6 +80,15 @@ class MembersRepositoryImpl @Inject constructor(
                 memberId,
                 gameId
             )
+        }
+    }
+
+    override suspend fun playGame(memberId: Int, gameId: Int): Result<Play> {
+        return  suspendRunCatching {
+            memberDataSource.playGame(
+                memberId,
+                gameId
+            ).data.toExternalModel()
         }
     }
 }

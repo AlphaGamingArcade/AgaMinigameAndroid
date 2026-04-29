@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright 2026 Alpha Gaming Arcade
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<resources>
+    <string name="hide_password">비밀번호 숨기기</string>
+    <string name="show_password">비밀번호 보기</string>
+    <string name="forgot_password">비밀번호를 잊으셨나요</string>
+    <string name="profile_picture">프로필 사진</string>
+    <string name="empty" />
+    <string name="report">신고</string>
+    <string name="undo">실행 취소</string>
+    <string name="back">뒤로</string>
+
+    <string name="search_games_placeholder">게임 검색…</string>
+</resources>

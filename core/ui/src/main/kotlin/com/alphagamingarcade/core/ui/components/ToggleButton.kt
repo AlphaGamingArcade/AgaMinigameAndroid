@@ -113,6 +113,8 @@ fun JetpackToggleOptions(
                         Text(
                             text = stringResource(id = option.text),
                             style = MaterialTheme.typography.labelLarge,
+                            maxLines = 1,
+                            softWrap = false,
                             color = if (isSelected) {
                                 MaterialTheme.colorScheme.primary
                             } else {

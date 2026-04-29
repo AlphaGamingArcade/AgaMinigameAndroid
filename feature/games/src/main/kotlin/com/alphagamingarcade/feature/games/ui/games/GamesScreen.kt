@@ -1,5 +1,6 @@
 package com.alphagamingarcade.feature.games.ui.games
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -40,6 +41,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -47,7 +49,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -59,6 +63,7 @@ import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.core.ui.utils.StatefulComposable
 import com.alphagamingarcade.model.data.Banner
 import com.alphagamingarcade.model.data.Game
+import com.alphagamingarcade.feature.games.R
 
 // ─── Palette ─────────────────────────────────────────────────────────────────
 
@@ -81,6 +86,7 @@ internal fun GamesScreen(
     gamesViewModel: GamesViewModel = hiltViewModel(),
 ) {
     val gamesState by gamesViewModel.gamesUiState.collectAsStateWithLifecycle()
+    val isRefreshing by gamesViewModel.isRefreshing.collectAsStateWithLifecycle()
 
     StatefulComposable(
         state = gamesState,
@@ -88,6 +94,8 @@ internal fun GamesScreen(
     ) { data ->
         GamesScreen(
             data = data,
+            isRefreshing = isRefreshing,
+            onRefresh = gamesViewModel::refresh,
             onGameClick = onGameClick,
             onCategoryClick = onCategoryClick
         )
@@ -99,36 +107,43 @@ internal fun GamesScreen(
 @Composable
 private fun GamesScreen(
     data: GamesScreenData,
+    isRefreshing: Boolean,
+    onRefresh: () -> Unit,
     onGameClick: (String) -> Unit,
     onCategoryClick: (String) -> Unit,
 ) {
     Surface(color = Color.White, modifier = Modifier.fillMaxSize()) {
-        LazyColumn(
+        PullToRefreshBox(
+            isRefreshing = isRefreshing,
+            onRefresh = onRefresh,
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(bottom = 32.dp),
         ) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(bottom = 32.dp),
+            ) {
 
-            // ── Hero Banner ──────────────────────────────────────────────────
-            item {
-                HeroBannerCarousel(
-                    banners = data.bannerGames,
-                    onGameClick = onGameClick,
-                )
-                Spacer(Modifier.height(24.dp))
-            }
+                // ── Hero Banner ──────────────────────────────────────────────────
+                item {
+                    HeroBannerCarousel(
+                        banners = data.bannerGames,
+                        onGameClick = onGameClick,
+                    )
+                    Spacer(Modifier.height(24.dp))
+                }
 
-            // ── Quick Category Pills ─────────────────────────────────────────
-            item {
-                SectionTitle(
-                    title = "Categories",
-                    modifier = Modifier.padding(horizontal = 20.dp),
-                )
-                Spacer(Modifier.height(12.dp))
-                QuickCategoryPills(onCategoryClick = onCategoryClick)
-                Spacer(Modifier.height(28.dp))
-            }
+                // ── Quick Category Pills ─────────────────────────────────────────
+                item {
+                    SectionTitle(
+                        title = stringResource(R.string.categories),
+                        modifier = Modifier.padding(horizontal = 20.dp),
+                    )
+                    Spacer(Modifier.height(12.dp))
+                    QuickCategoryPills(onCategoryClick = onCategoryClick)
+                    Spacer(Modifier.height(28.dp))
+                }
 
-            // ── Jackpot Banner ───────────────────────────────────────────────
+                // ── Jackpot Banner ───────────────────────────────────────────────
 //            item {
 //                JackpotBanner(
 //                    games = data.jackpotGames,
@@ -137,63 +152,64 @@ private fun GamesScreen(
 //                Spacer(Modifier.height(28.dp))
 //            }
 
-            // ── Trending Now ─────────────────────────────────────────────────
-            item {
-                SectionHeader(
-                    title = "Trending Now",
-                    subtitle = "Most played today",
-                    modifier = Modifier.padding(horizontal = 20.dp),
-                    onSeeMoreClick = {}
-                )
-                Spacer(Modifier.height(12.dp))
-                TrendingRow(games = data.trendingGames, onGameClick = onGameClick)
-                Spacer(Modifier.height(28.dp))
-            }
+                // ── Trending Now ─────────────────────────────────────────────────
+                item {
+                    SectionHeader(
+                        title = stringResource(R.string.trending_now),
+                        subtitle = stringResource(R.string.trending_now_subtitle),
+                        modifier = Modifier.padding(horizontal = 20.dp),
+                        onSeeMoreClick = {}
+                    )
+                    Spacer(Modifier.height(12.dp))
+                    TrendingRow(games = data.trendingGames, onGameClick = onGameClick)
+                    Spacer(Modifier.height(28.dp))
+                }
 
-            // ── New Releases ─────────────────────────────────────────────────
-            item {
-                SectionHeader(
-                    title = "New Releases",
-                    subtitle = "Fresh off the press",
-                    modifier = Modifier.padding(horizontal = 20.dp),
-                    onSeeMoreClick = {}
-                )
-                Spacer(Modifier.height(12.dp))
-                NewReleasesRow(games = data.newReleases, onGameClick = onGameClick)
-                Spacer(Modifier.height(28.dp))
-            }
+                // ── New Releases ─────────────────────────────────────────────────
+                item {
+                    SectionHeader(
+                        title = stringResource(R.string.new_release),
+                        subtitle = stringResource(R.string.new_release_sub_title),
+                        modifier = Modifier.padding(horizontal = 20.dp),
+                        onSeeMoreClick = {}
+                    )
+                    Spacer(Modifier.height(12.dp))
+                    NewReleasesRow(games = data.newReleases, onGameClick = onGameClick)
+                    Spacer(Modifier.height(28.dp))
+                }
 
-            // ── Coming Soon ──────────────────────────────────────────────────
-            item {
-                SectionHeader(
-                    title = "Coming Soon",
-                    subtitle = "Stay tuned for what's next",
-                    modifier = Modifier.padding(horizontal = 20.dp),
-                )
-                Spacer(Modifier.height(12.dp))
-                ComingSoonRow(games = data.comingSoonGames)
-                Spacer(Modifier.height(28.dp))
-            }
+                // ── Coming Soon ──────────────────────────────────────────────────
+                item {
+                    SectionHeader(
+                        title = stringResource(R.string.coming_soon),
+                        subtitle = stringResource(R.string.coming_soon_sub_title),
+                        modifier = Modifier.padding(horizontal = 20.dp),
+                    )
+                    Spacer(Modifier.height(12.dp))
+                    ComingSoonRow(games = data.comingSoonGames)
+                    Spacer(Modifier.height(28.dp))
+                }
 
 
-            // ── Top Rated ────────────────────────────────────────────────────
-            item {
-                SectionHeader(
-                    title = "Top Rated",
-                    subtitle = "Players' all-time favourites",
-                    modifier = Modifier.padding(horizontal = 20.dp),
-                    onSeeMoreClick = {}
-                )
-                Spacer(Modifier.height(12.dp))
-            }
+                // ── Top Rated ────────────────────────────────────────────────────
+                item {
+                    SectionHeader(
+                        title = stringResource(R.string.top_rated),
+                        subtitle = stringResource(R.string.top_rated_sub_title),
+                        modifier = Modifier.padding(horizontal = 20.dp),
+                        onSeeMoreClick = {}
+                    )
+                    Spacer(Modifier.height(12.dp))
+                }
 
-            items(items = data.topRated, key = { it.id }) { game ->
-                TopRatedListItem(
-                    game = game,
-                    rank = data.topRated.indexOf(game) + 1,
-                    onClick = { onGameClick(game.id.toString()) },
-                    modifier = Modifier.padding(horizontal = 20.dp, vertical = 6.dp),
-                )
+                items(items = data.topRated, key = { it.id }) { game ->
+                    TopRatedListItem(
+                        game = game,
+                        rank = data.topRated.indexOf(game) + 1,
+                        onClick = { onGameClick(game.id.toString()) },
+                        modifier = Modifier.padding(horizontal = 20.dp, vertical = 6.dp),
+                    )
+                }
             }
         }
     }
@@ -283,38 +299,51 @@ private fun HeroBannerCarousel(
     }
 }
 
+data class QuickCategory(
+    val icon: ImageVector,
+    @StringRes val labelRes: Int,
+    val value: String,
+)
+
+
 // ─── Quick Category Pills ────────────────────────────────────────────────────
 private val quickCategories = listOf(
-    Icons.Rounded.ViewColumn to "Slots",
-    Icons.Rounded.GridView to "Table",
-    Icons.Rounded.SportsEsports to "Arcade",
-    Icons.Rounded.LiveTv to "Live",
-    Icons.Rounded.SportsSoccer to "Sports",
-    Icons.Rounded.Diamond to "VIP",
+    QuickCategory(Icons.Rounded.ViewColumn, R.string.slots, "Slots"),
+    QuickCategory(Icons.Rounded.GridView, R.string.table, "Table"),
+    QuickCategory(Icons.Rounded.SportsEsports, R.string.arcade, "Arcade"),
+    QuickCategory(Icons.Rounded.LiveTv, R.string.live, "Live"),
+    QuickCategory(Icons.Rounded.SportsSoccer, R.string.sports, "Sports"),
+    QuickCategory(Icons.Rounded.Diamond, R.string.vip, "VIP"),
 )
 
 @Composable
-private fun QuickCategoryPills(onCategoryClick: (String) -> Unit) {
+private fun QuickCategoryPills(
+    onCategoryClick: (String) -> Unit,
+) {
     LazyRow(
         contentPadding = PaddingValues(horizontal = 20.dp),
         horizontalArrangement = Arrangement.spacedBy(10.dp),
     ) {
-        items(quickCategories) { (icon, label) ->
+        items(quickCategories) { category ->
+            val label = stringResource(id = category.labelRes)
+
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .clip(RoundedCornerShape(16.dp))
-                    .clickable { onCategoryClick(label) }
+                    .clickable { onCategoryClick(category.value) }
                     .background(SurfaceGray)
                     .padding(horizontal = 16.dp, vertical = 12.dp),
             ) {
                 Icon(
-                    imageVector = icon,
+                    imageVector = category.icon,
                     contentDescription = label,
                     tint = Color(0xFF0A3535),
                     modifier = Modifier.size(24.dp),
                 )
+
                 Spacer(Modifier.height(4.dp))
+
                 Text(
                     text = label,
                     fontSize = 11.sp,
@@ -722,7 +751,7 @@ private fun SectionHeader(
                 contentPadding = PaddingValues(horizontal = 8.dp),
             ) {
                 Text(
-                    text = "See More",
+                    text = stringResource(R.string.see_more),
                     fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Color(0xFF0A3535),

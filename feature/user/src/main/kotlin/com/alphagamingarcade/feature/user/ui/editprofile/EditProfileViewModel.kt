@@ -2,6 +2,7 @@ package com.alphagamingarcade.feature.user.ui.editprofile
 
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.alphagamingarcade.core.data.repository.MembersRepository
 import com.alphagamingarcade.core.data.repository.ProfileRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,6 +14,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -29,6 +31,23 @@ class EditProfileViewModel @Inject constructor(
 
     private val _successEvent = Channel<Unit>(Channel.BUFFERED)
     val successEvent = _successEvent.receiveAsFlow()
+
+    init {
+        loadProfile()
+    }
+
+    private fun loadProfile() {
+        viewModelScope.launch {
+            profileRepository.getProfile()
+                .collect { profile ->
+                    _editProfileUiState.updateState {
+                        copy(
+                            nickname = TextFieldData(value = profile.nickname),
+                        )
+                    }
+                }
+        }
+    }
 
     fun updateNickname(nickname: String) {
         _editProfileUiState.updateState {

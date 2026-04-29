@@ -10,6 +10,7 @@ import com.alphagamingarcade.core.data.repository.ProfileRepository
 import com.alphagamingarcade.core.ui.utils.UiState
 import com.alphagamingarcade.core.utils.OneTimeEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
@@ -138,12 +139,37 @@ class GameDetailViewModel @Inject constructor(
         // optional hook if you want analytics or preload later
     }
 
+    private val _navigationEvent = MutableStateFlow<OneTimeEvent<PlayScreenArgs>?>(null)
+    val navigationEvent = _navigationEvent.asStateFlow()
+
     fun play(){
         viewModelScope.launch {
             try {
+                val resolvedMemberId = profileRepository
+                    .getProfileMember()
+                    .map { it.memberId }
+                    .first()
 
-            } catch (e: Exception){
+                membersRepository.playGame(
+                    resolvedMemberId,
+                    gameId.toInt()
+                )
+                    .onSuccess { play ->
+                        _navigationEvent.value = OneTimeEvent(PlayScreenArgs(
+                            playUrl = play.playUrl,
+                            gameName = _gameDetailUiState.value.data.game.title
+                        ))
+                    }
+                    .onFailure { e ->
+                        _gameDetailUiState.value = _gameDetailUiState.value.copy(
+                            error = OneTimeEvent(e)
+                        )
+                    }
 
+            } catch (e: Exception) {
+                _gameDetailUiState.value = _gameDetailUiState.value.copy(
+                    error = OneTimeEvent(e)
+                )
             }
         }
     }
@@ -180,3 +206,8 @@ data class SimilarGameUiModel(
     val thumbnailUrl: String = "",
 )
 
+@Immutable
+data class PlayScreenArgs(
+    val playUrl: String,
+    val gameName: String,
+)

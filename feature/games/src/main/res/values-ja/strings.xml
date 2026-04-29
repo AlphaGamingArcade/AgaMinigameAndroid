@@ -1,0 +1,29 @@
+<resources>
+    <string name="categories">カテゴリー</string>
+    <string name="slots">スロット</string>
+    <string name="table">テーブル</string>
+    <string name="arcade">アーケード</string>
+    <string name="live">ライブ</string>
+    <string name="sports">スポーツ</string>
+    <string name="vip">VIP</string>
+
+    <string name="see_more">もっと見る</string>
+
+    <string name="trending_now">トレンド</string>
+    <string name="trending_now_subtitle">本日の人気ゲーム</string>
+
+    <string name="new_release">新着</string>
+    <string name="new_release_sub_title">最新リリース</string>
+
+    <string name="coming_soon">近日公開</string>
+    <string name="coming_soon_sub_title">今後の配信をお楽しみに</string>
+
+    <string name="top_rated">高評価</string>
+    <string name="top_rated_sub_title">プレイヤーに愛され続ける人気作</string>
+
+    <string name="search_games">ゲームを検索</string>
+    <string name="all_filter">すべて</string>
+    <string name="popular_filter">人気</string>
+    <string name="new_filter">新着</string>
+    <string name="top_rated_filter">高評価</string>
+</resources>

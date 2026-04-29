@@ -108,6 +108,7 @@ dependencies {
     implementation(project(":feature:user"))
     implementation(project(":feature:settings"))
     implementation(project(":feature:legal"))
+    implementation(project(":feature:play"))
 
     // ... Sync
     implementation(project(":sync"))

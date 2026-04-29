@@ -1,0 +1,15 @@
+<resources>
+    <string name="search_games">すべてのゲーム</string>
+
+    <string name="all_filter">すべて</string>
+    <string name="hot_filter">人気</string>
+    <string name="new_filter">新着</string>
+    <string name="trending_filter">トレンド</string>
+    <string name="coming_soon_filter">近日公開</string>
+
+    <string name="featured">おすすめ</string>
+    <string name="featured_sub_title">編集部が厳選したおすすめ</string>
+
+    <string name="all_games">すべてのゲーム</string>
+    <string name="all_games_sub_title">すべてのコレクションを見る</string>
+</resources>

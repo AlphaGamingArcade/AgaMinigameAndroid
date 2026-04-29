@@ -7,6 +7,8 @@ import com.alphagamingarcade.core.network.model.NetworkAddFavoriteResponse
 import com.alphagamingarcade.core.network.model.NetworkCreateMemberRequest
 import com.alphagamingarcade.core.network.model.NetworkGame
 import com.alphagamingarcade.core.network.model.NetworkMember
+import com.alphagamingarcade.core.network.model.NetworkPlay
+import com.alphagamingarcade.core.network.model.NetworkPlayRequest
 import com.alphagamingarcade.core.network.model.NetworkRemoveFavoriteResponse
 import com.alphagamingarcade.core.network.model.NetworkUpdateMemberRequest
 import com.alphagamingarcade.core.network.model.NetworkUpdateMemberResponse
@@ -75,4 +77,10 @@ interface MemberRestApi {
         @Query("sortBy") sortBy: String? = null,
         @Query("orderBy") orderBy: String? = null,
     ): ApiResponse<PaginatedResponse<NetworkGame>>
+
+    @POST("members/{memberId}/plays")
+    suspend fun play(
+        @Path("memberId") memberId: Int,
+        @Body request: NetworkPlayRequest
+    ): ApiResponse<NetworkPlay>
 }

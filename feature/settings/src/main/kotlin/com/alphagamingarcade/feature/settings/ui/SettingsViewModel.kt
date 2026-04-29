@@ -69,7 +69,9 @@ class SettingsViewModel @Inject constructor(
     private fun getPreferredLanguage(): Language {
         val preferredLanguage = getPreferredLocale().language
         return when (preferredLanguage) {
-            "ar" -> Language.ARABIC
+            "ko" -> Language.KOREAN
+            "zh" -> Language.CHINESE
+            "ja" -> Language.JAPANESE
             else -> Language.ENGLISH
         }
     }

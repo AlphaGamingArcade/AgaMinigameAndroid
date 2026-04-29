@@ -5,6 +5,7 @@ import com.alphagamingarcade.core.network.model.ApiResponseNullable
 import com.alphagamingarcade.core.network.model.NetworkAddFavoriteResponse
 import com.alphagamingarcade.core.network.model.NetworkGame
 import com.alphagamingarcade.core.network.model.NetworkMember
+import com.alphagamingarcade.core.network.model.NetworkPlay
 import com.alphagamingarcade.core.network.model.NetworkRemoveFavoriteResponse
 import com.alphagamingarcade.core.network.model.NetworkUpdateMemberResponse
 import com.alphagamingarcade.core.network.model.PaginatedResponse
@@ -53,4 +54,9 @@ interface MemberDataSource {
         memberId: Int,
         gameId: Int
     ): ApiResponseNullable<NetworkRemoveFavoriteResponse>
+
+    suspend fun playGame(
+        memberId: Int,
+        gameId: Int
+    ): ApiResponse<NetworkPlay>
 }

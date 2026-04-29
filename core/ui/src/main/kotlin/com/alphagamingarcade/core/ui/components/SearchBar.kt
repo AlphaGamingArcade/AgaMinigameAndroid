@@ -22,9 +22,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.alphagamingarcade.core.ui.R
 
 private val AccentBlue     = Color(0xFF2563EB)
 private val SearchBarColor = Color(0xFFF0F1F5)
@@ -56,7 +58,7 @@ fun SearchBar(
             Box(modifier = Modifier.weight(1f)) {
                 if (query.isEmpty()) {
                     Text(
-                        text = "Search games...",
+                        text = stringResource(R.string.search_games_placeholder),
                         color = TextSecondary,
                         fontSize = 14.sp,
                     )

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-     Copyright 2025 Atick Faisal
+     Copyright 2026 Alpha Gaming Arcade
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -16,6 +16,16 @@
 -->
 
 <resources>
-    <string name="profile_picture">Profile Picture</string>
-    <string name="sign_out">Sign Out</string>
+    <string name="search_games">All Games</string>
+    <string name="all_filter">All</string>
+    <string name="hot_filter">Hot</string>
+    <string name="new_filter">New</string>
+    <string name="trending_filter">Trending</string>
+    <string name="coming_soon_filter">Coming Soon</string>
+    <string name="featured">Featured</string>
+    <string name="featured_sub_title">Editor\\\'s picks just for you</string>
+    <string name="all_games">All Games</string>
+    <string name="all_games_sub_title">Browse the full collection</string>
+    <string name="results">Results</string>
+    <string name="results_sub_title">Showing filtered results</string>
 </resources>

@@ -1,6 +1,8 @@
 package com.alphagamingarcade.core.data.repository
 
+import com.alphagamingarcade.core.network.model.NetworkPlay
 import com.alphagamingarcade.model.data.Game
+import com.alphagamingarcade.model.data.Play
 
 interface MembersRepository {
     suspend fun createMember(
@@ -34,4 +36,10 @@ interface MembersRepository {
         memberId: Int,
         gameId: Int
     ): Result<Unit>
+
+    suspend fun playGame(
+        memberId: Int,
+        gameId: Int
+    ): Result<Play>
+
 }

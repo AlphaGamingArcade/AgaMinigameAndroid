@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright 2026 Alpha Gaming Arcade
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<resources>
+    <string name="privacy_policy">プライバシーポリシー</string>
+    <string name="licenses">ライセンス</string>
+    <string name="brand_guidelines">ブランドガイドライン</string>
+    <string name="feedback">フィードバック</string>
+    <string name="theme">テーマ</string>
+    <string name="brand_default">デフォルト</string>
+    <string name="brand_android">Android</string>
+    <string name="dark_mode_preference">ダークモード設定</string>
+    <string name="dark_mode_config_system_default">システム設定に従う</string>
+    <string name="dark_mode_config_light">ライト</string>
+    <string name="dark_mode_config_dark">ダーク</string>
+    <string name="dynamic_color_preference">ダイナミックカラーを使用</string>
+    <string name="dynamic_color_yes">はい</string>
+    <string name="dynamic_color_no">いいえ</string>
+    <string name="dismiss_dialog_button_text">OK</string>
+    <string name="sign_out">ログアウト</string>
+    <string name="settings">設定</string>
+    <string name="language">言語</string>
+    <string name="select_language">言語を選択</string>
+    <string name="terms_of_service">利用規約</string>
+</resources>

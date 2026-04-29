@@ -41,6 +41,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import com.alphagamingarcade.compose.R
 import com.alphagamingarcade.compose.navigation.AgamgNavHost
 import com.alphagamingarcade.compose.navigation.TopLevelDestination
+import com.alphagamingarcade.core.data.model.DarkThemeConfig
 import com.alphagamingarcade.core.ui.components.AppBackground
 import com.alphagamingarcade.core.ui.components.AppGradientBackground
 import com.alphagamingarcade.core.ui.components.AgamgNavigationSuiteScaffold
@@ -62,6 +63,7 @@ import com.alphagamingarcade.feature.settings.ui.SettingsDialog
 @Composable
 fun AgamgApp(
     appState: AgamgAppState,
+    isDarkTheme: Boolean,
     modifier: Modifier = Modifier,
     windowAdaptiveInfo: WindowAdaptiveInfo = currentWindowAdaptiveInfo(),
 ) {
@@ -101,6 +103,7 @@ fun AgamgApp(
                 onDismissSettings = { showSettingsDialog = false },
                 onTopAppBarActionClick = { showSettingsDialog = true },
                 windowAdaptiveInfo = windowAdaptiveInfo,
+                isDarkTheme = isDarkTheme
             )
         }
     }
@@ -120,6 +123,7 @@ fun AgamgApp(
 @Composable
 private fun AgamgApp(
     appState: AgamgAppState,
+    isDarkTheme: Boolean,
     snackbarHostState: SnackbarHostState,
     showSettingsDialog: Boolean,
     onDismissSettings: () -> Unit,
@@ -162,6 +166,7 @@ private fun AgamgApp(
             snackbarHostState = snackbarHostState,
             onTopAppBarActionClick = onTopAppBarActionClick,
             modifier = modifier,
+            isDarkTheme = isDarkTheme
         )
         return
     }
@@ -182,6 +187,7 @@ private fun AgamgApp(
             snackbarHostState = snackbarHostState,
             onTopAppBarActionClick = onTopAppBarActionClick,
             modifier = modifier,
+            isDarkTheme = isDarkTheme,
         )
     }
 }
@@ -197,10 +203,12 @@ private fun AgamgApp(
 @Composable
 private fun AgamgScaffold(
     appState: AgamgAppState,
+    isDarkTheme: Boolean,
     snackbarHostState: SnackbarHostState,
     onTopAppBarActionClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+
     Scaffold(
         modifier = modifier,
         containerColor = Color.Transparent,
@@ -225,8 +233,10 @@ private fun AgamgScaffold(
 
             if (destination != null) {
                 shouldShowTopAppBar = true
+
+
                 AgamgTopAppBarWithLogoAndActions(
-                    logoRes = R.drawable.ic_app_logo,
+                    logoRes = if (isDarkTheme) R.drawable.ic_app_logo_dark else R.drawable.ic_app_logo,
                     logoContentDescription = "App Logo",
                     isLoggedIn = appState.isUserLoggedIn,
                     balance = CurrencyFormatter.format(appState.userState.balance, appState.userState.currency),

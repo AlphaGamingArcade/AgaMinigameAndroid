@@ -9,6 +9,8 @@ import com.alphagamingarcade.core.network.model.NetworkAddFavoriteRequest
 import com.alphagamingarcade.core.network.model.NetworkAddFavoriteResponse
 import com.alphagamingarcade.core.network.model.NetworkGame
 import com.alphagamingarcade.core.network.model.NetworkMember
+import com.alphagamingarcade.core.network.model.NetworkPlay
+import com.alphagamingarcade.core.network.model.NetworkPlayRequest
 import com.alphagamingarcade.core.network.model.NetworkRemoveFavoriteResponse
 import com.alphagamingarcade.core.network.model.NetworkUpdateMemberRequest
 import com.alphagamingarcade.core.network.model.NetworkUpdateMemberResponse
@@ -99,5 +101,12 @@ internal class MemberDataSourceImpl @Inject constructor(
             memberId,
             gameId
         )
+    }
+
+    override suspend fun playGame(memberId: Int, gameId: Int): ApiResponse<NetworkPlay> {
+       return memberRestApi.play(
+           memberId,
+           NetworkPlayRequest(gameId)
+       )
     }
 }

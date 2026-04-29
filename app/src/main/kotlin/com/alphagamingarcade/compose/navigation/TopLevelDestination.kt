@@ -12,7 +12,6 @@ import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.alphagamingarcade.compose.R
-import com.alphagamingarcade.feature.auth.navigation.AuthNavGraph
 import com.alphagamingarcade.feature.browse.navigation.Browse
 import com.alphagamingarcade.feature.favorite.navigation.Favorite
 import com.alphagamingarcade.feature.games.navigation.Games

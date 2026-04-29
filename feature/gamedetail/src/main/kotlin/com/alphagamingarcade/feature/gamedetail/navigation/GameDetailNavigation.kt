@@ -31,14 +31,16 @@ fun NavController.navigateToGameDetailScreen(gameId: String, navOptions: NavOpti
 fun NavGraphBuilder.gameDetailScreen(
     isLoggedIn: Boolean,
     onBackClick: () -> Unit,
-    onPlayClick: (String) -> Unit,
+    onSignInClick: () -> Unit,
+    onNavigateToPlay: (String, String) -> Unit,
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
 ) {
     composable<GameDetail> {
         GameDetailScreen(
             isLoggedIn = isLoggedIn,
             onBackClick = onBackClick,
-            onPlayClick = onPlayClick,
+            onSignInClick = onSignInClick,
+            onNavigateToPlay = onNavigateToPlay,
             onShowSnackbar = onShowSnackbar,
         )
     }

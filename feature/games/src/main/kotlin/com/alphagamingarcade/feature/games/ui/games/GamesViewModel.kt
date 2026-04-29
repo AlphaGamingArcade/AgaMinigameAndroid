@@ -12,6 +12,8 @@ import com.alphagamingarcade.model.data.Banner
 import com.alphagamingarcade.model.data.Game
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
@@ -23,6 +25,9 @@ class GamesViewModel @Inject constructor(
     private val gamesRepository: GamesRepository
 ) : ViewModel() {
     private val _gamesUiState = MutableStateFlow(UiState(GamesScreenData()))
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
+
     val gamesUiState = _gamesUiState
         .onStart {
             loadBanners()
@@ -32,6 +37,21 @@ class GamesViewModel @Inject constructor(
             loadComingSoonGames()
         }
         .stateInDelayed(UiState(GamesScreenData()), viewModelScope)
+
+    fun refresh() {
+        viewModelScope.launch {
+            _isRefreshing.value = true
+            try {
+                loadBanners()
+                loadTrendingGames()
+                loadLatestGames()
+                loadTopGames()
+                loadComingSoonGames()// re-fetch your data here
+            } finally {
+                _isRefreshing.value = false
+            }
+        }
+    }
 
     private fun loadBanners() {
         viewModelScope.launch {

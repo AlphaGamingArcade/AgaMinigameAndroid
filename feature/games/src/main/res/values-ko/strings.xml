@@ -1,0 +1,29 @@
+<resources>
+    <string name="categories">카테고리</string>
+    <string name="slots">슬롯</string>
+    <string name="table">테이블</string>
+    <string name="arcade">아케이드</string>
+    <string name="live">라이브</string>
+    <string name="sports">스포츠</string>
+    <string name="vip">VIP</string>
+
+    <string name="see_more">더보기</string>
+
+    <string name="trending_now">지금 인기</string>
+    <string name="trending_now_subtitle">오늘 가장 많이 플레이됨</string>
+
+    <string name="new_release">신작</string>
+    <string name="new_release_sub_title">새롭게 출시된 게임</string>
+
+    <string name="coming_soon">출시 예정</string>
+    <string name="coming_soon_sub_title">곧 공개됩니다</string>
+
+    <string name="top_rated">최고 평점</string>
+    <string name="top_rated_sub_title">플레이어가 가장 좋아하는 게임</string>
+
+    <string name="search_games">게임 검색</string>
+    <string name="all_filter">전체</string>
+    <string name="popular_filter">인기</string>
+    <string name="new_filter">신규</string>
+    <string name="top_rated_filter">최고 평점</string>
+</resources>

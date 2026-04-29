@@ -28,6 +28,8 @@ import com.alphagamingarcade.feature.gamedetail.navigation.navigateToGameDetailS
 import com.alphagamingarcade.feature.games.navigation.categoriesScreen
 import com.alphagamingarcade.feature.games.navigation.navigateToCategoriesScreen
 import com.alphagamingarcade.feature.games.navigation.navigateToGamesScreen
+import com.alphagamingarcade.feature.play.navigation.navigateToPlayScreen
+import com.alphagamingarcade.feature.play.navigation.playScreen
 import com.alphagamingarcade.feature.user.navigation.accountNavGraph
 import com.alphagamingarcade.feature.user.navigation.changePasswordScreen
 import com.alphagamingarcade.feature.user.navigation.editProfileScreen
@@ -116,7 +118,14 @@ fun AgamgNavHost(
             isLoggedIn = appState.isUserLoggedIn,
             onShowSnackbar = onShowSnackbar,
             onBackClick = { navController.popBackStack() },
-            onPlayClick = { }
+            onSignInClick = navController::navigateToSignInScreen,
+            onNavigateToPlay = { playUrl, gameName ->
+                navController.navigateToPlayScreen(playUrl = playUrl, gameName = gameName)
+            }
+        )
+        playScreen(
+            onShowSnackbar = onShowSnackbar,
+            onBackClick = { navController.popBackStack() },
         )
         gamesScreen(
             onShowSnackbar = onShowSnackbar,

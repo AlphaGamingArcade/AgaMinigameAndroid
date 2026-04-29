@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-     Copyright 2025 Atick Faisal
+     Copyright 2026 Alpha Gaming Arcade
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -16,12 +16,17 @@
 -->
 
 <resources>
-    <string name="hide_password">إخفاء كلمة المرور</string>
-    <string name="show_password">إظهار كلمة المرور</string>
-    <string name="forgot_password">Forgot Password</string>
-    <string name="profile_picture">صورة الملف الشخصي</string>
-    <string name="empty" />
-    <string name="report">الإبلاغ</string>
-    <string name="undo">تراجع</string>
-    <string name="back">رجوع</string>
+    <string name="search_games">전체 게임</string>
+
+    <string name="all_filter">전체</string>
+    <string name="hot_filter">인기</string>
+    <string name="new_filter">신규</string>
+    <string name="trending_filter">트렌딩</string>
+    <string name="coming_soon_filter">출시 예정</string>
+
+    <string name="featured">추천</string>
+    <string name="featured_sub_title">에디터가 추천하는 게임</string>
+
+    <string name="all_games">전체 게임</string>
+    <string name="all_games_sub_title">모든 게임 둘러보기</string>
 </resources>

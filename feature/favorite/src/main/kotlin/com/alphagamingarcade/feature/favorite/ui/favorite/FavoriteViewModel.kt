@@ -1,7 +1,9 @@
 package com.alphagamingarcade.feature.favorite.ui.favorite
 
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import com.alphagamingarcade.core.data.repository.MembersRepository
 import com.alphagamingarcade.core.data.repository.ProfileRepository
@@ -11,6 +13,8 @@ import com.alphagamingarcade.core.utils.OneTimeEvent
 import com.alphagamingarcade.model.data.Game
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
@@ -23,6 +27,9 @@ class FavoriteViewModel @Inject constructor(
     private val profileRepository: ProfileRepository
 ) : ViewModel() {
     private val _favoriteUiState = MutableStateFlow(UiState(FavoriteScreenData()))
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
+
     val homeUiState = _favoriteUiState
         .onStart {}
         .stateInDelayed(UiState(FavoriteScreenData()), viewModelScope)
@@ -30,6 +37,18 @@ class FavoriteViewModel @Inject constructor(
     init {
         loadMemberRecentPlayed()
         loadMemberFavorites()
+    }
+
+    fun refresh(){
+        viewModelScope.launch {
+            _isRefreshing.value = true
+            try {
+                loadMemberFavorites()
+                loadMemberRecentPlayed()
+            } finally {
+                _isRefreshing.value = false
+            }
+        }
     }
 
     private fun loadMemberFavorites() {

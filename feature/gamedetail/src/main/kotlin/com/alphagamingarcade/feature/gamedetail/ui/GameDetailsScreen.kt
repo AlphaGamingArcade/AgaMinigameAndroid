@@ -45,6 +45,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -75,18 +76,26 @@ private val AccentSoft = Color(0xFFE8F7FA)
  *
  * @param onBackClick Navigate back.
  * @param onShowSnackbar Show Snackbar.
- * @param onPlayClick Callback when play button is clicked.
+ * @param onNavigateToPlay Callback when play button is clicked.
  * @param viewModel [GameDetailViewModel].
  */
 @Composable
 internal fun GameDetailScreen(
     isLoggedIn: Boolean,
     onBackClick: () -> Unit,
+    onSignInClick: () -> Unit,
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
-    onPlayClick: (String) -> Unit,
+    onNavigateToPlay: (String, String) -> Unit,
     viewModel: GameDetailViewModel = hiltViewModel(),
 ) {
     val gameDetailState by viewModel.gameDetailUiState.collectAsStateWithLifecycle()
+    val navEvent = viewModel.navigationEvent.collectAsState().value
+
+    LaunchedEffect(navEvent) {
+        navEvent?.getContentIfNotHandled()?.let { args ->
+            onNavigateToPlay(args.playUrl, args.gameName, )
+        }
+    }
 
     StatefulComposable(
         state = gameDetailState,
@@ -96,9 +105,10 @@ internal fun GameDetailScreen(
             isLoggedIn = isLoggedIn,
             screenData = screenData,
             onBackClick = onBackClick,
+            onSignInClick = onSignInClick,
             onFavoriteClick = viewModel::toggleFavorite,
             onScreenshotClick = viewModel::selectScreenshot,
-            onPlayClick = { onPlayClick(screenData.game.id.toString()) },
+            onPlayClick = viewModel::play,
             onSimilarGameClick = viewModel::openSimilarGame,
         )
     }
@@ -114,6 +124,7 @@ private fun GameDetailScreen(
     onFavoriteClick: () -> Unit,
     onScreenshotClick: (String) -> Unit,
     onPlayClick: () -> Unit,
+    onSignInClick: () -> Unit,
     onSimilarGameClick: (String) -> Unit,
 ) {
     val listState = rememberLazyListState()
@@ -143,6 +154,7 @@ private fun GameDetailScreen(
                     onBackClick = onBackClick,
                     onFavoriteClick = onFavoriteClick,
                     onPlayClick = onPlayClick,
+                    onSignInClick = onSignInClick,
                     showBackButton = !showCollapsedTopBar,
                 )
             }
@@ -221,6 +233,7 @@ private fun GameHeroSection(
     onBackClick: () -> Unit,
     onFavoriteClick: () -> Unit,
     onPlayClick: () -> Unit,
+    onSignInClick: () -> Unit,
     showBackButton: Boolean,
 ) {
     Box(
@@ -339,7 +352,13 @@ private fun GameHeroSection(
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Button(
-                    onClick = onPlayClick,
+                    onClick = {
+                        if (isLoggedIn){
+                            onPlayClick()
+                        } else {
+                            onSignInClick()
+                        }
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(48.dp),
@@ -356,11 +375,19 @@ private fun GameHeroSection(
                         disabledElevation = 0.dp,
                     ),
                 ) {
-                    Text(
-                        text = "Play",
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Medium,
-                    )
+                    if (isLoggedIn){
+                        Text(
+                            text = "Play",
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Medium,
+                        )
+                    } else {
+                        Text(
+                            text = "Sign in to play",
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Medium,
+                        )
+                    }
                 }
             }
         }

@@ -1,5 +1,6 @@
 package com.alphagamingarcade.feature.browse.ui
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -24,6 +25,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -46,6 +49,7 @@ import com.alphagamingarcade.core.ui.components.SearchBar
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.core.ui.utils.StatefulComposable
 import com.alphagamingarcade.model.data.Game
+import com.alphagamingarcade.feature.browse.R
 
 // ─── Palette ─────────────────────────────────────────────────────────────────
 
@@ -57,7 +61,15 @@ private val SearchBarColor = Color(0xFFF0F1F5)
 private val TextPrimary    = Color(0xFF1A1A2E)
 private val TextSecondary  = Color(0xFF8A8A9A)
 
-private val categories = listOf("All", "Hot", "New", "Trending", "Coming Soon")
+private enum class BrowseCategory(
+    @StringRes val labelRes: Int,
+) {
+    All(R.string.all_filter),
+    Hot(R.string.hot_filter),
+    New(R.string.new_filter),
+    Trending(R.string.trending_filter),
+    ComingSoon(R.string.coming_soon_filter),
+}
 
 @Composable
 internal fun BrowseScreen(
@@ -66,6 +78,7 @@ internal fun BrowseScreen(
     browseViewModel: BrowseViewModel = hiltViewModel(),
 ) {
     val browseState by browseViewModel.browseUiState.collectAsStateWithLifecycle()
+    val isRefreshing by browseViewModel.isRefreshing.collectAsStateWithLifecycle()
 
     StatefulComposable(
         state = browseState,
@@ -73,6 +86,8 @@ internal fun BrowseScreen(
     ) { browseScreenData ->
         BrowseScreen(
             data = browseScreenData,
+            onRefresh = browseViewModel::refresh,
+            isRefreshing = isRefreshing,
             onGameClick = onGameClick,
         )
     }
@@ -84,19 +99,21 @@ internal fun BrowseScreen(
 private fun BrowseScreen(
     data: BrowseScreenData,
     onGameClick: (String) -> Unit,
+    isRefreshing: Boolean,
+    onRefresh: () -> Unit,
 ) {
     var searchQuery by remember { mutableStateOf("") }
-    var selectedCategory by remember { mutableStateOf("All") }
+    var selectedCategory by remember { mutableStateOf(BrowseCategory.All) }
 
     val filteredGames = remember(data.allGames, selectedCategory, searchQuery) {
         data.allGames
             .filter { game ->
                 when (selectedCategory) {
-                    "Hot" -> game.isTrending
-                    "New" -> game.isLatest
-                    "Top" -> game.isTop
-                    "Coming Soon" -> game.isComingSoon
-                    else -> true
+                    BrowseCategory.All -> true
+                    BrowseCategory.Hot -> game.isTrending
+                    BrowseCategory.New -> game.isLatest
+                    BrowseCategory.Trending -> game.isTrending
+                    BrowseCategory.ComingSoon -> game.isComingSoon
                 }
             }
             .filter { game ->
@@ -104,66 +121,80 @@ private fun BrowseScreen(
             }
     }
 
-    val isFiltering = searchQuery.isNotBlank() || selectedCategory != "All"
+    val isFiltering = searchQuery.isNotBlank() || selectedCategory != BrowseCategory.All
+    val categoryLabels = BrowseCategory.entries.map { category ->
+        category to stringResource(category.labelRes)
+    }
+
 
     Surface(color = Color.White, modifier = Modifier.fillMaxSize()) {
-        LazyColumn(
+        PullToRefreshBox(
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(bottom = 32.dp),
+            isRefreshing = isRefreshing,
+            onRefresh = onRefresh,
         ) {
-            // ── Search Bar ───────────────────────────────────────────────────
-            item {
-                SearchBar(
-                    query = searchQuery,
-                    onQueryChange = { searchQuery = it },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp, vertical = 12.dp),
-                )
-            }
-
-            // ── Category Chips ───────────────────────────────────────────────
-            item {
-                Box(
-                    modifier = Modifier.padding(horizontal = 20.dp),
-                ) {
-                    FilterChips(
-                        categories = categories,
-                        selected = selectedCategory,
-                        onSelect = { selectedCategory = it }
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(bottom = 32.dp),
+            ) {
+                // ── Search Bar ───────────────────────────────────────────────────
+                item {
+                    SearchBar(
+                        query = searchQuery,
+                        onQueryChange = { searchQuery = it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 20.dp, vertical = 12.dp),
                     )
                 }
-                Spacer(Modifier.height(20.dp))
-            }
 
-            // ── Featured — only when not filtering ───────────────────────────
-            if (!isFiltering && data.featuredGames.isNotEmpty()) {
+                // ── Category Chips ───────────────────────────────────────────────
+                item {
+                    Box(
+                        modifier = Modifier.padding(horizontal = 20.dp),
+                    ) {
+
+
+                        FilterChips(
+                            categories = categoryLabels.map { it.second },
+                            selected = stringResource(selectedCategory.labelRes),
+                            onSelect = { selectedLabel ->
+                                selectedCategory = categoryLabels.first { it.second == selectedLabel }.first
+                            },
+                        )
+                    }
+                    Spacer(Modifier.height(20.dp))
+                }
+
+                // ── Featured — only when not filtering ───────────────────────────
+                if (!isFiltering && data.featuredGames.isNotEmpty()) {
+                    item {
+                        SectionHeader(
+                            title = stringResource(R.string.featured),
+                            subtitle = stringResource(R.string.featured_sub_title),
+                            modifier = Modifier.padding(horizontal = 20.dp),
+                        )
+                        Spacer(Modifier.height(12.dp))
+                        FeaturedRow(games = data.featuredGames, onGameClick = onGameClick)
+                        Spacer(Modifier.height(24.dp))
+                    }
+                }
+
+
+                // ── All / Filtered Games Grid ─────────────────────────────────────
                 item {
                     SectionHeader(
-                        title = "Featured",
-                        subtitle = "Editor's picks just for you",
+                        title = if (!isFiltering) stringResource(R.string.all_games) else "${stringResource(R.string.results)} (${filteredGames.size})",
+                        subtitle = if (!isFiltering) stringResource(R.string.all_games_sub_title) else stringResource(R.string.results_sub_title),
                         modifier = Modifier.padding(horizontal = 20.dp),
                     )
                     Spacer(Modifier.height(12.dp))
-                    FeaturedRow(games = data.featuredGames, onGameClick = onGameClick)
-                    Spacer(Modifier.height(24.dp))
+                    AllGamesGrid(
+                        games = filteredGames,
+                        onGameClick = onGameClick,
+                        modifier = Modifier.padding(horizontal = 20.dp),
+                    )
                 }
-            }
-
-
-            // ── All / Filtered Games Grid ─────────────────────────────────────
-            item {
-                SectionHeader(
-                    title = if (!isFiltering) "All Games" else "Results (${filteredGames.size})",
-                    subtitle = if (!isFiltering) "Browse the full collection" else "Showing filtered results",
-                    modifier = Modifier.padding(horizontal = 20.dp),
-                )
-                Spacer(Modifier.height(12.dp))
-                AllGamesGrid(
-                    games = filteredGames,
-                    onGameClick = onGameClick,
-                    modifier = Modifier.padding(horizontal = 20.dp),
-                )
             }
         }
     }

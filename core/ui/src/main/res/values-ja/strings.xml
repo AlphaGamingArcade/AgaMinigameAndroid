@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-     Copyright 2025 Atick Faisal
+     Copyright 2026 Alpha Gaming Arcade
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -16,6 +16,14 @@
 -->
 
 <resources>
-    <string name="profile_picture">صورة الملف الشخصي</string>
-    <string name="sign_out">تسجيل الخروج</string>
+    <string name="hide_password">パスワードを非表示</string>
+    <string name="show_password">パスワードを表示</string>
+    <string name="forgot_password">パスワードをお忘れですか</string>
+    <string name="profile_picture">プロフィール画像</string>
+    <string name="empty" />
+    <string name="report">報告</string>
+    <string name="undo">元に戻す</string>
+    <string name="back">戻る</string>
+
+    <string name="search_games_placeholder">ゲームを検索…</string>
 </resources>
