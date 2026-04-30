@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright 2026 Alpha Gaming Arcade
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<resources>
+    <string name="search_favorites">お気に入りを検索…</string>
+    <string name="continue_playing">続けてプレイ</string>
+    <string name="last_played">最終プレイ</string>
+    <string name="all_favorites">すべてのお気に入り</string>
+    <string name="results">結果</string>
+    <string name="remove_from_favorites">お気に入りから削除しますか？</string>
+    <string name="remove_from_favorites_sub_title">%1$s をお気に入りから削除しますか？</string>
+    <string name="cancel">キャンセル</string>
+    <string name="remove">削除</string>
+    <string name="no_favorites">お気に入りがありません</string>
+    <string name="no_favorites_sub_title">お気に入りに追加したゲームがここに表示されます</string>
+    <string name="resume">再開</string>
+
+</resources>

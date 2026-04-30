@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.alphagamingarcade.feature.changepassword"
+    namespace = "com.alphagamingarcade.feature.user"
 }
 
 dependencies {

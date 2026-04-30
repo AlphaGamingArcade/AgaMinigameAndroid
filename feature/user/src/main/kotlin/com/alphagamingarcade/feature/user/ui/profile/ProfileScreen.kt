@@ -1,11 +1,5 @@
 package com.alphagamingarcade.feature.user.ui.profile
 
-import androidx.compose.animation.core.EaseInOut
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -64,9 +58,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -76,6 +72,7 @@ import com.alphagamingarcade.core.ui.utils.StatefulComposable
 import com.alphagamingarcade.core.data.model.Profile
 import com.alphagamingarcade.core.ui.utils.CurrencyFormatter
 import kotlinx.coroutines.launch
+import com.alphagamingarcade.feature.user.R
 
 // ─── Palette ─────────────────────────────────────────────────────────────────
 
@@ -163,14 +160,14 @@ private fun ProfileScreen(
                     isFreeDepositClaimed = isFreeDepositClaimed
                 )
                 Spacer(Modifier.height(24.dp))
-                SectionLabel(title = "Account")
+                SectionLabel(title = stringResource(R.string.account))
                 MenuCard {
                     MenuItem(
                         icon = Icons.Default.Person,
                         iconBg = Color.Transparent,
                         iconTint = Color.Black,
-                        title = "Edit Profile",
-                        subtitle = "Update your personal info",
+                        title = stringResource(R.string.edit_profile),
+                        subtitle = stringResource(R.string.edit_profile_sub_title),
                         onClick = onEditProfileClick,
                     )
                     MenuDivider()
@@ -178,8 +175,8 @@ private fun ProfileScreen(
                         icon = Icons.Default.Lock,
                         iconBg = Color.Transparent,
                         iconTint = Color.Black,
-                        title = "Change Password",
-                        subtitle = "Manage security settings",
+                        title = stringResource(R.string.change_password),
+                        subtitle = stringResource(R.string.change_password_sub_title),
                         onClick = onChangePasswordClick,
                     )
                     MenuDivider()
@@ -187,32 +184,32 @@ private fun ProfileScreen(
                         icon = Icons.Default.Description,
                         iconBg = Color.Transparent,
                         iconTint = Color.Black,
-                        title = "Terms & Privacy",
-                        subtitle = "Read legal documents",
+                        title = stringResource(R.string.terms_and_privacy),
+                        subtitle = stringResource(R.string.terms_and_privacy_sub_title),
                         onClick = onTermsAndPrivacyClick,
                     )
                 }
                 Spacer(Modifier.height(16.dp))
-                SectionLabel(title = "Help & Support")
+                SectionLabel(title =  stringResource(R.string.help_an_support))
                 MenuCard {
                     MenuItem(
                         icon = Icons.Default.SupportAgent,
                         iconBg = Color.Transparent,
                         iconTint = Color.Black,
-                        title = "Contact Support",
-                        subtitle = "Get help from our team",
+                        title = stringResource(R.string.contact_support),
+                        subtitle = stringResource(R.string.contact_support_sub_title),
                         onClick = onContactSupportClick,
                     )
                 }
                 Spacer(Modifier.height(16.dp))
-                SectionLabel(title = "Account Actions")
+                SectionLabel(title =  stringResource(R.string.account_actions))
                 MenuCard {
                     MenuItem(
                         icon = Icons.AutoMirrored.Filled.Logout,
                         iconBg = Color.Transparent,
                         iconTint = AccentRed,
-                        title = "Sign Out",
-                        subtitle = "Log out of your account",
+                        title = stringResource(R.string.sign_out),
+                        subtitle = stringResource(R.string.sign_out_sub_title),
                         onClick = { showDialog = true },
                     )
                 }
@@ -262,7 +259,7 @@ private fun ProfileScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 Text(
-                    text = "SIGN OUT",
+                    text = stringResource(R.string.sign_out).uppercase(),
                     color = AccentRed,
                     fontWeight = FontWeight.ExtraBold,
                     fontSize = 16.sp,
@@ -270,7 +267,7 @@ private fun ProfileScreen(
                 )
 
                 Text(
-                    text = "Are you sure you want to sign out?",
+                    text = stringResource(R.string.sign_out_confirm),
                     fontSize = 13.sp,
                     color = TextSecondary,
                     textAlign = TextAlign.Center,
@@ -293,7 +290,7 @@ private fun ProfileScreen(
                         .height(52.dp),
                 ) {
                     Text(
-                        text = "Sign Out",
+                        text = stringResource(R.string.sign_out),
                         fontSize = 15.sp,
                         fontWeight = FontWeight.ExtraBold,
                     )
@@ -311,7 +308,7 @@ private fun ProfileScreen(
                         .height(52.dp),
                 ) {
                     Text(
-                        text = "Cancel",
+                        text = stringResource(R.string.cancel),
                         fontSize = 15.sp,
                         fontWeight = FontWeight.SemiBold,
                     )
@@ -370,7 +367,7 @@ private fun DailyRewardBottomSheet(
                     modifier = Modifier.size(16.dp),
                 )
                 Text(
-                    text = "DAILY REWARD",
+                    text = stringResource(R.string.daily_reward),
                     color = AccentGold,
                     fontWeight = FontWeight.ExtraBold,
                     fontSize = 16.sp,
@@ -423,7 +420,7 @@ private fun DailyRewardBottomSheet(
                 )
                 Spacer(Modifier.width(8.dp))
                 Text(
-                    text = if (isClaimed) "Claimed" else "Claim Now",
+                    text = if (isClaimed) stringResource(R.string.claimed) else stringResource(R.string.claim_now),
                     fontSize = 15.sp,
                     fontWeight = FontWeight.ExtraBold,
                 )
@@ -449,9 +446,9 @@ private fun DailyRewardBottomSheet(
                 Spacer(Modifier.width(6.dp))
                 Text(
                     text = if (isClaimed)
-                        "Come back tomorrow to claim your next daily reward!"
+                        stringResource(R.string.claimed_information)
                     else
-                        "Come back every day to claim your free coins!",
+                        stringResource(R.string.claim_now_information),
                     fontSize = 12.sp,
                     color = TextSecondary,
                     fontWeight = FontWeight.Medium,
@@ -516,7 +513,7 @@ private fun ProfileHero(profile: Profile) {
             ) {
                 Text(text = "★", fontSize = 10.sp, color = Color(0xFFCA8A04))
                 Text(
-                    text = "Member",
+                    text = stringResource(R.string.member),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = Color(0xFFCA8A04),
@@ -531,7 +528,7 @@ private fun ProfileHero(profile: Profile) {
                         .size(6.dp)
                         .background(Color(0xFF22C55E), CircleShape),
                 )
-                Text(text = "Online", fontSize = 11.sp, color = Color(0xFF6B7280))
+                Text(text = stringResource(R.string.online), fontSize = 11.sp, color = Color(0xFF6B7280))
             }
         }
     }
@@ -605,7 +602,7 @@ private fun WalletCard(
     ) {
         Column {
             Text(
-                text = "💳 WALLET BALANCE",
+                text = stringResource(R.string.wallet_balance),
                 color = AccentGold,
                 fontWeight = FontWeight.ExtraBold,
                 fontSize = 13.sp,
@@ -620,7 +617,7 @@ private fun WalletCard(
                 fontFamily = FontFamily.Monospace,
             )
             Text(
-                text = "Coins",
+                text = stringResource(R.string.coins),
                 fontSize = 12.sp,
                 color = AccentGold,
                 fontWeight = FontWeight.Medium,
@@ -637,7 +634,7 @@ private fun WalletCard(
                     modifier = Modifier.weight(1f),
                 ) {
                     Text(
-                        text = "Daily Reward",
+                        text = stringResource(R.string.daily_reward),
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -653,7 +650,7 @@ private fun WalletCard(
                     modifier = Modifier.weight(1f),
                 ) {
                     Text(
-                        text = "Transactions",
+                        text = stringResource(R.string.transactions),
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Medium
                     )

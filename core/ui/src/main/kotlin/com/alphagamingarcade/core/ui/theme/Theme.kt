@@ -37,8 +37,8 @@ import androidx.compose.ui.unit.dp
  */
 @VisibleForTesting
 val LightDefaultColorScheme = lightColorScheme(
-    primary = Purple40,
-    onPrimary = Color.White,
+    primary = Color(0xFF061C20) ,
+    onPrimary = Color(0xFFE0F7FA),
     primaryContainer = Purple90,
     onPrimaryContainer = Purple10,
     secondary = Orange40,
@@ -69,8 +69,8 @@ val LightDefaultColorScheme = lightColorScheme(
  */
 @VisibleForTesting
 val DarkDefaultColorScheme = darkColorScheme(
-    primary = Purple80,
-    onPrimary = Purple20,
+    primary = Color(0xFFD3EA29) ,
+    onPrimary = Color(0xFF061C20),
     primaryContainer = Purple30,
     onPrimaryContainer = Purple90,
     secondary = Orange80,

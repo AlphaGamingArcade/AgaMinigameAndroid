@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,6 +42,7 @@ import com.alphagamingarcade.core.ui.components.JetpackButton
 import com.alphagamingarcade.core.ui.components.JetpackPasswordField
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.core.ui.utils.StatefulComposable
+import com.alphagamingarcade.feature.user.R
 
 /**
  * Change password screen.
@@ -58,9 +60,10 @@ internal fun ChangePasswordScreen(
 ) {
     val changePasswordState by viewModel.changePasswordUiState.collectAsStateWithLifecycle()
 
+    val successMessage = stringResource(R.string.password_change_success);
     LaunchedEffect(Unit) {
         viewModel.successEvent.collect {
-            onShowSnackbar("Password changed successfully! Please re-login to continue.", SnackbarAction.NONE, null)
+            onShowSnackbar(successMessage, SnackbarAction.NONE, null)
             onPopBackToStack()
         }
     }
@@ -118,7 +121,7 @@ private fun ChangePasswordScreen(
                 },
                 title = {
                     Text(
-                        text = "Change Password",
+                        text = stringResource(R.string.change_password),
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
                         color = Color(0xFF1A1A2E),
@@ -140,14 +143,14 @@ private fun ChangePasswordScreen(
             ) {
 
                 Text(
-                    text = "Update your password",
+                    text = stringResource(R.string.update_password),
                     style = MaterialTheme.typography.headlineLarge,
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "Choose a strong password to keep your account secure.",
+                    text = stringResource(R.string.update_password_sub_title),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                 )
@@ -158,11 +161,11 @@ private fun ChangePasswordScreen(
                     value = screenData.currentPassword.value,
                     errorMessage = screenData.currentPassword.errorMessage,
                     onValueChange = onCurrentPasswordChange,
-                    label = { Text("Current Password") },
+                    label = { Text(stringResource(R.string.current_password)) },
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Lock,
-                            contentDescription = "Current Password",
+                            contentDescription = stringResource(R.string.current_password),
                         )
                     },
                     modifier = Modifier.fillMaxWidth(),
@@ -172,11 +175,11 @@ private fun ChangePasswordScreen(
                     value = screenData.newPassword.value,
                     errorMessage = screenData.newPassword.errorMessage,
                     onValueChange = onNewPasswordChange,
-                    label = { Text("New Password") },
+                    label = { Text(stringResource(R.string.new_password)) },
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Password,
-                            contentDescription = "New Password",
+                            contentDescription = stringResource(R.string.new_password),
                         )
                     },
                     modifier = Modifier.fillMaxWidth(),
@@ -186,11 +189,11 @@ private fun ChangePasswordScreen(
                     value = screenData.confirmPassword.value,
                     errorMessage = screenData.confirmPassword.errorMessage,
                     onValueChange = onConfirmPasswordChange,
-                    label = { Text("Confirm New Password") },
+                    label = { Text(stringResource(R.string.confirm_new_password)) },
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Password,
-                            contentDescription = "Confirm New Password",
+                            contentDescription = stringResource(R.string.confirm_new_password),
                         )
                     },
                     modifier = Modifier.fillMaxWidth(),
@@ -207,7 +210,7 @@ private fun ChangePasswordScreen(
                         .fillMaxWidth()
                         .padding(vertical = 8.dp)
                         .height(56.dp),
-                    text = { Text("Change Password") },
+                    text = { Text(stringResource(R.string.change_password)) },
                 )
 
                 Spacer(modifier = Modifier.height(40.dp))

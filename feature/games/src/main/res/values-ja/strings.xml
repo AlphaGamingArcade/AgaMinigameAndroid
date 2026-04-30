@@ -26,4 +26,15 @@
     <string name="popular_filter">人気</string>
     <string name="new_filter">新着</string>
     <string name="top_rated_filter">高評価</string>
+
+    <plurals name="games_available">
+        <item quantity="one">%d件のゲームが利用可能</item>
+        <item quantity="other">%d件のゲームが利用可能</item>
+    </plurals>
+
+    <string name="no_results_found">結果が見つかりません</string>
+    <string name="no_results_found_sub_title">別の検索ワードを試してください</string>
+
+    <string name="no_games_yet">ゲームはまだありません</string>
+    <string name="no_games_yet_sub_title">後でもう一度ご確認ください！</string>
 </resources>

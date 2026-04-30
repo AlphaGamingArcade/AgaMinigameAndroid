@@ -1,4 +1,4 @@
-package com.alphagamingarcade.legal.ui.contactsupport
+package com.alphagamingarcade.feature.legal.ui.contactsupport
 
 import android.graphics.Bitmap
 import android.webkit.JavascriptInterface
@@ -6,7 +6,6 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -16,7 +15,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -30,8 +28,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
+import com.alphagamingarcade.feature.legal.R
 
 @Composable
 internal fun ContactSupportScreen(
@@ -63,7 +63,7 @@ private fun ContactSupportScreen(
                 },
                 title = {
                     Text(
-                        text = "Terms and Privacy",
+                        text = stringResource(R.string.contact_support),
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
                         color = Color(0xFF1A1A2E),

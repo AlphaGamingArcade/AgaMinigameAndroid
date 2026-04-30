@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.feature.games.ui.categories.CategoriesScreen
+import com.alphagamingarcade.feature.games.ui.games.GameCategory
 import com.alphagamingarcade.feature.games.ui.games.GamesScreen
 import kotlinx.serialization.Serializable
 
@@ -17,7 +18,7 @@ import kotlinx.serialization.Serializable
 data object Games
 
 @Serializable
-data class Categories(val categoryId: String) // pass category ID or name
+data class Categories(val category: GameCategory) // pass category ID or name
 
 // ─── Games Navigation ────────────────────────────────────────────────────────
 
@@ -28,7 +29,7 @@ fun NavController.navigateToGamesScreen(navOptions: NavOptions? = null) {
 fun NavGraphBuilder.gamesScreen(
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
     onGameClick: (String) -> Unit,
-    onCategoryClick: (String) -> Unit,
+    onCategoryClick: (GameCategory) -> Unit,
 ) {
     composable<Games> {
         GamesScreen(
@@ -47,9 +48,9 @@ fun NavGraphBuilder.gamesScreen(
  * @param navOptions Options to configure the navigation behavior.
  */
 fun NavController.navigateToCategoriesScreen(
-    categoryId: String,
+    category: GameCategory,
     navOptions: NavOptions? = null) {
-    navigate(Categories(categoryId = categoryId), navOptions)
+    navigate(Categories(category = category), navOptions)
 }
 
 /**
@@ -67,7 +68,7 @@ fun NavGraphBuilder.categoriesScreen(
         CategoriesScreen(
             onShowSnackbar = onShowSnackbar,
             onGameClick = onGameClick,
-            categoryName = categories.categoryId,
+            category = categories.category,
             onBackClick = onBackClick,
         )
     }

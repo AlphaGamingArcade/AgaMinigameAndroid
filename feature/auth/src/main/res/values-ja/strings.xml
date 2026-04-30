@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright 2023 Atick Faisal
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<resources>
+    <string name="email_verified">メール認証完了</string>
+    <string name="email_verified_description">メールの認証が完了しました。アカウントにサインインできます。</string>
+    <string name="continue_to_sign_in">サインインへ進む</string>
+    <string name="password">パスワード</string>
+    <string name="show_password">パスワードを表示</string>
+    <string name="hide_password">パスワードを非表示</string>
+    <string name="sign_in">サインイン</string>
+    <string name="do_not_have_an_account">アカウントをお持ちでない方は</string>
+    <string name="sign_up">登録</string>
+    <string name="email">メールアドレス</string>
+    <string name="name">氏名</string>
+    <string name="sign_up_with_google">Googleで登録</string>
+    <string name="already_have_an_account">すでにアカウントをお持ちですか？</string>
+    <string name="login">ログイン</string>
+    <string name="or">または</string>
+    <string name="password_spec">パスワードは大文字・小文字・数字・特殊文字（#$@?）を含めてください</string>
+    <string name="agree_to_terms">続行することで、以下に同意したことになります</string>
+    <string name="privacy_policy">プライバシーポリシー</string>
+    <string name="feedback">フィードバック</string>
+    <string name="terms_of_service">利用規約</string>
+    <string name="forgot_password">パスワードをお忘れですか</string>
+    <string name="forgot_password_description">メールアドレスを入力すると、パスワード再設定用のリンクを送信します。</string>
+    <string name="send_reset_link">再設定リンクを送信</string>
+    <string name="remember_your_password">パスワードを思い出しましたか？</string>
+    <string name="check_your_email">メールを確認</string>
+    <string name="check_your_email_description">パスワード再設定リンクを次のアドレスに送信しました</string>
+    <string name="check_your_email_hint">メールが届かない場合は、迷惑メールフォルダをご確認いただくか、再送信してください。</string>
+    <string name="open_email_app">メールアプリを開く</string>
+    <string name="resend_email">メールを再送信</string>
+    <string name="reset_link_sent">メールを確認</string>
+    <string name="reset_link_sent_description">パスワード再設定リンクを送信しました</string>
+
+    <string name="email_not_valid">有効なメールアドレスを入力してください</string>
+    <string name="password_not_valid">パスワードが無効です</string>
+    <string name="password_min_characters">パスワードは8文字以上で入力してください</string>
+    <string name="passwords_do_not_match">パスワードが一致しません</string>
+</resources>

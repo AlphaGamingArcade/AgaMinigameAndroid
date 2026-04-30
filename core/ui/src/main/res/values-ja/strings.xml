@@ -26,4 +26,11 @@
     <string name="back">戻る</string>
 
     <string name="search_games_placeholder">ゲームを検索…</string>
+
+    <string name="login_required">ログインが必要です</string>
+    <string name="login_required_sub_title">続行するにはサインインしてください</string>
+    <string name="sign_in">サインイン</string>
+    <string name="create_account">アカウント作成</string>
+
+    <string name="see_more">もっと見る</string>
 </resources>

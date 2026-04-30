@@ -16,8 +16,7 @@
 -->
 
 <resources>
-    <string name="search_games">전체 게임</string>
-
+    <string name="search_games">게임 검색…</string>
     <string name="all_filter">전체</string>
     <string name="hot_filter">인기</string>
     <string name="new_filter">신규</string>
@@ -29,4 +28,7 @@
 
     <string name="all_games">전체 게임</string>
     <string name="all_games_sub_title">모든 게임 둘러보기</string>
+
+    <string name="results">결과</string>
+    <string name="results_sub_title">필터링된 결과 표시 중</string>
 </resources>

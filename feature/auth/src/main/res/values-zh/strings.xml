@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright 2023 Atick Faisal
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<resources>
+    <string name="email_verified">邮箱验证成功</string>
+    <string name="email_verified_description">您的邮箱已成功验证，现在可以登录您的账户。</string>
+    <string name="continue_to_sign_in">继续登录</string>
+    <string name="password">密码</string>
+    <string name="show_password">显示密码</string>
+    <string name="hide_password">隐藏密码</string>
+    <string name="sign_in">登录</string>
+    <string name="do_not_have_an_account">还没有账号？</string>
+    <string name="sign_up">注册</string>
+    <string name="email">邮箱</string>
+    <string name="name">姓名</string>
+    <string name="sign_up_with_google">使用 Google 注册</string>
+    <string name="already_have_an_account">已有账号？</string>
+    <string name="login">登录</string>
+    <string name="or">或</string>
+    <string name="password_spec">密码需包含大写字母、小写字母、数字及特殊字符（#$@?）</string>
+    <string name="agree_to_terms">继续即表示您同意我们的</string>
+    <string name="privacy_policy">隐私政策</string>
+    <string name="feedback">反馈</string>
+    <string name="terms_of_service">服务条款</string>
+    <string name="forgot_password">忘记密码</string>
+    <string name="forgot_password_description">输入您的邮箱，我们将发送重置密码的链接。</string>
+    <string name="send_reset_link">发送重置链接</string>
+    <string name="remember_your_password">想起密码了？</string>
+    <string name="check_your_email">检查您的邮箱</string>
+    <string name="check_your_email_description">我们已向以下地址发送重置链接</string>
+    <string name="check_your_email_hint">未收到邮件？请检查垃圾邮箱或点击下方重新发送。</string>
+    <string name="open_email_app">打开邮箱应用</string>
+    <string name="resend_email">重新发送邮件</string>
+    <string name="reset_link_sent">请检查邮箱</string>
+    <string name="reset_link_sent_description">我们已发送密码重置链接</string>
+
+    <string name="email_not_valid">请输入有效的邮箱地址</string>
+    <string name="password_not_valid">密码无效</string>
+    <string name="password_min_characters">密码至少需要8个字符</string>
+    <string name="passwords_do_not_match">密码不一致</string>
+</resources>

@@ -15,9 +15,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import javax.inject.Inject
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
+
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(

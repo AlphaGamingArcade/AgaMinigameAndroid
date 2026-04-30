@@ -16,19 +16,16 @@
 -->
 
 <resources>
-    <string name="search_games">搜索游戏…</string>
-    <string name="all_filter">全部</string>
-    <string name="hot_filter">热门</string>
-    <string name="new_filter">最新</string>
-    <string name="trending_filter">趋势</string>
-    <string name="coming_soon_filter">即将上线</string>
-
-    <string name="featured">精选</string>
-    <string name="featured_sub_title">为你精选推荐</string>
-
-    <string name="all_games">全部游戏</string>
-    <string name="all_games_sub_title">浏览全部内容</string>
-
+    <string name="search_favorites">搜索收藏…</string>
+    <string name="continue_playing">继续游戏</string>
+    <string name="last_played">最近游玩</string>
+    <string name="all_favorites">全部收藏</string>
     <string name="results">结果</string>
-    <string name="results_sub_title">显示筛选结果</string>
+    <string name="remove_from_favorites">从收藏中移除？</string>
+    <string name="remove_from_favorites_sub_title">确定要将 %1$s 从收藏中移除吗？</string>
+    <string name="cancel">取消</string>
+    <string name="remove">移除</string>
+    <string name="no_favorites">暂无收藏</string>
+    <string name="no_favorites_sub_title">您收藏的游戏将显示在这里</string>
+    <string name="resume">继续</string>
 </resources>

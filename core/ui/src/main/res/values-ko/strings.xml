@@ -26,4 +26,11 @@
     <string name="back">뒤로</string>
 
     <string name="search_games_placeholder">게임 검색…</string>
+
+    <string name="login_required">로그인이 필요합니다</string>
+    <string name="login_required_sub_title">계속하려면 먼저 로그인하세요</string>
+    <string name="sign_in">로그인</string>
+    <string name="create_account">계정 생성</string>
+
+    <string name="see_more">더 보기</string>
 </resources>

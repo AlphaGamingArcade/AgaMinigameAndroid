@@ -31,6 +31,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -47,6 +48,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -58,6 +60,8 @@ import coil.compose.AsyncImage
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.core.ui.utils.StatefulComposable
 import com.alphagamingarcade.model.data.Game
+import com.alphagamingarcade.feature.favorite.R
+import com.alphagamingarcade.core.ui.components.SearchBar
 
 // ─── Palette ─────────────────────────────────────────────────────────────────
 
@@ -121,8 +125,8 @@ private fun FavoriteScreen(
             onDismissRequest = {
                 selectedGameToRemove = null
             },
-            title = { Text("Remove from favorites?") },
-            text = { Text("Do you want to remove ${game.name} from your favorites?") },
+            title = { Text(stringResource(R.string.remove_from_favorites)) },
+            text = { Text(stringResource(R.string.remove_from_favorites, game.name)) },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -141,7 +145,7 @@ private fun FavoriteScreen(
         )
     }
 
-    Surface(color = Color.White, modifier = Modifier.fillMaxSize()) {
+    Surface(color = MaterialTheme.colorScheme.surface, modifier = Modifier.fillMaxSize()) {
         PullToRefreshBox(
             modifier = Modifier.fillMaxSize(),
             onRefresh = onRefresh,
@@ -153,7 +157,7 @@ private fun FavoriteScreen(
             ) {
                 // ── Search Bar ───────────────────────────────────────────────────
                 item {
-                    FavoriteSearchBar(
+                    SearchBar(
                         query = searchQuery,
                         onQueryChange = { searchQuery = it },
                         modifier = Modifier
@@ -168,7 +172,7 @@ private fun FavoriteScreen(
                     data.recentGames.firstOrNull()?.let { recent ->
                         item {
                             SectionLabel(
-                                title = "Continue Playing",
+                                title = stringResource(R.string.continue_playing),
                                 modifier = Modifier.padding(horizontal = 20.dp),
                             )
                             Spacer(Modifier.height(10.dp))
@@ -206,7 +210,7 @@ private fun FavoriteScreen(
                 // ── All Favorites grid ────────────────────────────────────────────
                 item {
                     SectionLabel(
-                        title = if (isSearching) "Results (${filteredGames.size})" else "All Favorites",
+                        title = if (isSearching) "${stringResource(R.string.results)} (${filteredGames.size})" else stringResource(R.string.all_favorites),
                         modifier = Modifier.padding(horizontal = 20.dp),
                     )
                     Spacer(Modifier.height(10.dp))
@@ -279,58 +283,6 @@ private fun FavoriteScreen(
 //    }
 //}
 
-// ─── Search Bar ──────────────────────────────────────────────────────────────
-
-@Composable
-private fun FavoriteSearchBar(
-    query: String,
-    onQueryChange: (String) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Box(
-        modifier = modifier
-            .clip(RoundedCornerShape(16.dp))
-            .background(SearchBarColor)
-            .padding(horizontal = 16.dp, vertical = 12.dp),
-        contentAlignment = Alignment.CenterStart,
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                imageVector = Icons.Default.Search,
-                contentDescription = null,
-                tint = TextSecondary,
-                modifier = Modifier.size(20.dp),
-            )
-            Spacer(Modifier.width(10.dp))
-            Box(modifier = Modifier.weight(1f)) {
-                if (query.isEmpty()) {
-                    Text(text = "Search favorites...", color = TextSecondary, fontSize = 14.sp)
-                }
-                BasicTextField(
-                    value = query,
-                    onValueChange = onQueryChange,
-                    textStyle = TextStyle(fontSize = 14.sp, color = TextPrimary),
-                    cursorBrush = SolidColor(AccentPink),
-                    singleLine = true,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-            }
-            if (query.isNotEmpty()) {
-                IconButton(
-                    onClick = { onQueryChange("") },
-                    modifier = Modifier.size(20.dp),
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Close,
-                        contentDescription = "Clear",
-                        tint = TextSecondary,
-                        modifier = Modifier.size(16.dp),
-                    )
-                }
-            }
-        }
-    }
-}
 
 // ─── Resume Card ─────────────────────────────────────────────────────────────
 
@@ -368,7 +320,7 @@ private fun ResumeCard(
                 .padding(20.dp),
         ) {
             Text(
-                text = "Last Played",
+                text = stringResource(R.string.last_played),
                 color = Color.White.copy(alpha = 0.7f),
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Medium,
@@ -388,7 +340,7 @@ private fun ResumeCard(
                     .padding(horizontal = 16.dp, vertical = 6.dp),
             ) {
                 Text(
-                    text = "▶  Resume",
+                    text = "▶  ${stringResource(R.string.resume)}",
                     color = Color.White,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
@@ -591,14 +543,14 @@ private fun FavoriteEmptyState(isSearching: Boolean) {
         }
         Spacer(Modifier.height(4.dp))
         Text(
-            text = if (isSearching) "No results found" else "No favorites yet",
+            text = if (isSearching) stringResource(R.string.no_results_found) else stringResource(R.string.no_favorites),
             fontSize = 16.sp,
             fontWeight = FontWeight.SemiBold,
             color = TextPrimary,
         )
         Text(
-            text = if (isSearching) "Try a different search term"
-            else "Games you favorite will appear here",
+            text = if (isSearching) stringResource(R.string.no_results_found_sub_title)
+            else stringResource(R.string.no_favorites_sub_title),
             fontSize = 13.sp,
             color = TextSecondary,
         )

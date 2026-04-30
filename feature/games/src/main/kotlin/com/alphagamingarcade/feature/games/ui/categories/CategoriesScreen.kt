@@ -36,6 +36,7 @@ import androidx.compose.material.icons.rounded.SportsEsports
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -54,6 +55,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -68,6 +70,7 @@ import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.core.ui.utils.StatefulComposable
 import com.alphagamingarcade.model.data.Game
 import com.alphagamingarcade.feature.games.R
+import com.alphagamingarcade.feature.games.ui.games.GameCategory
 
 enum class CategoryFilter(
     @StringRes val labelRes: Int,
@@ -82,7 +85,7 @@ enum class CategoryFilter(
 
 @Composable
 internal fun CategoriesScreen(
-    categoryName: String,
+    category: GameCategory,
     onGameClick: (String) -> Unit,
     onBackClick: () -> Unit,
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
@@ -91,8 +94,8 @@ internal fun CategoriesScreen(
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
 
-    LaunchedEffect(categoryName) {
-        viewModel.initialize(categoryName)
+    LaunchedEffect(category.value) {
+        viewModel.initialize(category.value)
     }
 
     StatefulComposable(
@@ -103,7 +106,7 @@ internal fun CategoriesScreen(
             data = data,
             onRefresh = viewModel::refresh,
             isRefreshing = isRefreshing,
-            categoryName = categoryName,
+            category = category,
             onGameClick = onGameClick,
             onBackClick = onBackClick,
         )
@@ -115,7 +118,7 @@ internal fun CategoriesScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CategoriesScreen(
-    categoryName: String,
+    category: GameCategory,
     data: CategoriesScreenData,
     onGameClick: (String) -> Unit,
     onBackClick: () -> Unit,
@@ -145,7 +148,7 @@ private fun CategoriesScreen(
     }
 
 
-    Surface(color = Color.White, modifier = Modifier.fillMaxSize()) {
+    Surface(color = MaterialTheme.colorScheme.surface, modifier = Modifier.fillMaxSize()) {
             Column(modifier = Modifier.fillMaxSize()) {
 
                 // ── Top App Bar ──────────────────────────────────────────────────
@@ -160,7 +163,7 @@ private fun CategoriesScreen(
                     },
                     title = {
                         Text(
-                            text = categoryName,
+                            text = stringResource(category.labelRes),
                             fontWeight = FontWeight.Bold,
                             fontSize = 18.sp,
                             color = Color(0xFF1A1A2E),
@@ -217,6 +220,7 @@ private fun CategoriesScreen(
                         ) {
                             item(span = { GridItemSpan(maxLineSpan) }) {
                                 SearchBar(
+                                    placeholder = stringResource(R.string.search_games),
                                     query = searchQuery,
                                     onQueryChange = { searchQuery = it },
                                     modifier = Modifier
@@ -234,10 +238,14 @@ private fun CategoriesScreen(
                             }
                             item(span = { GridItemSpan(maxLineSpan) }) {
                                 Text(
-                                    text = "${filteredGames.size} Game${if (filteredGames.size != 1) "s" else ""} Available",
+                                    text = pluralStringResource(
+                                        R.plurals.games_available,
+                                        filteredGames.size,
+                                        filteredGames.size
+                                    ),
                                     fontSize = 13.sp,
                                     fontWeight = FontWeight.Medium,
-                                    color = Color(0xFF8A8A9A)
+                                    color = Color(0xFF8A8A9A),
                                 )
                             }
                             if (filteredGames.isEmpty()) {
@@ -340,13 +348,13 @@ private fun EmptyState(isSearching: Boolean = false) {
                 modifier = Modifier.size(48.dp),
             )
             Text(
-                text = if (isSearching) "No results found" else "No games yet",
+                text = if (isSearching) stringResource(R.string.no_results_found) else stringResource(R.string.no_games_yet),
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
                 color = Color(0xFF1A1A2E),
             )
             Text(
-                text = if (isSearching) "Try a different search term" else "Check back later!",
+                text = if (isSearching) stringResource(R.string.no_results_found_sub_title) else stringResource(R.string.no_games_yet_sub_title),
                 fontSize = 13.sp,
                 color = Color(0xFF8A8A9A),
             )

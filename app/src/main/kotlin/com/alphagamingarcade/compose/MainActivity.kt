@@ -119,7 +119,8 @@ class MainActivity : AppCompatActivity() {
             )
             JetpackTheme(
                 darkTheme = themeSettings.darkTheme,
-                disableDynamicTheming = themeSettings.disableDynamicTheming,
+//                disableDynamicTheming = themeSettings.disableDynamicTheming,
+                disableDynamicTheming = true
             ) {
                 AgamgApp(
                     appState = appState,

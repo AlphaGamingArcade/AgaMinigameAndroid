@@ -26,4 +26,15 @@
     <string name="popular_filter">热门</string>
     <string name="new_filter">最新</string>
     <string name="top_rated_filter">高评分</string>
+
+    <plurals name="games_available">
+        <item quantity="one">%d 个可用游戏</item>
+        <item quantity="other">%d 个可用游戏</item>
+    </plurals>
+
+    <string name="no_results_found">未找到结果</string>
+    <string name="no_results_found_sub_title">请尝试其他搜索关键词</string>
+
+    <string name="no_games_yet">暂无游戏</string>
+    <string name="no_games_yet_sub_title">稍后再来查看！</string>
 </resources>

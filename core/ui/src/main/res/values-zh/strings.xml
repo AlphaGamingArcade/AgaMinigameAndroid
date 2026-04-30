@@ -26,4 +26,11 @@
     <string name="back">返回</string>
 
     <string name="search_games_placeholder">搜索游戏…</string>
+
+    <string name="login_required">需要登录</string>
+    <string name="login_required_sub_title">请先登录以继续</string>
+    <string name="sign_in">登录</string>
+    <string name="create_account">创建账号</string>
+
+    <string name="see_more">查看更多</string>
 </resources>

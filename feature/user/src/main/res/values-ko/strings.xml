@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright 2026 Alpha Gaming Arcade
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<resources>
+    <string name="member">회원</string>
+    <string name="online">온라인</string>
+    <string name="wallet_balance">지갑 잔액</string>
+    <string name="coins">코인</string>
+    <string name="daily_reward">일일 보상</string>
+    <string name="transactions">거래 내역</string>
+
+    <string name="account">계정</string>
+    <string name="edit_profile">프로필 수정</string>
+    <string name="edit_profile_sub_title">개인 정보 업데이트</string>
+
+    <string name="change_password">비밀번호 변경</string>
+    <string name="change_password_sub_title">보안 설정 관리</string>
+
+    <string name="terms_and_privacy">약관 및 개인정보</string>
+    <string name="terms_and_privacy_sub_title">법적 문서 확인</string>
+
+    <string name="help_an_support">도움말 및 지원</string>
+    <string name="contact_support">고객센터 문의</string>
+    <string name="contact_support_sub_title">지원팀의 도움 받기</string>
+
+    <string name="account_actions">계정 작업</string>
+    <string name="sign_out">로그아웃</string>
+    <string name="sign_out_sub_title">계정에서 로그아웃</string>
+    <string name="sign_out_confirm">정말 로그아웃하시겠습니까?</string>
+    <string name="cancel">취소</string>
+
+    <string name="claimed">수령 완료</string>
+    <string name="claimed_information">내일 다시 와서 다음 일일 보상을 받아보세요!</string>
+    <string name="claim_now">지금 받기</string>
+    <string name="claim_now_information">매일 접속하여 무료 코인을 받아보세요!</string>
+
+    <string name="update_profile">프로필 업데이트</string>
+    <string name="update_profile_sub_title">개인 정보를 최신 상태로 유지하세요.</string>
+    <string name="nickname">닉네임</string>
+    <string name="save_changes">변경 사항 저장</string>
+
+    <string name="update_password">비밀번호 업데이트</string>
+    <string name="update_password_sub_title">계정을 보호하기 위해 강력한 비밀번호를 설정하세요</string>
+    <string name="current_password">현재 비밀번호</string>
+    <string name="new_password">새 비밀번호</string>
+    <string name="confirm_new_password">새 비밀번호 확인</string>
+    <string name="password_change_success">비밀번호가 성공적으로 변경되었습니다. 계속하려면 다시 로그인하세요.</string>
+</resources>

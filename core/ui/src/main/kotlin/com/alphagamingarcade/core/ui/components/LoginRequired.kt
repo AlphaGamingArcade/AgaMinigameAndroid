@@ -13,14 +13,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.alphagamingarcade.core.ui.R
 
 @Composable
 fun LoginRequired(
     modifier: Modifier = Modifier,
-    title: String = "Login Required",
-    description: String = "You need to sign in first to continue.",
+    title: String = stringResource(id = R.string.login_required),
+    description: String = stringResource(id = R.string.login_required_sub_title),
     onLoginClick: () -> Unit,
     onSignUpClick: () -> Unit,
     onBackClick: (() -> Unit)? = null,
@@ -60,7 +62,7 @@ fun LoginRequired(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(52.dp),
-            text = { Text("Sign In") },
+            text = { Text(stringResource(id = R.string.sign_in)) },
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -70,7 +72,7 @@ fun LoginRequired(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(52.dp),
-            text = { Text("Create Account") },
+            text = { Text(stringResource(id = R.string.create_account)) },
         )
 
         if (onBackClick != null) {

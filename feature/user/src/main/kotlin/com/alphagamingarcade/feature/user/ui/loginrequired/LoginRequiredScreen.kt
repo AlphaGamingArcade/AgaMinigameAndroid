@@ -1,6 +1,7 @@
 package com.alphagamingarcade.feature.user.ui.loginrequired
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,7 +38,7 @@ private fun LoginRequiredScreen(
     onLoginClick: () -> Unit,
     onSignUpClick: () -> Unit,
 ) {
-    Surface(color = Color.White, modifier = Modifier.fillMaxSize()) {
+    Surface(color = MaterialTheme.colorScheme.surface, modifier = Modifier.fillMaxSize()) {
         LoginRequired(
             modifier = Modifier.fillMaxSize(),
             onLoginClick = onLoginClick,

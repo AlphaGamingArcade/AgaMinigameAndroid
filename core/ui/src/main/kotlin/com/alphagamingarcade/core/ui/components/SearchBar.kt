@@ -1,5 +1,6 @@
 package com.alphagamingarcade.core.ui.components
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -36,6 +37,7 @@ private val TextSecondary  = Color(0xFF8A8A9A)
 
 @Composable
 fun SearchBar(
+    placeholder: String? = null,
     query: String,
     onQueryChange: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -56,9 +58,9 @@ fun SearchBar(
             )
             Spacer(Modifier.width(10.dp))
             Box(modifier = Modifier.weight(1f)) {
-                if (query.isEmpty()) {
+                if (query.isEmpty() && placeholder != null) {
                     Text(
-                        text = stringResource(R.string.search_games_placeholder),
+                        text = placeholder,
                         color = TextSecondary,
                         fontSize = 14.sp,
                     )

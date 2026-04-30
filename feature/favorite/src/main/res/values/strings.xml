@@ -16,6 +16,18 @@
 -->
 
 <resources>
-    <string name="profile_picture">Profile Picture</string>
-    <string name="sign_out">Sign Out</string>
+    <string name="search_favorites">Search Favorites...</string>
+    <string name="continue_playing">Continue Playing</string>
+    <string name="last_played">Last Played</string>
+    <string name="all_favorites">All Favorites</string>
+    <string name="results">Results</string>
+    <string name="remove_from_favorites">Remove from favorites?</string>
+    <string name="remove_from_favorites_sub_title">Do you want to remove %1$s from your favorites?</string>
+    <string name="cancel">Cancel</string>
+    <string name="remove">Remove</string>
+    <string name="no_favorites">No favorites</string>
+    <string name="no_favorites_sub_title">Games you favorite will appear here</string>
+    <string name="no_results_found">No results found</string>
+    <string name="no_results_found_sub_title">Try a different search term</string>
+    <string name="resume">Resume</string>
 </resources>

@@ -38,11 +38,11 @@ import com.alphagamingarcade.feature.user.navigation.navigateToEditProfileScreen
 import com.alphagamingarcade.feature.user.navigation.navigateToTransactionScreen
 import com.alphagamingarcade.feature.user.navigation.transactionScreen
 import com.alphagamingarcade.feature.user.navigation.profileScreen
-import com.alphagamingarcade.legal.navigation.contactSupportScreen
-import com.alphagamingarcade.legal.navigation.legalNavGraph
-import com.alphagamingarcade.legal.navigation.navigateToContactSupportScreen
-import com.alphagamingarcade.legal.navigation.navigateToTermsAndPrivacyScreen
-import com.alphagamingarcade.legal.navigation.termsAndPrivacyScreen
+import com.alphagamingarcade.feature.legal.navigation.contactSupportScreen
+import com.alphagamingarcade.feature.legal.navigation.legalNavGraph
+import com.alphagamingarcade.feature.legal.navigation.navigateToContactSupportScreen
+import com.alphagamingarcade.feature.legal.navigation.navigateToTermsAndPrivacyScreen
+import com.alphagamingarcade.feature.legal.navigation.termsAndPrivacyScreen
 
 /**
  * Composable function that sets up the navigation host for the Jetpack Compose application.
@@ -132,8 +132,8 @@ fun AgamgNavHost(
             onGameClick = { gameId ->
                 navController.navigateToGameDetailScreen(gameId = gameId)
             },
-            onCategoryClick = { categoryId ->
-                navController.navigateToCategoriesScreen(categoryId = categoryId)
+            onCategoryClick = { category ->
+                navController.navigateToCategoriesScreen(category = category)
             },
         )
         categoriesScreen(

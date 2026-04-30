@@ -23,6 +23,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -58,7 +59,6 @@ private val TagNew         = Color(0xFF00C48C)
 private val TagHot         = Color(0xFFFF4757)
 private val SurfaceGray    = Color(0xFFF5F6FA)
 private val SearchBarColor = Color(0xFFF0F1F5)
-private val TextPrimary    = Color(0xFF1A1A2E)
 private val TextSecondary  = Color(0xFF8A8A9A)
 
 private enum class BrowseCategory(
@@ -127,11 +127,11 @@ private fun BrowseScreen(
     }
 
 
-    Surface(color = Color.White, modifier = Modifier.fillMaxSize()) {
+    Surface(color = MaterialTheme.colorScheme.surface, modifier = Modifier.fillMaxSize()) {
         PullToRefreshBox(
             modifier = Modifier.fillMaxSize(),
             isRefreshing = isRefreshing,
-            onRefresh = onRefresh,
+            onRefresh = onRefresh
         ) {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
@@ -140,6 +140,7 @@ private fun BrowseScreen(
                 // ── Search Bar ───────────────────────────────────────────────────
                 item {
                     SearchBar(
+                        placeholder = stringResource(R.string.search_games),
                         query = searchQuery,
                         onQueryChange = { searchQuery = it },
                         modifier = Modifier
@@ -290,59 +291,10 @@ private fun HotGamesRow(games: List<Game>, onGameClick: (String) -> Unit) {
                     text = game.name,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Medium,
-                    color = TextPrimary,
+                    color = MaterialTheme.colorScheme.onSurface,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
-            }
-        }
-    }
-}
-
-// ─── New Arrivals Row ─────────────────────────────────────────────────────────
-
-@Composable
-private fun NewArrivalsRow(games: List<Game>, onGameClick: (String) -> Unit) {
-    LazyRow(
-        contentPadding = PaddingValues(horizontal = 20.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-    ) {
-        items(games) { game ->
-            Row(
-                modifier = Modifier
-                    .width(200.dp)
-                    .clip(RoundedCornerShape(14.dp))
-                    .background(SurfaceGray)
-                    .clickable { onGameClick(game.id.toString()) }
-                    .padding(10.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                AsyncImage(
-                    model = game.imageUrl,
-                    contentDescription = game.name,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(52.dp)
-                        .clip(RoundedCornerShape(10.dp)),
-                )
-                Spacer(Modifier.width(10.dp))
-                Column {
-                    GameTag(label = "NEW", color = TagNew)
-                    Spacer(Modifier.height(4.dp))
-                    Text(
-                        text = game.name,
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 13.sp,
-                        color = TextPrimary,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                    Text(
-                        text = "⭐ 4.7",
-                        fontSize = 11.sp,
-                        color = TextSecondary,
-                    )
-                }
             }
         }
     }
@@ -404,7 +356,7 @@ private fun GridGameCard(game: Game, onClick: () -> Unit) {
             text = game.name,
             fontWeight = FontWeight.SemiBold,
             fontSize = 13.sp,
-            color = TextPrimary,
+            color = MaterialTheme.colorScheme.onSurface,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
@@ -429,7 +381,7 @@ private fun SectionHeader(
             text = title,
             fontWeight = FontWeight.Bold,
             fontSize = 18.sp,
-            color = TextPrimary,
+            color = MaterialTheme.colorScheme.onSurface,
         )
         Text(
             text = subtitle,

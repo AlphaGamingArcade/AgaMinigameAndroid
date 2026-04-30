@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,6 +42,7 @@ import com.alphagamingarcade.core.ui.components.JetpackButton
 import com.alphagamingarcade.core.ui.components.JetpackTextField
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.core.ui.utils.StatefulComposable
+import com.alphagamingarcade.feature.user.R
 
 /**
  * Edit profile screen.
@@ -109,7 +111,7 @@ private fun EditProfileScreen(
                 },
                 title = {
                     Text(
-                        text = "Edit Profile",
+                        text = stringResource(R.string.edit_profile),
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
                         color = Color(0xFF1A1A2E),
@@ -130,14 +132,14 @@ private fun EditProfileScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
-                    text = "Update your profile",
+                    text = stringResource(R.string.update_profile),
                     style = MaterialTheme.typography.headlineLarge,
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "Keep your personal information up to date.",
+                    text = stringResource(R.string.update_profile_sub_title),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                 )
@@ -147,11 +149,11 @@ private fun EditProfileScreen(
                 JetpackTextField(
                     value = screenData.nickname.value,
                     onValueChange = onNicknameChange,
-                    label = { Text("Nickname") },
+                    label = { Text(stringResource(R.string.nickname)) },
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Person,
-                            contentDescription = "Nickname",
+                            contentDescription = stringResource(R.string.nickname),
                         )
                     },
                     modifier = Modifier.fillMaxWidth(),
@@ -168,7 +170,7 @@ private fun EditProfileScreen(
                         .fillMaxWidth()
                         .padding(vertical = 8.dp)
                         .height(56.dp),
-                    text = { Text("Save Changes") },
+                    text = { Text(stringResource(R.string.save_changes)) },
                 )
 
                 Spacer(modifier = Modifier.height(40.dp))

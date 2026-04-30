@@ -38,6 +38,7 @@ import androidx.compose.material.icons.rounded.ViewColumn
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -59,6 +60,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import com.alphagamingarcade.core.ui.components.SectionHeader
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.core.ui.utils.StatefulComposable
 import com.alphagamingarcade.model.data.Banner
@@ -81,7 +83,7 @@ private val TextSecondary= Color(0xFF8A8A9A)
 @Composable
 internal fun GamesScreen(
     onGameClick: (String) -> Unit,
-    onCategoryClick: (String) -> Unit,
+    onCategoryClick: (GameCategory) -> Unit,
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
     gamesViewModel: GamesViewModel = hiltViewModel(),
 ) {
@@ -110,9 +112,9 @@ private fun GamesScreen(
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
     onGameClick: (String) -> Unit,
-    onCategoryClick: (String) -> Unit,
+    onCategoryClick: (GameCategory) -> Unit,
 ) {
-    Surface(color = Color.White, modifier = Modifier.fillMaxSize()) {
+    Surface(color = MaterialTheme.colorScheme.surface, modifier = Modifier.fillMaxSize()) {
         PullToRefreshBox(
             isRefreshing = isRefreshing,
             onRefresh = onRefresh,
@@ -142,15 +144,6 @@ private fun GamesScreen(
                     QuickCategoryPills(onCategoryClick = onCategoryClick)
                     Spacer(Modifier.height(28.dp))
                 }
-
-                // ── Jackpot Banner ───────────────────────────────────────────────
-//            item {
-//                JackpotBanner(
-//                    games = data.jackpotGames,
-//                    onGameClick = onGameClick,
-//                )
-//                Spacer(Modifier.height(28.dp))
-//            }
 
                 // ── Trending Now ─────────────────────────────────────────────────
                 item {
@@ -299,26 +292,25 @@ private fun HeroBannerCarousel(
     }
 }
 
-data class QuickCategory(
-    val icon: ImageVector,
-    @StringRes val labelRes: Int,
+
+enum class GameCategory(
     val value: String,
-)
+    @StringRes val labelRes: Int,
+    val icon: ImageVector,
+) {
+    Slots("Slots", R.string.slots, Icons.Rounded.ViewColumn),
+    Table("Table", R.string.table, Icons.Rounded.GridView),
+    Arcade("Arcade", R.string.arcade, Icons.Rounded.SportsEsports),
+    Live("Live", R.string.live, Icons.Rounded.LiveTv),
+    Sports("Sports", R.string.sports, Icons.Rounded.SportsSoccer),
+    VIP("VIP", R.string.vip, Icons.Rounded.Diamond),
+}
 
-
-// ─── Quick Category Pills ────────────────────────────────────────────────────
-private val quickCategories = listOf(
-    QuickCategory(Icons.Rounded.ViewColumn, R.string.slots, "Slots"),
-    QuickCategory(Icons.Rounded.GridView, R.string.table, "Table"),
-    QuickCategory(Icons.Rounded.SportsEsports, R.string.arcade, "Arcade"),
-    QuickCategory(Icons.Rounded.LiveTv, R.string.live, "Live"),
-    QuickCategory(Icons.Rounded.SportsSoccer, R.string.sports, "Sports"),
-    QuickCategory(Icons.Rounded.Diamond, R.string.vip, "VIP"),
-)
+private val quickCategories = GameCategory.entries
 
 @Composable
 private fun QuickCategoryPills(
-    onCategoryClick: (String) -> Unit,
+    onCategoryClick: (GameCategory) -> Unit,
 ) {
     LazyRow(
         contentPadding = PaddingValues(horizontal = 20.dp),
@@ -331,7 +323,7 @@ private fun QuickCategoryPills(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .clip(RoundedCornerShape(16.dp))
-                    .clickable { onCategoryClick(category.value) }
+                    .clickable { onCategoryClick(category) }
                     .background(SurfaceGray)
                     .padding(horizontal = 16.dp, vertical = 12.dp),
             ) {
@@ -424,7 +416,8 @@ private fun ComingSoonCard(game: Game) {
             Column(
                 modifier = Modifier
                     .background(Color.White)
-                    .padding(horizontal = 10.dp, vertical = 8.dp),
+                    .padding(horizontal = 10.dp, vertical = 8.dp)
+                    .fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 Text(
@@ -719,54 +712,6 @@ private fun SectionTitle(title: String, modifier: Modifier = Modifier) {
     )
 }
 
-@Composable
-private fun SectionHeader(
-    title: String,
-    subtitle: String,
-    modifier: Modifier = Modifier,
-    onSeeMoreClick: (() -> Unit)? = null,
-) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.Bottom,
-    ) {
-        Column {
-            Text(
-                text = title,
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp,
-                color = TextPrimary,
-            )
-            Text(
-                text = subtitle,
-                fontSize = 12.sp,
-                color = TextSecondary,
-            )
-        }
-
-        if (onSeeMoreClick != null) {
-            TextButton(
-                onClick = onSeeMoreClick,
-                contentPadding = PaddingValues(horizontal = 8.dp),
-            ) {
-                Text(
-                    text = stringResource(R.string.see_more),
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color(0xFF0A3535),
-                )
-                Spacer(Modifier.width(2.dp))
-                Icon(
-                    imageVector = Icons.Rounded.ChevronRight,
-                    contentDescription = null,
-                    tint = Color(0xFF0A3535),
-                    modifier = Modifier.size(16.dp),
-                )
-            }
-        }
-    }
-}
 
 @Composable
 private fun GameTag(

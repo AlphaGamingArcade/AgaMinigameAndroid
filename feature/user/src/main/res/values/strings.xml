@@ -16,6 +16,48 @@
 -->
 
 <resources>
-    <string name="profile_picture">Profile Picture</string>
+    <string name="member">Member</string>
+    <string name="online">Online</string>
+    <string name="wallet_balance">WALLET BALANCE</string>
+    <string name="coins">Coins</string>
+    <string name="daily_reward">Daily Reward</string>
+    <string name="transactions">Transactions</string>
+
+    <string name="account">Account</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="edit_profile_sub_title">Update your personal information</string>
+
+    <string name="change_password">Change Password</string>
+    <string name="change_password_sub_title">Manage security settings</string>
+
+    <string name="terms_and_privacy">Terms and Privacy</string>
+    <string name="terms_and_privacy_sub_title">Read legal documents</string>
+
+    <string name="help_an_support">Help and Support</string>
+    <string name="contact_support">Contact support</string>
+    <string name="contact_support_sub_title">Get help from our team</string>
+
+
+    <string name="account_actions">Account Actions</string>
     <string name="sign_out">Sign Out</string>
+    <string name="sign_out_sub_title">Log out of your account</string>
+    <string name="sign_out_confirm">Are you sure you want to sign out?</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="claimed">Claimed</string>
+    <string name="claimed_information">Come back tomorrow to claim your next daily reward!</string>
+    <string name="claim_now">Claim Now</string>
+    <string name="claim_now_information">Come back every day to claim your free coins!</string>
+
+    <string name="update_profile">Update your profile</string>
+    <string name="update_profile_sub_title">Keep your personal information up to date.</string>
+    <string name="nickname">Nickname</string>
+    <string name="save_changes">Save Changes</string>
+
+    <string name="update_password">Update your password</string>
+    <string name="update_password_sub_title">Choose a strong password to keep your account secure</string>
+    <string name="current_password">Current Password</string>
+    <string name="new_password">New Password</string>
+    <string name="confirm_new_password">Confirm New Password</string>
+    <string name="password_change_success">Password changed successfully! Please re-login to continue.</string>
 </resources>

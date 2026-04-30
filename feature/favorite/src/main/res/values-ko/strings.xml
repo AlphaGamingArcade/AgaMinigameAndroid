@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright 2026 Alpha Gaming Arcade
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<resources>
+    <string name="search_favorites">즐겨찾기 검색…</string>
+    <string name="continue_playing">계속 플레이</string>
+    <string name="last_played">최근 플레이</string>
+    <string name="all_favorites">전체 즐겨찾기</string>
+    <string name="results">결과</string>
+    <string name="remove_from_favorites">즐겨찾기에서 삭제하시겠습니까?</string>
+    <string name="remove_from_favorites_sub_title">%1$s 을(를) 즐겨찾기에서 삭제하시겠습니까?</string>
+    <string name="cancel">취소</string>
+    <string name="remove">삭제</string>
+    <string name="no_favorites">즐겨찾기가 없습니다</string>
+    <string name="no_favorites_sub_title">즐겨찾기에 추가한 게임이 여기에 표시됩니다</string>
+</resources>

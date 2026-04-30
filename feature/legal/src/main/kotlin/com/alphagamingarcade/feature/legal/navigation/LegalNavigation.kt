@@ -1,4 +1,4 @@
-package com.alphagamingarcade.legal.navigation
+package com.alphagamingarcade.feature.legal.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -6,8 +6,8 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
-import com.alphagamingarcade.legal.ui.contactsupport.ContactSupportScreen
-import com.alphagamingarcade.legal.ui.termsandprivacy.TermsAndPrivacyScreen
+import com.alphagamingarcade.feature.legal.ui.contactsupport.ContactSupportScreen
+import com.alphagamingarcade.feature.legal.ui.termsandprivacy.TermsAndPrivacyScreen
 import kotlinx.serialization.Serializable
 
 /**
