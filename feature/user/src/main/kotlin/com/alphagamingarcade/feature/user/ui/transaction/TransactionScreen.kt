@@ -28,6 +28,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -40,6 +41,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -51,6 +53,7 @@ import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.core.ui.utils.StatefulComposable
 import com.alphagamingarcade.model.data.Transaction
 import com.alphagamingarcade.model.data.TransactionStatus
+import com.alphagamingarcade.feature.user.R
 
 private val ScreenBackground = Color.White
 private val CardBackground = Color.White
@@ -123,7 +126,7 @@ private fun TransactionsScreen(
     }
 
     Surface(
-        color = ScreenBackground,
+        color = MaterialTheme.colorScheme.surface,
         modifier = Modifier.fillMaxSize(),
     ) {
         Column(
@@ -135,21 +138,22 @@ private fun TransactionsScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back",
+                            tint = MaterialTheme.colorScheme.onSurface,
                         )
                     }
                 },
                 title = {
                     Text(
-                        text = "Transactions",
+                        text = stringResource(R.string.transactions),
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
-                        color = TextPrimary,
+                        color = MaterialTheme.colorScheme.onSurface,
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.White,
+                    containerColor = MaterialTheme.colorScheme.surface,
                     navigationIconContentColor = TextPrimary,
-                    titleContentColor = TextPrimary,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
                 ),
             )
 
@@ -165,18 +169,18 @@ private fun TransactionsScreen(
                     ) {
                         item {
                             Text(
-                                text = "Your recharge transactions",
+                                text = stringResource(R.string.your_recharge_transactions),
                                 fontSize = 24.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = TextPrimary,
+                                color = MaterialTheme.colorScheme.onSurface,
                             )
 
                             Spacer(modifier = Modifier.height(6.dp))
 
                             Text(
-                                text = "Review your recent top-ups and payment status.",
+                                text = stringResource(R.string.your_recharge_transactions_sub_title),
                                 fontSize = 14.sp,
-                                color = TextSecondary,
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
                             )
 
                             Spacer(modifier = Modifier.height(12.dp))
@@ -235,7 +239,7 @@ private fun EmptyTransactionsContent() {
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "No recharge transactions yet",
+                text = stringResource(R.string.no_recharge_transactions),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = TextPrimary,
@@ -244,7 +248,7 @@ private fun EmptyTransactionsContent() {
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Your completed or pending recharge records will appear here.",
+                text = stringResource(R.string.no_recharge_transactions_sub_title),
                 fontSize = 14.sp,
                 color = TextSecondary,
             )
@@ -262,10 +266,10 @@ private fun TransactionItem(
             .clip(RoundedCornerShape(14.dp))
             .border(
                 width = 1.dp,
-                color = BorderGray.copy(alpha = 0.6f),
+                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.8f),
                 shape = RoundedCornerShape(14.dp),
             )
-            .background(CardBackground)
+            .background(MaterialTheme.colorScheme.surface)
             .padding(16.dp),
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
@@ -278,7 +282,7 @@ private fun TransactionItem(
                     text = CurrencyFormatter.format(transaction.amount, transaction.currency),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color = TextPrimary,
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
 
                 StatusChip(status = transaction.status)
@@ -289,7 +293,7 @@ private fun TransactionItem(
             Text(
                 text = transaction.method,
                 fontSize = 13.sp,
-                color = TextSecondary,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -302,12 +306,12 @@ private fun TransactionItem(
             Spacer(modifier = Modifier.height(10.dp))
 
             TransactionInfoRow(
-                label = "Reference No.",
+                label = stringResource(R.string.reference_number),
                 value = transaction.id.toString(),
             )
 
             TransactionInfoRow(
-                label = "Date",
+                label = stringResource(R.string.date),
                 value = transaction.datetime,
             )
         }
@@ -319,21 +323,21 @@ private fun StatusChip(status: TransactionStatus) {
     val (icon, text, containerColor, contentColor) = when (status) {
         TransactionStatus.SUCCESS -> Quadruple(
             Icons.Default.CheckCircle,
-            "Success",
+            stringResource(R.string.success),
             Color(0xFFE8F8F1),
             Color(0xFF059669),
         )
 
         TransactionStatus.PENDING -> Quadruple(
             Icons.Default.Schedule,
-            "Pending",
+            stringResource(R.string.pending),
             Color(0xFFFFF7E0),
             Color(0xFFD97706),
         )
 
         TransactionStatus.FAILED -> Quadruple(
             Icons.Default.Warning,
-            "Failed",
+            stringResource(R.string.failed),
             Color(0xFFFFEFEF),
             Color(0xFFE53935),
         )
@@ -377,14 +381,14 @@ private fun TransactionInfoRow(
         Text(
             text = label,
             fontSize = 12.sp,
-            color = TextSecondary.copy(alpha = 0.8f),
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
         )
 
         Text(
             text = value,
             fontSize = 12.sp,
             fontWeight = FontWeight.Medium,
-            color = TextPrimary,
+            color = MaterialTheme.colorScheme.onSurface,
         )
     }
 }

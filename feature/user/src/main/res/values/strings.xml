@@ -60,4 +60,14 @@
     <string name="new_password">New Password</string>
     <string name="confirm_new_password">Confirm New Password</string>
     <string name="password_change_success">Password changed successfully! Please re-login to continue.</string>
+
+    <string name="your_recharge_transactions">Your recharge transactions</string>
+    <string name="your_recharge_transactions_sub_title">Review your recent top-ups and payment status.</string>
+    <string name="no_recharge_transactions">No recharge transactions yet</string>
+    <string name="no_recharge_transactions_sub_title">Your completed or pending recharge records will appear here.</string>
+    <string name="reference_number">Reference No.</string>
+    <string name="date">Date</string>
+    <string name="success">Success</string>
+    <string name="failed">Failed</string>
+    <string name="pending">Pending</string>
 </resources>

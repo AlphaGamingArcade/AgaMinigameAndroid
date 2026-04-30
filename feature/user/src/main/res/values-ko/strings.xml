@@ -59,4 +59,14 @@
     <string name="new_password">새 비밀번호</string>
     <string name="confirm_new_password">새 비밀번호 확인</string>
     <string name="password_change_success">비밀번호가 성공적으로 변경되었습니다. 계속하려면 다시 로그인하세요.</string>
+
+    <string name="your_recharge_transactions">충전 내역</string>
+    <string name="your_recharge_transactions_sub_title">최근 충전 및 결제 상태를 확인하세요.</string>
+    <string name="no_recharge_transactions">충전 내역이 없습니다</string>
+    <string name="no_recharge_transactions_sub_title">완료되었거나 진행 중인 충전 내역이 여기에 표시됩니다.</string>
+    <string name="reference_number">참조 번호</string>
+    <string name="date">날짜</string>
+    <string name="success">성공</string>
+    <string name="failed">실패</string>
+    <string name="pending">대기 중</string>
 </resources>
