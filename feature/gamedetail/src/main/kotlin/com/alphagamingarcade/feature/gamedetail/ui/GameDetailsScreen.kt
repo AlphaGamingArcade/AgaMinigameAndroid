@@ -40,6 +40,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -54,6 +55,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -62,9 +64,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.core.ui.utils.StatefulComposable
+import com.alphagamingarcade.feature.gamedetail.R
 
-private val ScreenBackground = Color.White
-private val CardBackground = Color.White
 private val BorderGray = Color(0xFFE9EDF2)
 private val TextPrimary = Color(0xFF1A1A2E)
 private val TextSecondary = Color(0xFF7A8194)
@@ -139,7 +140,7 @@ private fun GameDetailScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(ScreenBackground),
+            .background(MaterialTheme.colorScheme.surface),
     ) {
         LazyColumn(
             state = listState,
@@ -171,7 +172,7 @@ private fun GameDetailScreen(
                     )
 
                     SectionBlock(
-                        title = "About this game",
+                        title = stringResource(R.string.about_this_game),
                         content = screenData.game.description,
                     )
 
@@ -242,18 +243,18 @@ private fun GameHeroSection(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.White),
+                .background(MaterialTheme.colorScheme.surface),
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(2f)
-                    .background(AccentSoft),
+                    .background(MaterialTheme.colorScheme.surfaceVariant),
             ) {
                 AsyncImage(
                     model = game.bannerUrl,
                     contentDescription = "Game Banner",
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surface),
                     contentScale = ContentScale.Crop,
                 )
 
@@ -291,10 +292,10 @@ private fun GameHeroSection(
                             .size(72.dp)
                             .offset(y = (-36).dp)
                             .clip(RoundedCornerShape(16.dp))
-                            .background(AccentSoft)
+                            .background(MaterialTheme.colorScheme.outlineVariant)
                             .border(
                                 width = 2.dp,
-                                color = Color.White,
+                                color = MaterialTheme.colorScheme.outlineVariant,
                                 shape = RoundedCornerShape(16.dp),
                             ),
                         contentScale = ContentScale.Crop,
@@ -311,7 +312,7 @@ private fun GameHeroSection(
                             text = game.title,
                             fontSize = 22.sp,
                             fontWeight = FontWeight.Bold,
-                            color = TextPrimary,
+                            color = MaterialTheme.colorScheme.onSurface,
                         )
 
                         Spacer(modifier = Modifier.height(4.dp))
@@ -377,13 +378,13 @@ private fun GameHeroSection(
                 ) {
                     if (isLoggedIn){
                         Text(
-                            text = "Play",
+                            text = stringResource(R.string.play),
                             fontSize = 15.sp,
                             fontWeight = FontWeight.Medium,
                         )
                     } else {
                         Text(
-                            text = "Sign in to play",
+                            text = stringResource(R.string.sign_in_to_play),
                             fontSize = 15.sp,
                             fontWeight = FontWeight.Medium,
                         )
@@ -469,10 +470,10 @@ private fun SectionBlock(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(18.dp))
-            .background(CardBackground)
+            .background(MaterialTheme.colorScheme.surface)
             .border(
                 width = 1.dp,
-                color = BorderGray.copy(alpha = 0.6f),
+                color = MaterialTheme.colorScheme.outlineVariant,
                 shape = RoundedCornerShape(18.dp),
             )
             .padding(18.dp),
@@ -481,14 +482,14 @@ private fun SectionBlock(
             text = title,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            color = TextPrimary,
+            color = MaterialTheme.colorScheme.onSurface,
         )
 
         Spacer(modifier = Modifier.height(14.dp))
 
         HorizontalDivider(
             thickness = 0.6.dp,
-            color = BorderGray.copy(alpha = 0.5f),
+            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.9f),
         )
 
         Spacer(modifier = Modifier.height(14.dp))
@@ -497,7 +498,7 @@ private fun SectionBlock(
             text = content,
             fontSize = 14.sp,
             lineHeight = 22.sp,
-            color = TextSecondary.copy(alpha = 0.95f),
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.95f),
         )
     }
 }
@@ -511,7 +512,7 @@ private fun SimilarGamesSection(
         verticalArrangement = Arrangement.spacedBy(14.dp),
     ) {
         Text(
-            text = "Similar games",
+            text = stringResource(R.string.similar_games),
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             color = TextPrimary,
