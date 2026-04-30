@@ -38,6 +38,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.SheetState
@@ -78,7 +79,6 @@ import com.alphagamingarcade.feature.user.R
 
 private val AccentGold    = Color(0xFFFFBF00)
 private val AccentRed     = Color(0xFFE53935)
-private val BorderGray    = Color(0xFFEEEEF5)
 private val TextPrimary   = Color(0xFF1A1A2E)
 private val TextSecondary = Color(0xFF8A8A9A)
 
@@ -143,7 +143,7 @@ private fun ProfileScreen(
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
 
-    Surface(color = Color.White, modifier = Modifier.fillMaxSize()) {
+    Surface(color = MaterialTheme.colorScheme.surface, modifier = Modifier.fillMaxSize()) {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(
                 modifier = Modifier
@@ -165,7 +165,7 @@ private fun ProfileScreen(
                     MenuItem(
                         icon = Icons.Default.Person,
                         iconBg = Color.Transparent,
-                        iconTint = Color.Black,
+                        iconTint = MaterialTheme.colorScheme.onSurface,
                         title = stringResource(R.string.edit_profile),
                         subtitle = stringResource(R.string.edit_profile_sub_title),
                         onClick = onEditProfileClick,
@@ -174,7 +174,7 @@ private fun ProfileScreen(
                     MenuItem(
                         icon = Icons.Default.Lock,
                         iconBg = Color.Transparent,
-                        iconTint = Color.Black,
+                        iconTint = MaterialTheme.colorScheme.onSurface,
                         title = stringResource(R.string.change_password),
                         subtitle = stringResource(R.string.change_password_sub_title),
                         onClick = onChangePasswordClick,
@@ -183,7 +183,7 @@ private fun ProfileScreen(
                     MenuItem(
                         icon = Icons.Default.Description,
                         iconBg = Color.Transparent,
-                        iconTint = Color.Black,
+                        iconTint = MaterialTheme.colorScheme.onSurface,
                         title = stringResource(R.string.terms_and_privacy),
                         subtitle = stringResource(R.string.terms_and_privacy_sub_title),
                         onClick = onTermsAndPrivacyClick,
@@ -195,7 +195,7 @@ private fun ProfileScreen(
                     MenuItem(
                         icon = Icons.Default.SupportAgent,
                         iconBg = Color.Transparent,
-                        iconTint = Color.Black,
+                        iconTint = MaterialTheme.colorScheme.onSurface,
                         title = stringResource(R.string.contact_support),
                         subtitle = stringResource(R.string.contact_support_sub_title),
                         onClick = onContactSupportClick,
@@ -239,21 +239,21 @@ private fun ProfileScreen(
         ModalBottomSheet(
             onDismissRequest = { showDialog = false },
             sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-            containerColor = Color.White,
+            containerColor = MaterialTheme.colorScheme.surface,
             dragHandle = {
                 Box(
                     modifier = Modifier
                         .padding(top = 12.dp, bottom = 4.dp)
                         .size(width = 40.dp, height = 4.dp)
                         .clip(RoundedCornerShape(2.dp))
-                        .background(BorderGray),
+                        .background(MaterialTheme.colorScheme.outlineVariant),
                 )
             },
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.White)
+                    .background(MaterialTheme.colorScheme.surface)
                     .padding(horizontal = 24.dp, vertical = 28.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -269,12 +269,12 @@ private fun ProfileScreen(
                 Text(
                     text = stringResource(R.string.sign_out_confirm),
                     fontSize = 13.sp,
-                    color = TextSecondary,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
                     textAlign = TextAlign.Center,
                     lineHeight = 20.sp,
                 )
 
-                HorizontalDivider(color = BorderGray)
+                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
                 Spacer(Modifier.height(4.dp))
 
@@ -299,7 +299,7 @@ private fun ProfileScreen(
                 OutlinedButton(
                     onClick = { showDialog = false },
                     shape = RoundedCornerShape(14.dp),
-                    border = BorderStroke(1.dp, BorderGray),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = TextSecondary,
                     ),
@@ -335,21 +335,21 @@ private fun DailyRewardBottomSheet(
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
-        containerColor = Color.White,
+        containerColor = MaterialTheme.colorScheme.surface,
         dragHandle = {
             Box(
                 modifier = Modifier
                     .padding(top = 12.dp, bottom = 4.dp)
                     .size(width = 40.dp, height = 4.dp)
                     .clip(RoundedCornerShape(2.dp))
-                    .background(BorderGray),
+                    .background(MaterialTheme.colorScheme.outlineVariant),
             )
         },
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.White)
+                .background(MaterialTheme.colorScheme.surface)
                 .padding(horizontal = 24.dp, vertical = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(14.dp),
@@ -380,7 +380,7 @@ private fun DailyRewardBottomSheet(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(16.dp))
-                    .background(Color.White)
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
                     .padding(horizontal = 20.dp, vertical = 18.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
@@ -390,13 +390,13 @@ private fun DailyRewardBottomSheet(
                         text = CurrencyFormatter.format(freeDepositAmount, freeDepositCurrency),
                         fontSize = 28.sp,
                         fontWeight = FontWeight.ExtraBold,
-                        color = Color(0xFF061C20),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontFamily = FontFamily.Monospace,
                     )
                 }
             }
 
-            HorizontalDivider(color = BorderGray)
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
             // Claim / Claimed button
             Button(
@@ -406,8 +406,8 @@ private fun DailyRewardBottomSheet(
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFF061C20),
                     contentColor = Color.White,
-                    disabledContainerColor = SurfaceGray,
-                    disabledContentColor = TextSecondary,
+                    disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -432,7 +432,7 @@ private fun DailyRewardBottomSheet(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(10.dp))
-                    .background(SurfaceGray)
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
                     .padding(horizontal = 16.dp, vertical = 12.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
@@ -440,7 +440,7 @@ private fun DailyRewardBottomSheet(
                 Icon(
                     imageVector = Icons.Rounded.Info,
                     contentDescription = null,
-                    tint = TextSecondary,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(15.dp),
                 )
                 Spacer(Modifier.width(6.dp))
@@ -450,7 +450,7 @@ private fun DailyRewardBottomSheet(
                     else
                         stringResource(R.string.claim_now_information),
                     fontSize = 12.sp,
-                    color = TextSecondary,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontWeight = FontWeight.Medium,
                     textAlign = TextAlign.Center,
                     lineHeight = 18.sp,
@@ -470,7 +470,7 @@ private fun ProfileHero(profile: Profile) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.surface)
             .padding(horizontal = 20.dp, vertical = 20.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -481,18 +481,18 @@ private fun ProfileHero(profile: Profile) {
                     .size(68.dp)
                     .border(
                         width = 1.5.dp,
-                        color = Color(0xFFE5E7EB),
+                        color = Color.Transparent,
                         shape = CircleShape,
                     )
                     .padding(3.dp)
-                    .background(Color(0xFFF9FAFB), CircleShape),
+                    .background(MaterialTheme.colorScheme.surfaceVariant, CircleShape),
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
                     text = profile.nickname.firstOrNull()?.uppercaseChar()?.toString() ?: "?",
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF111827),
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
             }
         }
@@ -501,7 +501,7 @@ private fun ProfileHero(profile: Profile) {
                 text = profile.nickname,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
-                color = Color(0xFF111827),
+                color = MaterialTheme.colorScheme.onSurface,
             )
             Row(
                 modifier = Modifier
@@ -530,52 +530,6 @@ private fun ProfileHero(profile: Profile) {
                 )
                 Text(text = stringResource(R.string.online), fontSize = 11.sp, color = Color(0xFF6B7280))
             }
-        }
-    }
-    HorizontalDivider(color = Color(0xFFF3F4F6))
-}
-
-@Composable
-private fun StatCard(
-    label: String,
-    value: String,
-    emoji: String,
-    iconBg: Color,
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        modifier = modifier
-            .clip(RoundedCornerShape(16.dp))
-            .border(1.dp, BorderGray, RoundedCornerShape(16.dp))  // 👈 same border as MenuCard
-            .background(Color.White)                               // 👈 white like MenuItem
-            .padding(horizontal = 12.dp, vertical = 14.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
-    ) {
-        // Icon box — same style as MenuItem
-        Box(
-            modifier = Modifier
-                .size(40.dp)
-                .clip(RoundedCornerShape(12.dp))
-                .background(iconBg),                               // 👈 colored bg like MenuItem
-            contentAlignment = Alignment.Center,
-        ) {
-            Text(text = emoji, fontSize = 20.sp)
-        }
-
-        // Text stack
-        Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-            Text(
-                text = value,
-                fontSize = 15.sp,
-                fontWeight = FontWeight.ExtraBold,
-                color = TextPrimary,                               // 👈 same as MenuItem title
-            )
-            Text(
-                text = label,
-                fontSize = 11.sp,
-                color = TextSecondary,                             // 👈 same as MenuItem subtitle
-            )
         }
     }
 }
@@ -665,7 +619,7 @@ private fun SectionLabel(title: String) {
         text = title,
         fontSize = 13.sp,
         fontWeight = FontWeight.Bold,
-        color = TextSecondary,
+        color = MaterialTheme.colorScheme.onSurface,
         modifier = Modifier.padding(start = 20.dp, end = 20.dp, top = 4.dp, bottom = 8.dp),
     )
 }
@@ -679,8 +633,8 @@ private fun MenuCard(content: @Composable ColumnScope.() -> Unit) {
             .fillMaxWidth()
             .padding(horizontal = 20.dp)
             .clip(RoundedCornerShape(20.dp))
-            .border(1.dp, BorderGray, RoundedCornerShape(20.dp))
-            .background(Color.White),
+            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(20.dp))
+            .background(MaterialTheme.colorScheme.surface),
     ) {
         Column(content = content)
     }
@@ -721,7 +675,7 @@ private fun MenuItem(
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(2.dp),
         ) {
-            Text(text = title, fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = TextPrimary)
+            Text(text = title, fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onSurface)
             Text(text = subtitle, fontSize = 12.sp, color = TextSecondary)
         }
         Icon(
@@ -738,6 +692,6 @@ private fun MenuDivider() {
     HorizontalDivider(
         modifier = Modifier.padding(start = 72.dp, end = 18.dp),
         thickness = 0.5.dp,
-        color = BorderGray,
+        color = MaterialTheme.colorScheme.outlineVariant,
     )
 }

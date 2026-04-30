@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -23,14 +24,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.alphagamingarcade.core.ui.R
 
 private val AccentBlue     = Color(0xFF2563EB)
-private val SearchBarColor = Color(0xFFF0F1F5)
 private val TextPrimary    = Color(0xFF1A1A2E)
 private val TextSecondary  = Color(0xFF8A8A9A)
 
@@ -45,7 +43,7 @@ fun SearchBar(
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(16.dp))
-            .background(SearchBarColor)
+            .background(MaterialTheme.colorScheme.surfaceVariant)
             .padding(horizontal = 16.dp, vertical = 12.dp),
         contentAlignment = Alignment.CenterStart,
     ) {
@@ -53,7 +51,7 @@ fun SearchBar(
             Icon(
                 imageVector = Icons.Default.Search,
                 contentDescription = null,
-                tint = TextSecondary,
+                tint = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.size(20.dp),
             )
             Spacer(Modifier.width(10.dp))
@@ -61,17 +59,18 @@ fun SearchBar(
                 if (query.isEmpty() && placeholder != null) {
                     Text(
                         text = placeholder,
-                        color = TextSecondary,
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontSize = 14.sp,
                     )
                 }
                 BasicTextField(
                     value = query,
                     onValueChange = onQueryChange,
-                    textStyle = TextStyle(fontSize = 14.sp, color = TextPrimary),
+                    textStyle = TextStyle(fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface),
                     cursorBrush = SolidColor(AccentBlue),
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
+
                 )
             }
             if (query.isNotEmpty()) {
@@ -82,7 +81,7 @@ fun SearchBar(
                     Icon(
                         imageVector = Icons.Default.Close,
                         contentDescription = "Clear",
-                        tint = TextSecondary,
+                        tint = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.size(16.dp),
                     )
                 }

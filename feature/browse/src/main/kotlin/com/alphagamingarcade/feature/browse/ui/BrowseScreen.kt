@@ -154,8 +154,6 @@ private fun BrowseScreen(
                     Box(
                         modifier = Modifier.padding(horizontal = 20.dp),
                     ) {
-
-
                         FilterChips(
                             categories = categoryLabels.map { it.second },
                             selected = stringResource(selectedCategory.labelRes),
@@ -202,7 +200,6 @@ private fun BrowseScreen(
 }
 
 // ─── Featured Row ─────────────────────────────────────────────────────────────
-
 @Composable
 private fun FeaturedRow(games: List<Game>, onGameClick: (String) -> Unit) {
     LazyRow(
@@ -251,57 +248,7 @@ private fun FeaturedRow(games: List<Game>, onGameClick: (String) -> Unit) {
     }
 }
 
-// ─── Hot Games Row ────────────────────────────────────────────────────────────
-
-@Composable
-private fun HotGamesRow(games: List<Game>, onGameClick: (String) -> Unit) {
-    LazyRow(
-        contentPadding = PaddingValues(horizontal = 20.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-    ) {
-        items(games) { game ->
-            Column(
-                modifier = Modifier
-                    .width(100.dp)
-                    .clickable { onGameClick(game.id.toString()) },
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(1f)
-                        .clip(RoundedCornerShape(14.dp)),
-                ) {
-                    AsyncImage(
-                        model = game.imageUrl,
-                        contentDescription = game.name,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize(),
-                    )
-                    GameTag(
-                        label = "HOT",
-                        color = TagHot,
-                        modifier = Modifier
-                            .align(Alignment.TopStart)
-                            .padding(5.dp),
-                    )
-                }
-                Spacer(Modifier.height(6.dp))
-                Text(
-                    text = game.name,
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-            }
-        }
-    }
-}
-
 // ─── All Games Grid ───────────────────────────────────────────────────────────
-
 @Composable
 private fun AllGamesGrid(
     games: List<Game>,

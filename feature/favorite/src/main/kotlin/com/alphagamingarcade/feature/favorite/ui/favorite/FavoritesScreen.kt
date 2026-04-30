@@ -158,6 +158,7 @@ private fun FavoriteScreen(
                 // ── Search Bar ───────────────────────────────────────────────────
                 item {
                     SearchBar(
+                        placeholder = stringResource(R.string.search_favorites),
                         query = searchQuery,
                         onQueryChange = { searchQuery = it },
                         modifier = Modifier
@@ -503,7 +504,7 @@ private fun FavoriteGridCard(
             text = game.name,
             fontWeight = FontWeight.SemiBold,
             fontSize = 13.sp,
-            color = TextPrimary,
+            color = MaterialTheme.colorScheme.onSurface,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
@@ -531,13 +532,13 @@ private fun FavoriteEmptyState(isSearching: Boolean) {
             modifier = Modifier
                 .size(80.dp)
                 .clip(RoundedCornerShape(24.dp))
-                .background(SurfaceGray),
+                .background(MaterialTheme.colorScheme.surfaceVariant),
             contentAlignment = Alignment.Center,
         ) {
             Icon(
                 imageVector = Icons.Default.Favorite,
                 contentDescription = null,
-                tint = Color.Black,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.size(36.dp),
             )
         }
@@ -546,13 +547,13 @@ private fun FavoriteEmptyState(isSearching: Boolean) {
             text = if (isSearching) stringResource(R.string.no_results_found) else stringResource(R.string.no_favorites),
             fontSize = 16.sp,
             fontWeight = FontWeight.SemiBold,
-            color = TextPrimary,
+            color = MaterialTheme.colorScheme.onSurface,
         )
         Text(
             text = if (isSearching) stringResource(R.string.no_results_found_sub_title)
             else stringResource(R.string.no_favorites_sub_title),
             fontSize = 13.sp,
-            color = TextSecondary,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }
@@ -565,7 +566,7 @@ private fun SectionLabel(title: String, modifier: Modifier = Modifier) {
         text = title,
         fontWeight = FontWeight.Bold,
         fontSize = 18.sp,
-        color = TextPrimary,
+        color = MaterialTheme.colorScheme.onSurface,
         modifier = modifier,
     )
 }

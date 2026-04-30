@@ -166,12 +166,12 @@ private fun CategoriesScreen(
                             text = stringResource(category.labelRes),
                             fontWeight = FontWeight.Bold,
                             fontSize = 18.sp,
-                            color = Color(0xFF1A1A2E),
+                            color = MaterialTheme.colorScheme.onSurface,
                         )
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Color.White,
-                        navigationIconContentColor = Color(0xFF1A1A2E),
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
                     ),
                 )
 
@@ -312,7 +312,7 @@ private fun CategoryGameCard(
             text = game.name,
             fontWeight = FontWeight.SemiBold,
             fontSize = 13.sp,
-            color = Color(0xFF1A1A2E),
+            color = MaterialTheme.colorScheme.onSurface,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.padding(horizontal = 4.dp),

@@ -41,7 +41,7 @@ fun FilterChips(
                 colors = FilterChipDefaults.filterChipColors(
                     selectedContainerColor = MaterialTheme.colorScheme.onBackground,
                     selectedLabelColor = MaterialTheme.colorScheme.background,
-                    containerColor = SurfaceGray,
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
                     labelColor = MaterialTheme.colorScheme.onBackground,
                 ),
                 border = null,

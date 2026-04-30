@@ -74,8 +74,6 @@ private val AccentPurple = Color(0xFF7B2FBE)
 private val AccentGold   = Color(0xFFFFBF00)
 private val TagNew       = Color(0xFF00C48C)
 private val TagHot       = Color(0xFFFF4757)
-private val SurfaceGray  = Color(0xFFF5F6FA)
-private val TextPrimary  = Color(0xFF1A1A2E)
 private val TextSecondary= Color(0xFF8A8A9A)
 
 // ─── Entry Point ─────────────────────────────────────────────────────────────
@@ -285,7 +283,7 @@ private fun HeroBannerCarousel(
                         .padding(horizontal = 3.dp)
                         .size(if (isSelected) 20.dp else 6.dp, 6.dp)
                         .clip(CircleShape)
-                        .background(if (isSelected) AccentOrange else SurfaceGray),
+                        .background(if (isSelected) AccentOrange else MaterialTheme.colorScheme.surfaceVariant),
                 )
             }
         }
@@ -324,13 +322,13 @@ private fun QuickCategoryPills(
                 modifier = Modifier
                     .clip(RoundedCornerShape(16.dp))
                     .clickable { onCategoryClick(category) }
-                    .background(SurfaceGray)
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
                     .padding(horizontal = 16.dp, vertical = 12.dp),
             ) {
                 Icon(
                     imageVector = category.icon,
                     contentDescription = label,
-                    tint = Color(0xFF0A3535),
+                    tint = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.size(24.dp),
                 )
 
@@ -340,7 +338,7 @@ private fun QuickCategoryPills(
                     text = label,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = TextPrimary,
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
             }
         }
@@ -367,7 +365,8 @@ private fun ComingSoonCard(game: Game) {
         modifier = Modifier
             .width(160.dp)
             .clip(RoundedCornerShape(16.dp))
-            .border(1.dp, SurfaceGray, RoundedCornerShape(16.dp)),
+            .background(MaterialTheme.colorScheme.surface)
+            .border(1.dp, MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(16.dp)),
     ) {
         Column {
             // Image with locked overlay
@@ -402,7 +401,7 @@ private fun ComingSoonCard(game: Game) {
                             .padding(horizontal = 8.dp, vertical = 3.dp),
                     ) {
                         Text(
-                            text = "COMING SOON",
+                            text = stringResource(R.string.coming_soon),
                             color = Color.White,
                             fontSize = 8.sp,
                             fontWeight = FontWeight.ExtraBold,
@@ -415,7 +414,7 @@ private fun ComingSoonCard(game: Game) {
             // Game info
             Column(
                 modifier = Modifier
-                    .background(Color.White)
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
                     .padding(horizontal = 10.dp, vertical = 8.dp)
                     .fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -424,7 +423,7 @@ private fun ComingSoonCard(game: Game) {
                     text = game.name,
                     fontWeight = FontWeight.Bold,
                     fontSize = 13.sp,
-                    color = TextPrimary,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -433,77 +432,6 @@ private fun ComingSoonCard(game: Game) {
     }
 }
 
-// ─── Jackpot Banner ──────────────────────────────────────────────────────────
-
-@Composable
-private fun JackpotBanner(
-    games: List<Game>,
-    onGameClick: (String) -> Unit,
-) {
-    Box(
-        modifier = Modifier
-            .padding(horizontal = 20.dp)
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(20.dp))
-            .background(
-                Brush.linearGradient(
-                    colors = listOf(AccentPurple, Color(0xFF3A1078)),
-                ),
-            )
-            .padding(20.dp),
-    ) {
-        Column {
-            Text(
-                text = "💰 JACKPOT GAMES",
-                color = AccentGold,
-                fontWeight = FontWeight.ExtraBold,
-                fontSize = 13.sp,
-                letterSpacing = 1.5.sp,
-            )
-            Spacer(Modifier.height(4.dp))
-            Text(
-                text = "Win up to ₱1,000,000",
-                color = Color.White,
-                fontWeight = FontWeight.Bold,
-                fontSize = 20.sp,
-            )
-            Spacer(Modifier.height(16.dp))
-            LazyRow(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                items(games) { game ->
-                    Box(
-                        modifier = Modifier
-                            .width(110.dp)
-                            .height(80.dp)
-                            .clip(RoundedCornerShape(12.dp))
-                            .clickable { onGameClick(game.id.toString()) },
-                    ) {
-                        AsyncImage(
-                            model = game.imageUrl,
-                            contentDescription = game.name,
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier.fillMaxSize(),
-                        )
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(Color.Black.copy(alpha = 0.3f)),
-                        )
-                        Text(
-                            text = game.name,
-                            color = Color.White,
-                            fontSize = 11.sp,
-                            fontWeight = FontWeight.Bold,
-                            maxLines = 2,
-                            modifier = Modifier
-                                .align(Alignment.BottomStart)
-                                .padding(6.dp),
-                        )
-                    }
-                }
-            }
-        }
-    }
-}
 
 // ─── Trending Row ─────────────────────────────────────────────────────────────
 
@@ -526,7 +454,7 @@ private fun TrendingCard(game: Game, onClick: () -> Unit) {
         modifier = Modifier.width(140.dp),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
     ) {
         Column {
             Box(
@@ -550,12 +478,17 @@ private fun TrendingCard(game: Game, onClick: () -> Unit) {
                     )
                 }
             }
-            Column(modifier = Modifier.padding(10.dp)) {
+            Column(
+                modifier = Modifier
+                    .background(MaterialTheme.colorScheme.background)
+                    .padding(10.dp)
+                    .fillMaxWidth()
+            ) {
                 Text(
                     text = game.name,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 13.sp,
-                    color = TextPrimary,
+                    color = MaterialTheme.colorScheme.onBackground,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -614,7 +547,7 @@ private fun NewReleaseCard(game: Game, onClick: () -> Unit) {
             text = game.name,
             fontSize = 12.sp,
             fontWeight = FontWeight.Medium,
-            color = TextPrimary,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
@@ -634,8 +567,8 @@ private fun TopRatedListItem(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .background(Color.White)
-            .border(1.dp, SurfaceGray, RoundedCornerShape(16.dp))
+            .background(MaterialTheme.colorScheme.surface)
+            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(16.dp))
             .clickable(onClick = onClick),
     ) {
         Row(
@@ -652,7 +585,7 @@ private fun TopRatedListItem(
                             1 -> AccentGold
                             2 -> Color(0xFFB0BEC5)
                             3 -> Color(0xFFCD7F32)
-                            else -> SurfaceGray
+                            else -> MaterialTheme.colorScheme.surfaceVariant
                         },
                     ),
                 contentAlignment = Alignment.Center,
@@ -685,7 +618,7 @@ private fun TopRatedListItem(
                     text = game.name,
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp,
-                    color = TextPrimary,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Spacer(Modifier.height(4.dp))
                 Text(text = "⭐ 4.9 · 120K plays", fontSize = 12.sp, color = TextSecondary)
@@ -707,7 +640,7 @@ private fun SectionTitle(title: String, modifier: Modifier = Modifier) {
         text = title,
         fontWeight = FontWeight.Bold,
         fontSize = 18.sp,
-        color = TextPrimary,
+        color = MaterialTheme.colorScheme.onSurface,
         modifier = modifier,
     )
 }

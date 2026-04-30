@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.dp
  */
 @VisibleForTesting
 val LightDefaultColorScheme = lightColorScheme(
-    primary = Color(0xFF061C20) ,
+    primary = Color(0xFF061C20),
     onPrimary = Color(0xFFE0F7FA),
     primaryContainer = Purple90,
     onPrimaryContainer = Purple10,
@@ -57,11 +57,12 @@ val LightDefaultColorScheme = lightColorScheme(
     onBackground = DarkPurpleGray10,
     surface = Color.White,
     onSurface = Color.Black,
-    surfaceVariant = PurpleGray90,
-    onSurfaceVariant = PurpleGray30,
+    surfaceVariant = Color(0xFFF5F6FA),
+    onSurfaceVariant = Color(0xFF061C20),
     inverseSurface = DarkPurpleGray20,
     inverseOnSurface = DarkPurpleGray95,
     outline = PurpleGray50,
+    outlineVariant = Color(0xFFEEEEF5),
 )
 
 /**
@@ -94,6 +95,7 @@ val DarkDefaultColorScheme = darkColorScheme(
     inverseSurface = DarkPurpleGray90,
     inverseOnSurface = DarkPurpleGray10,
     outline = PurpleGray60,
+    outlineVariant = Color(0xFF3D3D3F),
 )
 
 /**

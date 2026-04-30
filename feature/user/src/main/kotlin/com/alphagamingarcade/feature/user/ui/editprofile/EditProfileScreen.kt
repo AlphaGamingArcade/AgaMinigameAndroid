@@ -95,7 +95,7 @@ private fun EditProfileScreen(
 ) {
     val focusManager = LocalFocusManager.current
 
-    Surface(color = Color.White, modifier = Modifier.fillMaxSize()) {
+    Surface(color = MaterialTheme.colorScheme.surface, modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier.fillMaxSize(),
         ) {
@@ -114,12 +114,12 @@ private fun EditProfileScreen(
                         text = stringResource(R.string.edit_profile),
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
-                        color = Color(0xFF1A1A2E),
+                        color = MaterialTheme.colorScheme.onSurface,
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.White,
-                    navigationIconContentColor = Color(0xFF1A1A2E),
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
                 ),
             )
 
@@ -134,6 +134,7 @@ private fun EditProfileScreen(
                 Text(
                     text = stringResource(R.string.update_profile),
                     style = MaterialTheme.typography.headlineLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
