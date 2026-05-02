@@ -1,11 +1,8 @@
 package com.alphagamingarcade.feature.settings.ui
 
-import android.content.Intent
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -24,8 +21,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material.icons.filled.Language
-import androidx.compose.material.icons.filled.Translate
+
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -36,7 +32,6 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -45,7 +40,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -54,11 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
-import com.alphagamingarcade.core.ui.components.JetpackOutlinedButton
 import com.alphagamingarcade.core.ui.components.JetpackTextButton
-import com.alphagamingarcade.core.ui.components.JetpackToggleOptions
-import com.alphagamingarcade.core.ui.components.ToggleOption
 import com.alphagamingarcade.core.ui.theme.supportsDynamicTheming
 import com.alphagamingarcade.core.ui.utils.PreviewDevices
 import com.alphagamingarcade.core.ui.utils.PreviewThemes
@@ -67,7 +57,6 @@ import com.alphagamingarcade.core.ui.utils.StatefulComposable
 import com.alphagamingarcade.core.data.model.DarkThemeConfig
 import com.alphagamingarcade.core.data.model.Language
 import com.alphagamingarcade.core.data.model.Settings
-import com.alphagamingarcade.core.data.utils.FEEDBACK_URL
 import com.alphagamingarcade.core.data.utils.PRIVACY_POLICY_URL
 import com.alphagamingarcade.core.data.utils.TERMS_OF_SERVICE_URL
 import com.alphagamingarcade.feature.settings.R
@@ -310,19 +299,19 @@ private fun LinksPanel() {
         ) {
             Text(text = stringResource(R.string.terms_of_service))
         }
-        val context = LocalContext.current
-        JetpackTextButton(
-            onClick = {
-                context.startActivity(Intent(context, OssLicensesMenuActivity::class.java))
-            },
-        ) {
-            Text(text = stringResource(R.string.licenses))
-        }
-        JetpackTextButton(
-            onClick = { uriHandler.openUri(FEEDBACK_URL) },
-        ) {
-            Text(text = stringResource(R.string.feedback))
-        }
+//        val context = LocalContext.current
+//        JetpackTextButton(
+//            onClick = {
+//                context.startActivity(Intent(context, OssLicensesMenuActivity::class.java))
+//            },
+//        ) {
+//            Text(text = stringResource(R.string.licenses))
+//        }
+//        JetpackTextButton(
+//            onClick = { uriHandler.openUri(FEEDBACK_URL) },
+//        ) {
+//            Text(text = stringResource(R.string.feedback))
+//        }
     }
 }
 
@@ -359,7 +348,7 @@ private fun LanguagePickerBottomSheet(
                         .fillMaxWidth()
                         .clip(MaterialTheme.shapes.medium)
                         .background(
-                            if (isSelected) MaterialTheme.colorScheme.primaryContainer
+                            if (isSelected) MaterialTheme.colorScheme.primaryContainer.copy(0.6f)
                             else Color.Transparent,
                         )
                         .clickable {

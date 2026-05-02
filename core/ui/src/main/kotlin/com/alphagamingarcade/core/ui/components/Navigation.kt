@@ -257,8 +257,8 @@ object AgamgNavigationDefaults {
     fun navigationSelectedItemColor() = MaterialTheme.colorScheme.onPrimaryContainer
 
     @Composable
-    fun navigationSelectedItemTexColor() = MaterialTheme.colorScheme.onPrimaryContainer
+    fun navigationSelectedItemTexColor() = MaterialTheme.colorScheme.onSurface
 
     @Composable
-    fun navigationIndicatorColor() = MaterialTheme.colorScheme.primaryContainer
+    fun navigationIndicatorColor() = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.6f)
 }

@@ -1,5 +1,6 @@
 package com.alphagamingarcade.feature.auth.ui.signin
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
@@ -36,6 +37,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.alphagamingarcade.core.data.utils.PRIVACY_POLICY_URL
+import com.alphagamingarcade.core.data.utils.TERMS_OF_SERVICE_URL
 import com.alphagamingarcade.core.ui.components.DividerWithText
 import com.alphagamingarcade.core.ui.components.ForgotPassword
 import com.alphagamingarcade.core.ui.components.JetpackButton
@@ -152,6 +155,7 @@ private fun SignInScreen(
                 )
             },
         )
+        Spacer(modifier = Modifier.height(8.dp))
         JetpackPasswordField(
             value = screenData.password.value,
             errorMessage = screenData.password.errorMessage,
@@ -205,8 +209,7 @@ private fun SignInScreen(
         ) {
             val uriHandler = LocalUriHandler.current
             JetpackTextButton(
-                //                onClick = { uriHandler.openUri(TERMS_OF_SERVICE_URL) },
-                onClick = { uriHandler.openUri("") },
+                onClick = { uriHandler.openUri(PRIVACY_POLICY_URL) },
             ) {
                 Text(
                     text = stringResource(R.string.privacy_policy),
@@ -214,8 +217,7 @@ private fun SignInScreen(
                 )
             }
             JetpackTextButton(
-//                onClick = { uriHandler.openUri(TERMS_OF_SERVICE_URL) },
-                onClick = { uriHandler.openUri("") },
+                onClick = { uriHandler.openUri(TERMS_OF_SERVICE_URL) },
             ) {
                 Text(
                     text = stringResource(R.string.terms_of_service),

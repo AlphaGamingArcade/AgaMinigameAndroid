@@ -1,5 +1,8 @@
 package com.alphagamingarcade.feature.auth.ui.checkyouremail
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -33,6 +36,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -184,13 +188,13 @@ private fun CheckYourEmailScreen(
         ) {
             Surface(
                 modifier = Modifier.fillMaxWidth(),
-                color = MaterialTheme.colorScheme.primaryContainer,
+                color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.9f),
                 shape = MaterialTheme.shapes.medium,
             ) {
                 Text(
                     text = stringResource(R.string.check_your_email_hint),
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.primary,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(12.dp),
                 )
@@ -209,8 +213,21 @@ private fun CheckYourEmailScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
+                val context = LocalContext.current
+
                 JetpackButton(
-                    onClick = { uriHandler.openUri("googlegmail://") },
+                    onClick = {
+                        val intent = Intent(Intent.ACTION_MAIN).apply {
+                            addCategory(Intent.CATEGORY_APP_EMAIL)
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        }
+
+                        try {
+                            context.startActivity(intent)
+                        } catch (e: ActivityNotFoundException) {
+                            Toast.makeText(context, "No email app found", Toast.LENGTH_SHORT).show()
+                        }
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp),
@@ -231,7 +248,7 @@ private fun CheckYourEmailScreen(
                         if (screenData.canResendEmail) {
                             Text(stringResource(R.string.resend_email))
                         } else {
-                            Text("Resend in ${screenData.resendCooldownSeconds}s")
+                            Text("${stringResource(R.string.resend_in)} ${screenData.resendCooldownSeconds}s")
                         }
                     }
                 )

@@ -1,5 +1,6 @@
 package com.alphagamingarcade.core.data.repository
 
+import com.alphagamingarcade.core.common.result.AppResult
 import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
@@ -7,12 +8,16 @@ interface AuthRepository {
     fun isEmailVerified(): Flow<Boolean>
     fun hasProfileSetup(): Flow<Boolean>
 
-    suspend fun signInWithEmailAndPassword(email: String, password: String): Result<Unit>
+    suspend fun signInWithEmailAndPassword(
+        email: String,
+        password: String
+    ): AppResult<Unit>
+
     suspend fun registerWithEmailAndPassword(
         email: String,
         password: String,
         confirmPassword: String,
-    ): Result<Unit>
+    ): AppResult<Unit>
 
     suspend fun resendVerifyEmail(email: String) : Result<Unit>
 

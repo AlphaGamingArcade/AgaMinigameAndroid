@@ -154,7 +154,9 @@ fun AgamgNavHost(
             onSignInClick = navController::navigateToSignInScreen,
             onSignUpClick = navController::navigateToSignUpScreen,
             onShowSnackbar = onShowSnackbar,
-            onGameClick = { }
+            onResumeGameClick = { gameId ->
+                navController.navigateToGameDetailScreen(gameId = gameId)
+            },
         )
         accountNavGraph(
             nestedNavGraphs = {

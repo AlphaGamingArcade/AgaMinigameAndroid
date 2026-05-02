@@ -3,6 +3,7 @@ package com.alphagamingarcade.feature.user.ui.editprofile
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alphagamingarcade.core.common.result.AppResult
 import com.alphagamingarcade.core.data.repository.MembersRepository
 import com.alphagamingarcade.core.data.repository.ProfileRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -10,6 +11,7 @@ import com.alphagamingarcade.core.ui.utils.TextFieldData
 import com.alphagamingarcade.core.ui.utils.UiState
 import com.alphagamingarcade.core.ui.utils.updateState
 import com.alphagamingarcade.core.ui.utils.updateWith
+import com.alphagamingarcade.core.ui.utils.updateWithAppResult
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -74,21 +76,44 @@ class EditProfileViewModel @Inject constructor(
             else -> null
         }
 
+        // Apply local validation first
         _editProfileUiState.updateState {
             copy(
                 nickname = nickname.copy(errorMessage = nicknameError),
             )
         }
 
-        val hasError = nicknameError != null
-        if (hasError) return
+        // Stop if local validation fails
+        if (nicknameError != null) return
 
-        _editProfileUiState.updateWith {
-            membersRepository.updateMember(
+        // Call API with AppResult handling
+        _editProfileUiState.updateWithAppResult {
+            val result = membersRepository.updateMember(
                 nickname = nickname.value
-            ).onSuccess {
-                _successEvent.send(Unit)
+            )
+
+            when (result) {
+                is AppResult.Success -> {
+                    _successEvent.send(Unit)
+                }
+
+                is AppResult.Error -> {
+                    val nicknameApiError = result.errors
+                        ?.firstOrNull { it.field.equals("nickname", ignoreCase = true) }
+                        ?.message
+
+                    _editProfileUiState.updateState {
+                        copy(
+                            nickname = TextFieldData(
+                                value = nickname.value,
+                                errorMessage = nicknameApiError
+                            )
+                        )
+                    }
+                }
             }
+
+            result
         }
     }
 }

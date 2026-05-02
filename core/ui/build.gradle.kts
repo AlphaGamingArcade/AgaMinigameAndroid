@@ -24,6 +24,7 @@ android {
 }
 
 dependencies {
+    api(project(":core:common"))
     api(project(":core:android"))
     api(project(":core:model"))
 

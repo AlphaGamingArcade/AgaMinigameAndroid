@@ -48,8 +48,17 @@
     <string name="reset_link_sent">이메일 확인</string>
     <string name="reset_link_sent_description">비밀번호 재설정 링크를 보냈습니다</string>
 
-    <string name="email_not_valid">유효한 이메일을 입력하세요</string>
-    <string name="password_not_valid">비밀번호가 올바르지 않습니다</string>
+    <string name="email_not_valid">유효하지 않은 이메일입니다</string>
+    <string name="password_not_valid">유효하지 않은 비밀번호입니다</string>
     <string name="password_min_characters">비밀번호는 최소 8자 이상이어야 합니다</string>
     <string name="passwords_do_not_match">비밀번호가 일치하지 않습니다</string>
+    <string name="confirm_password">비밀번호 확인</string>
+
+    <string name="setup_profile_title">시작하려면 몇 가지 정보를 입력해 주세요.</string>
+
+    <string name="account">계정</string>
+    <string name="nickname">닉네임</string>
+    <string name="date_of_birth">생년월일</string>
+    <string name="continue_btn">계속</string>
+    <string name="resend_in">재전송까지</string>
 </resources>

@@ -12,6 +12,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import com.alphagamingarcade.core.network.di.retrofit.RetrofitModule
 import com.alphagamingarcade.core.network.interceptor.AuthInterceptor
+import kotlinx.serialization.json.Json
 import retrofit2.Retrofit
 import javax.inject.Singleton
 
@@ -23,6 +24,16 @@ import javax.inject.Singleton
 )
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
+    @Provides
+    @Singleton
+    fun provideJson(): Json {
+        return Json {
+            ignoreUnknownKeys = true
+            isLenient = true
+            encodeDefaults = true
+        }
+    }
+
     @Provides
     @Singleton
     fun providesBannerRestApi(retrofit: Retrofit): BannerRestApi {

@@ -16,7 +16,7 @@
 -->
 
 <resources>
-    <string name="search_favorites">搜索收藏…</string>
+    <string name="search_favorites">搜索收藏...</string>
     <string name="continue_playing">继续游戏</string>
     <string name="last_played">最近游玩</string>
     <string name="all_favorites">全部收藏</string>
@@ -26,6 +26,9 @@
     <string name="cancel">取消</string>
     <string name="remove">移除</string>
     <string name="no_favorites">暂无收藏</string>
-    <string name="no_favorites_sub_title">您收藏的游戏将显示在这里</string>
+    <string name="no_favorites_sub_title">你收藏的游戏会显示在这里</string>
+    <string name="no_results_found">未找到结果</string>
+    <string name="no_results_found_sub_title">请尝试其他关键词</string>
     <string name="resume">继续</string>
+    <string name="favorited">已收藏</string>
 </resources>

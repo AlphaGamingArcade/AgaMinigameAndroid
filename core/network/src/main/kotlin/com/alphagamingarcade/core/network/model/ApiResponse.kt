@@ -9,7 +9,6 @@ data class ApiError(
     val field: String? = null,
 )
 
-
 /**
  * Wrapper for API response with pagination data.
  */

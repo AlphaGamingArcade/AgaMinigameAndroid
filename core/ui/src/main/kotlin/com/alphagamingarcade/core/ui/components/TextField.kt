@@ -145,7 +145,7 @@ private fun JetpackTextFieldWithError(
     readonly: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     visualTransformation: VisualTransformation = VisualTransformation.None,
-    shape: Shape = RoundedCornerShape(percent = 50),
+    shape: Shape = RoundedCornerShape(10.dp),
 ) {
     Column(
         modifier = modifier,

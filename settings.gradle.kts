@@ -47,6 +47,7 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(":app")
 
 // ... Core
+include(":core:common")
 include(":core:android")
 include(":core:data")
 include(":core:network")

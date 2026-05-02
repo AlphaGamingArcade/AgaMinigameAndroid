@@ -1,5 +1,7 @@
 package com.alphagamingarcade.core.network.data
 
+import com.alphagamingarcade.core.common.exception.ApiException
+import com.alphagamingarcade.core.common.utils.parseFieldErrors
 import com.alphagamingarcade.core.network.api.MemberRestApi
 import com.alphagamingarcade.core.network.model.NetworkCreateMemberRequest
 
@@ -15,6 +17,7 @@ import com.alphagamingarcade.core.network.model.NetworkRemoveFavoriteResponse
 import com.alphagamingarcade.core.network.model.NetworkUpdateMemberRequest
 import com.alphagamingarcade.core.network.model.NetworkUpdateMemberResponse
 import com.alphagamingarcade.core.network.model.PaginatedResponse
+import retrofit2.HttpException
 import javax.inject.Inject
 
 internal class MemberDataSourceImpl @Inject constructor(
@@ -30,17 +33,35 @@ internal class MemberDataSourceImpl @Inject constructor(
             nickname = nickname,
             dateOfBirth = dateOfBirth
         )
-        return memberRestApi.createMember(request)
+        return try {
+            memberRestApi.createMember(request)
+        }  catch (e: HttpException) {
+            val errorBody = e.response()?.errorBody()?.string()
+            throw ApiException(
+                message = e.message() ?: "Unexpected error occur.",
+                statusCode = e.code(),
+                errors = parseFieldErrors(errorBody),
+            )
+        }
     }
 
     override suspend fun updateMember(
         memberId: Int,
         nickname: String
     ): ApiResponseNullable<NetworkUpdateMemberResponse?> {
-        val request = NetworkUpdateMemberRequest(
-            nickname = nickname
-        )
-        return memberRestApi.updateMember(memberId, request)
+       return try {
+           val request = NetworkUpdateMemberRequest(
+               nickname = nickname
+           )
+           memberRestApi.updateMember(memberId, request)
+       } catch (e: HttpException) {
+           val errorBody = e.response()?.errorBody()?.string()
+           throw ApiException(
+               message = e.message() ?: "Unexpected error occur.",
+               statusCode = e.code(),
+               errors = parseFieldErrors(errorBody),
+           )
+       }
     }
 
     override suspend fun getMemberFavorites(

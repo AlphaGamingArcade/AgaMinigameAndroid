@@ -3,14 +3,14 @@ package com.alphagamingarcade.core.data.utils
 /**
  * URL for the privacy policy.
  */
-const val PRIVACY_POLICY_URL = "https://atick.dev/privacy"
+const val PRIVACY_POLICY_URL = "https://agaminigameapp.agaglobal.com/home/privacypolicy"
 
 /**
  * URL for the terms of service.
  */
-const val TERMS_OF_SERVICE_URL = "https://atick.dev/terms"
+const val TERMS_OF_SERVICE_URL = "https://agaminigameapp.agaglobal.com/home/termsofservice"
 
 /**
- * URL for the feedback form.
+ * URL for the terms of service.
  */
-const val FEEDBACK_URL = "https://forms.gle/muBdaD2HxJLtWo9a8"
+const val CONTACT_SUPPORT_URL = "https://agaminigameapp.agaglobal.com/#support"

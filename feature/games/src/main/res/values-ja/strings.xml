@@ -1,5 +1,5 @@
 <resources>
-    <string name="categories">カテゴリー</string>
+    <string name="categories">カテゴリ</string>
     <string name="slots">スロット</string>
     <string name="table">テーブル</string>
     <string name="arcade">アーケード</string>
@@ -10,31 +10,32 @@
     <string name="see_more">もっと見る</string>
 
     <string name="trending_now">トレンド</string>
-    <string name="trending_now_subtitle">本日の人気ゲーム</string>
+    <string name="trending_now_subtitle">本日最もプレイされたゲーム</string>
 
     <string name="new_release">新着</string>
     <string name="new_release_sub_title">最新リリース</string>
 
     <string name="coming_soon">近日公開</string>
-    <string name="coming_soon_sub_title">今後の配信をお楽しみに</string>
+    <string name="coming_soon_sub_title">今後の展開にご期待ください</string>
 
     <string name="top_rated">高評価</string>
-    <string name="top_rated_sub_title">プレイヤーに愛され続ける人気作</string>
+    <string name="top_rated_sub_title">プレイヤーのお気に入り</string>
 
-    <string name="search_games">ゲームを検索</string>
+    <string name="search_games">ゲームを検索...</string>
     <string name="all_filter">すべて</string>
     <string name="popular_filter">人気</string>
     <string name="new_filter">新着</string>
     <string name="top_rated_filter">高評価</string>
 
     <plurals name="games_available">
-        <item quantity="one">%d件のゲームが利用可能</item>
-        <item quantity="other">%d件のゲームが利用可能</item>
+        <item quantity="one">%d 件のゲーム</item>
+        <item quantity="other">%d 件のゲーム</item>
     </plurals>
 
     <string name="no_results_found">結果が見つかりません</string>
-    <string name="no_results_found_sub_title">別の検索ワードを試してください</string>
+    <string name="no_results_found_sub_title">別のキーワードで検索してください</string>
 
-    <string name="no_games_yet">ゲームはまだありません</string>
+    <string name="no_games_yet">まだゲームがありません</string>
     <string name="no_games_yet_sub_title">後でもう一度ご確認ください！</string>
+    <string name="plays">プレイ数</string>
 </resources>

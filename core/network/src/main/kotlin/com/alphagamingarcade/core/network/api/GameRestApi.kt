@@ -22,6 +22,18 @@ interface GameRestApi {
         @Query("sortBy") sortBy: String? = null,
         @Query("orderBy") orderBy: String? = null,
     ): ApiResponse<PaginatedResponse<NetworkGame>>
+
+    @GET("/games/{gameId}/similar")
+    suspend fun getSimilarGames(
+        @Path("gameId") gameId: Int,
+        @Query("pageNumber") pageNumber: Int,
+        @Query("pageSize") pageSize: Int,
+        @Query("category") category: String? = null,
+        @Query("search") search: String? = null,
+        @Query("sortBy") sortBy: String? = null,
+        @Query("orderBy") orderBy: String? = null,
+    ): ApiResponse<PaginatedResponse<NetworkGame>>
+
     @GET("/games/trending")
     suspend fun getTrendingGames(): ApiResponse<PaginatedResponse<NetworkGame>>
 

@@ -7,34 +7,35 @@
     <string name="sports">스포츠</string>
     <string name="vip">VIP</string>
 
-    <string name="see_more">더보기</string>
+    <string name="see_more">더 보기</string>
 
     <string name="trending_now">지금 인기</string>
     <string name="trending_now_subtitle">오늘 가장 많이 플레이됨</string>
 
-    <string name="new_release">신작</string>
-    <string name="new_release_sub_title">새롭게 출시된 게임</string>
+    <string name="new_release">신규 출시</string>
+    <string name="new_release_sub_title">최신 게임</string>
 
     <string name="coming_soon">출시 예정</string>
-    <string name="coming_soon_sub_title">곧 공개됩니다</string>
+    <string name="coming_soon_sub_title">곧 만나보세요</string>
 
     <string name="top_rated">최고 평점</string>
-    <string name="top_rated_sub_title">플레이어가 가장 좋아하는 게임</string>
+    <string name="top_rated_sub_title">유저들이 가장 좋아하는 게임</string>
 
-    <string name="search_games">게임 검색</string>
+    <string name="search_games">게임 검색...</string>
     <string name="all_filter">전체</string>
     <string name="popular_filter">인기</string>
     <string name="new_filter">신규</string>
     <string name="top_rated_filter">최고 평점</string>
 
     <plurals name="games_available">
-        <item quantity="one">%d개의 게임 이용 가능</item>
-        <item quantity="other">%d개의 게임 이용 가능</item>
+        <item quantity="one">%d개의 게임</item>
+        <item quantity="other">%d개의 게임</item>
     </plurals>
 
     <string name="no_results_found">검색 결과가 없습니다</string>
     <string name="no_results_found_sub_title">다른 검색어를 시도해 보세요</string>
 
     <string name="no_games_yet">아직 게임이 없습니다</string>
-    <string name="no_games_yet_sub_title">나중에 다시 확인해 주세요!</string>
+    <string name="no_games_yet_sub_title">나중에 다시 확인하세요!</string>
+    <string name="plays">플레이 수</string>
 </resources>

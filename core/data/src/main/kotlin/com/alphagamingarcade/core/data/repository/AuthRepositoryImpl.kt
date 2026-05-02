@@ -1,5 +1,7 @@
 package com.alphagamingarcade.core.data.repository
 
+import com.alphagamingarcade.core.common.result.AppResult
+import com.alphagamingarcade.core.common.utils.suspendRunAppResultCatching
 import com.alphagamingarcade.core.datastore.data.TokenDataSource
 import com.alphagamingarcade.core.datastore.data.UserPreferencesDataSource
 import com.alphagamingarcade.core.datastore.model.UserDataPreferences
@@ -39,8 +41,8 @@ internal class AuthRepositoryImpl @Inject constructor(
     override suspend fun signInWithEmailAndPassword(
         email: String,
         password: String,
-    ): Result<Unit> {
-        return suspendRunCatching {
+    ): AppResult<Unit> {
+        return suspendRunAppResultCatching {
             val result = authDataSource.signInWithEmailAndPassword(email, password)
             userPreferencesDataSource.setUserProfile(
                 UserDataPreferences(
@@ -63,8 +65,8 @@ internal class AuthRepositoryImpl @Inject constructor(
         email: String,
         password: String,
         confirmPassword: String
-    ): Result<Unit> {
-        return suspendRunCatching {
+    ): AppResult<Unit> {
+        return suspendRunAppResultCatching {
             val result = authDataSource.registerWithEmailAndPassword(email, password, confirmPassword)
 
             userPreferencesDataSource.setUserProfile(

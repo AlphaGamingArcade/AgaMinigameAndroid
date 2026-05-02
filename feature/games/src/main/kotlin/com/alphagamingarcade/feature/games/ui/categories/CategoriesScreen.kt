@@ -104,6 +104,7 @@ internal fun CategoriesScreen(
     ) { data ->
         CategoriesScreen(
             data = data,
+            isLoading = state.loading,
             onRefresh = viewModel::refresh,
             isRefreshing = isRefreshing,
             category = category,
@@ -119,6 +120,7 @@ internal fun CategoriesScreen(
 @Composable
 private fun CategoriesScreen(
     category: GameCategory,
+    isLoading: Boolean,
     data: CategoriesScreenData,
     onGameClick: (String) -> Unit,
     onBackClick: () -> Unit,
@@ -175,41 +177,12 @@ private fun CategoriesScreen(
                     ),
                 )
 
-                PullToRefreshBox(
-                    modifier = Modifier.fillMaxSize(),
-                    isRefreshing = isRefreshing,
-                    onRefresh = onRefresh,
-                ){
-                    if (data.isLoading) {
-                        // ── Shimmer Loading State ────────────────────────────────────
-                        LazyVerticalGrid(
-                            columns = GridCells.Adaptive(minSize = 160.dp),
-                            contentPadding = PaddingValues(start = 16.dp, top = 0.dp, end = 16.dp, bottom = 32.dp),
-                            verticalArrangement = Arrangement.spacedBy(16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(16.dp),
-                            modifier = Modifier.fillMaxSize(),
-                            userScrollEnabled = false, // disable scroll during loading
-                        ) {
-                            // Shimmer search bar
-                            item(span = { GridItemSpan(maxLineSpan) }) {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height(52.dp)
-                                        .clip(RoundedCornerShape(12.dp))
-                                        .background(shimmerBrush()),
-                                )
-                            }
-                            // Shimmer filter chips
-                            item(span = { GridItemSpan(maxLineSpan) }) {
-                                ShimmerFilterChips()
-                            }
-                            // Shimmer game cards — 6 placeholders
-                            items(6) { index ->
-                                ShimmerGameCard()
-                            }
-                        }
-                    } else {
+                if (!isLoading){
+                    PullToRefreshBox(
+                        modifier = Modifier.fillMaxSize(),
+                        isRefreshing = isRefreshing,
+                        onRefresh = onRefresh,
+                    ){
                         // ── Actual Content ───────────────────────────────────────────
                         LazyVerticalGrid(
                             columns = GridCells.Adaptive(minSize = 160.dp),
@@ -317,12 +290,12 @@ private fun CategoryGameCard(
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.padding(horizontal = 4.dp),
         )
-        Text(
-            text = "⭐ 4.8",
-            fontSize = 11.sp,
-            color = Color(0xFF8A8A9A),
-            modifier = Modifier.padding(horizontal = 4.dp),
-        )
+//        Text(
+//            text = "⭐ 4.8",
+//            fontSize = 11.sp,
+//            color = Color(0xFF8A8A9A),
+//            modifier = Modifier.padding(horizontal = 4.dp),
+//        )
         Spacer(Modifier.height(4.dp))
     }
 }
@@ -344,19 +317,19 @@ private fun EmptyState(isSearching: Boolean = false) {
             Icon(
                 imageVector = if (isSearching) Icons.Rounded.Search else Icons.Rounded.SportsEsports,
                 contentDescription = null,
-                tint = Color(0xFF0A3535),
+                tint = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.size(48.dp),
             )
             Text(
                 text = if (isSearching) stringResource(R.string.no_results_found) else stringResource(R.string.no_games_yet),
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
-                color = Color(0xFF1A1A2E),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Text(
                 text = if (isSearching) stringResource(R.string.no_results_found_sub_title) else stringResource(R.string.no_games_yet_sub_title),
                 fontSize = 13.sp,
-                color = Color(0xFF8A8A9A),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
     }
@@ -387,14 +360,17 @@ private fun GameTag(
 }
 
 // ─── Shimmer Effect ───────────────────────────────────────────────────────────
-
 @Composable
 private fun shimmerBrush(): Brush {
+    val baseColor = MaterialTheme.colorScheme.surfaceVariant
+    val highlightColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+
     val shimmerColors = listOf(
-        Color(0xFFE5E7EB),
-        Color(0xFFF9FAFB),
-        Color(0xFFE5E7EB),
+        baseColor.copy(alpha = 0.6f),
+        highlightColor,
+        baseColor.copy(alpha = 0.6f),
     )
+
     val transition = rememberInfiniteTransition(label = "shimmer")
     val translateAnim by transition.animateFloat(
         initialValue = 0f,
@@ -405,6 +381,7 @@ private fun shimmerBrush(): Brush {
         ),
         label = "shimmer_translate",
     )
+
     return Brush.linearGradient(
         colors = shimmerColors,
         start = Offset(translateAnim - 200f, 0f),

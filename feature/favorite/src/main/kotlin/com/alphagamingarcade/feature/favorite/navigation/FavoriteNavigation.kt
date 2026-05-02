@@ -35,7 +35,7 @@ fun NavGraphBuilder.favoriteScreen(
     onSignInClick: () -> Unit,
     onSignUpClick: () -> Unit,
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
-    onGameClick: (String) -> Unit
+    onResumeGameClick: (String) -> Unit
 ) {
     composable<Favorite> {
         if (!isLoggedIn){
@@ -47,7 +47,7 @@ fun NavGraphBuilder.favoriteScreen(
         } else {
             FavoriteScreen(
                 onShowSnackbar = onShowSnackbar,
-                onGameClick = onGameClick
+                onResumeGameClick = onResumeGameClick
             )
         }
     }

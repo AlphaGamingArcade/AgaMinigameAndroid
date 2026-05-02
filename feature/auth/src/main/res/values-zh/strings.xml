@@ -48,8 +48,17 @@
     <string name="reset_link_sent">请检查邮箱</string>
     <string name="reset_link_sent_description">我们已发送密码重置链接</string>
 
-    <string name="email_not_valid">请输入有效的邮箱地址</string>
-    <string name="password_not_valid">密码无效</string>
+    <string name="email_not_valid">邮箱格式不正确</string>
+    <string name="password_not_valid">密码不正确</string>
     <string name="password_min_characters">密码至少需要8个字符</string>
-    <string name="passwords_do_not_match">密码不一致</string>
+    <string name="passwords_do_not_match">两次输入的密码不一致</string>
+    <string name="confirm_password">确认密码</string>
+
+    <string name="setup_profile_title">请填写一些信息以开始使用。</string>
+
+    <string name="account">账户</string>
+    <string name="nickname">昵称</string>
+    <string name="date_of_birth">出生日期</string>
+    <string name="continue_btn">继续</string>
+    <string name="resend_in">重新发送倒计时</string>
 </resources>

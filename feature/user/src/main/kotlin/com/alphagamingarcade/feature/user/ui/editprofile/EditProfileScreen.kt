@@ -150,6 +150,7 @@ private fun EditProfileScreen(
                 JetpackTextField(
                     value = screenData.nickname.value,
                     onValueChange = onNicknameChange,
+                    errorMessage = screenData.nickname.errorMessage,
                     label = { Text(stringResource(R.string.nickname)) },
                     leadingIcon = {
                         Icon(

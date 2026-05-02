@@ -1,5 +1,7 @@
 package com.alphagamingarcade.core.data.repository
 
+import com.alphagamingarcade.core.common.result.AppResult
+import com.alphagamingarcade.core.common.utils.suspendRunAppResultCatching
 import com.alphagamingarcade.core.datastore.data.UserPreferencesDataSource
 import com.alphagamingarcade.core.network.data.MemberDataSource
 import com.alphagamingarcade.core.network.model.asMemberPreferences
@@ -7,6 +9,7 @@ import com.alphagamingarcade.core.network.model.toExternalModel
 import com.alphagamingarcade.core.utils.suspendRunCatching
 import com.alphagamingarcade.model.data.Game
 import com.alphagamingarcade.model.data.Play
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class MembersRepositoryImpl @Inject constructor(
@@ -18,8 +21,8 @@ class MembersRepositoryImpl @Inject constructor(
      *
      * @return A Result indicating the success or failure of the operation.
      */
-    override suspend fun createMember(account: String, nickname: String, dateOfBirth: String): Result<Unit> {
-        return suspendRunCatching {
+    override suspend fun createMember(account: String, nickname: String, dateOfBirth: String): AppResult<Unit> {
+        return suspendRunAppResultCatching {
             val result = memberDataSource.createMember(account, nickname, dateOfBirth)
             userPreferencesDataSource.setUserMember(result.data.asMemberPreferences());
         }
@@ -30,10 +33,23 @@ class MembersRepositoryImpl @Inject constructor(
      *
      * @return A Result indicating the success or failure of the operation.
      */
-    override suspend fun updateMember(nickname: String): Result<Unit> {
-        return suspendRunCatching {
+    override suspend fun updateMember(nickname: String): AppResult<Unit> {
+        return suspendRunAppResultCatching {
             val memberId = userPreferencesDataSource.getMemberIdOrThrow()
             memberDataSource.updateMember(memberId, nickname)
+
+            val currentPreferences = userPreferencesDataSource
+                .getUserDataPreferences()
+                .first()
+
+            val memberPreferences = currentPreferences.member;
+            if (memberPreferences != null){
+                userPreferencesDataSource.setUserMember(
+                    memberPreferences.copy(
+                        nickname = nickname
+                    )
+                )
+            }
         }
     }
 

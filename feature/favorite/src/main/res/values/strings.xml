@@ -30,4 +30,5 @@
     <string name="no_results_found">No results found</string>
     <string name="no_results_found_sub_title">Try a different search term</string>
     <string name="resume">Resume</string>
+    <string name="favorited">Favorited</string>
 </resources>

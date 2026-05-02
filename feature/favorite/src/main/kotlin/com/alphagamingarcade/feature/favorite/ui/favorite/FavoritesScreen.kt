@@ -68,8 +68,6 @@ import com.alphagamingarcade.core.ui.components.SearchBar
 private val AccentPink     = Color(0xFFE91E8C)
 private val TagNew         = Color(0xFF00C48C)
 private val TagHot         = Color(0xFFFF4757)
-private val SurfaceGray    = Color(0xFFF5F6FA)
-private val SearchBarColor = Color(0xFFF0F1F5)
 private val TextPrimary    = Color(0xFF1A1A2E)
 private val TextSecondary  = Color(0xFF8A8A9A)
 
@@ -77,7 +75,7 @@ private val TextSecondary  = Color(0xFF8A8A9A)
 
 @Composable
 internal fun FavoriteScreen(
-    onGameClick: (String) -> Unit,
+    onResumeGameClick: (String) -> Unit,
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
     browseViewModel: FavoriteViewModel = hiltViewModel(),
 ) {
@@ -92,7 +90,7 @@ internal fun FavoriteScreen(
             data = homeScreenData,
             isRefreshing = isRefreshing,
             onRefresh = browseViewModel::refresh,
-            onGameClick = onGameClick,
+            onResumeGameClick = onResumeGameClick,
             onRemoveFavoriteClick = { game ->
                 browseViewModel.removeFavorite(game.id.toInt())
             }
@@ -107,7 +105,7 @@ private fun FavoriteScreen(
     data: FavoriteScreenData,
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
-    onGameClick: (String) -> Unit,
+    onResumeGameClick: (String) -> Unit,
     onRemoveFavoriteClick: (Game) -> Unit
 ) {
     var searchQuery by remember { mutableStateOf("") }
@@ -134,12 +132,12 @@ private fun FavoriteScreen(
                         onRemoveFavoriteClick(game)
                     }
                 ) {
-                    Text("Remove")
+                    Text(stringResource(R.string.remove))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { selectedGameToRemove = null }) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.cancel))
                 }
             },
         )
@@ -179,7 +177,7 @@ private fun FavoriteScreen(
                             Spacer(Modifier.height(10.dp))
                             ResumeCard(
                                 game = recent,
-                                onClick = { onGameClick(recent.id.toString()) },
+                                onClick = { onResumeGameClick(recent.id.toString()) },
                                 modifier = Modifier.padding(horizontal = 20.dp),
                             )
                             Spacer(Modifier.height(24.dp))
@@ -225,7 +223,7 @@ private fun FavoriteScreen(
                     item {
                         FavoritesGrid(
                             games = filteredGames,
-                            onGameClick = onGameClick,
+                            onGameClick = onResumeGameClick,
                             modifier = Modifier.padding(horizontal = 20.dp),
                             onRemoveFavoriteClick = { game ->
                                 selectedGameToRemove = game
@@ -510,9 +508,10 @@ private fun FavoriteGridCard(
         )
 
         Text(
-            text = "⭐ 4.8 · Favorited",
+            text = stringResource(R.string.favorited),
             fontSize = 11.sp,
             color = TextSecondary,
+            modifier = Modifier.padding(horizontal = 12.dp)
         )
     }
 }

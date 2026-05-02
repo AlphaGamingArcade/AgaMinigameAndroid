@@ -1,8 +1,9 @@
 package com.alphagamingarcade.core.network.data
 
-import android.net.http.HttpException
 import android.os.Build
 import androidx.annotation.RequiresExtension
+import com.alphagamingarcade.core.common.exception.ApiException
+import com.alphagamingarcade.core.common.utils.parseFieldErrors
 import com.alphagamingarcade.core.di.IoDispatcher
 import com.alphagamingarcade.core.network.api.AuthRestApi
 import com.alphagamingarcade.core.network.model.ApiResponse
@@ -22,10 +23,9 @@ import com.alphagamingarcade.core.network.model.NetworkResendVerifyEmail
 import com.alphagamingarcade.core.network.model.RegisterRequest
 import com.alphagamingarcade.core.network.model.ResendVerifyEmailRequest
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.withContext
 import retrofit2.Call
-import java.io.IOException
 import javax.inject.Inject
+import retrofit2.HttpException
 
 internal class AuthDataSourceImpl @Inject constructor(
     private val authRestApi: AuthRestApi,
@@ -41,7 +41,16 @@ internal class AuthDataSourceImpl @Inject constructor(
             email = email,
             password = password
         )
-        return authRestApi.signIn(request)
+        return try {
+            authRestApi.signIn(request)
+        } catch (e: HttpException) {
+            val errorBody = e.response()?.errorBody()?.string()
+            throw ApiException(
+                message = e.message() ?: "Unexpected error occur.",
+                statusCode = e.code(),
+                errors = parseFieldErrors(errorBody),
+            )
+        }
     }
 
     override suspend fun signOut(refreshToken: String
@@ -64,7 +73,16 @@ internal class AuthDataSourceImpl @Inject constructor(
             password = password,
             confirmPassword = confirmPassword
         )
-        return authRestApi.register(request)
+        return  try {
+            authRestApi.register(request)
+        }  catch (e: HttpException) {
+            val errorBody = e.response()?.errorBody()?.string()
+            throw ApiException(
+                message = e.message() ?: "Unexpected error occur.",
+                statusCode = e.code(),
+                errors = parseFieldErrors(errorBody),
+            )
+        }
     }
 
     // Resend verify email

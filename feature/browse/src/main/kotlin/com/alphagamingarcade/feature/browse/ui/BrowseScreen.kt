@@ -57,8 +57,6 @@ import com.alphagamingarcade.feature.browse.R
 private val AccentBlue     = Color(0xFF2563EB)
 private val TagNew         = Color(0xFF00C48C)
 private val TagHot         = Color(0xFFFF4757)
-private val SurfaceGray    = Color(0xFFF5F6FA)
-private val SearchBarColor = Color(0xFFF0F1F5)
 private val TextSecondary  = Color(0xFF8A8A9A)
 
 private enum class BrowseCategory(
@@ -308,7 +306,7 @@ private fun GridGameCard(game: Game, onClick: () -> Unit) {
             overflow = TextOverflow.Ellipsis,
         )
         Text(
-            text = "⭐ 4.8 · Free to Play",
+            text = game.category,
             fontSize = 11.sp,
             color = TextSecondary,
         )

@@ -16,10 +16,10 @@
     <string name="new_release_sub_title">Fresh off the press</string>
 
     <string name="coming_soon">Coming Soon</string>
-    <string name="coming_soon_sub_title">Stay tuned for what\\\'s next</string>
+    <string name="coming_soon_sub_title">Stay tuned for what\'s next</string>
 
-    <string name="top_rated">Coming Soon</string>
-    <string name="top_rated_sub_title">Players\\\' all-time favourites</string>
+    <string name="top_rated">Top rated</string>
+    <string name="top_rated_sub_title">Players\' all-time favourites</string>
 
     <string name="search_games">Search games...</string>
     <string name="all_filter">All</string>
@@ -37,4 +37,5 @@
 
     <string name="no_games_yet">No games yet</string>
     <string name="no_games_yet_sub_title">Check back later!</string>
+    <string name="plays">plays</string>
 </resources>

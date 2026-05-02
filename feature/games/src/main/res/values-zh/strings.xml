@@ -12,29 +12,30 @@
     <string name="trending_now">热门推荐</string>
     <string name="trending_now_subtitle">今日最受欢迎</string>
 
-    <string name="new_release">新上线</string>
-    <string name="new_release_sub_title">最新发布</string>
+    <string name="new_release">最新上线</string>
+    <string name="new_release_sub_title">全新发布</string>
 
     <string name="coming_soon">即将上线</string>
     <string name="coming_soon_sub_title">敬请期待</string>
 
-    <string name="top_rated">高评分</string>
+    <string name="top_rated">评分最高</string>
     <string name="top_rated_sub_title">玩家最喜爱的游戏</string>
 
-    <string name="search_games">搜索游戏</string>
+    <string name="search_games">搜索游戏...</string>
     <string name="all_filter">全部</string>
     <string name="popular_filter">热门</string>
     <string name="new_filter">最新</string>
-    <string name="top_rated_filter">高评分</string>
+    <string name="top_rated_filter">评分最高</string>
 
     <plurals name="games_available">
-        <item quantity="one">%d 个可用游戏</item>
-        <item quantity="other">%d 个可用游戏</item>
+        <item quantity="one">%d 个游戏</item>
+        <item quantity="other">%d 个游戏</item>
     </plurals>
 
     <string name="no_results_found">未找到结果</string>
-    <string name="no_results_found_sub_title">请尝试其他搜索关键词</string>
+    <string name="no_results_found_sub_title">请尝试其他关键词</string>
 
     <string name="no_games_yet">暂无游戏</string>
-    <string name="no_games_yet_sub_title">稍后再来查看！</string>
+    <string name="no_games_yet_sub_title">稍后再来看看！</string>
+    <string name="plays">游玩次数</string>
 </resources>

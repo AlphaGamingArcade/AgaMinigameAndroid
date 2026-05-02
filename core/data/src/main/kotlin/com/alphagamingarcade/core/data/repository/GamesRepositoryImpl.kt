@@ -15,6 +15,26 @@ class GamesRepositoryImpl @Inject constructor(private val gameDataSource: GameDa
         }
     }
 
+    override suspend fun getSimilarGames(
+        gameId: Int,
+        pageNumber: Int,
+        pageSize: Int,
+        search: String?,
+        sortBy: String?,
+        orderBy: String?,
+    ): Result<List<Game>> {
+        return suspendRunCatching {
+            gameDataSource.getSimilarGames(
+                gameId,
+                pageNumber,
+                pageSize,
+                search,
+                sortBy,
+                orderBy
+            ).data.items.map { it.toExternalModel() }
+        }
+    }
+
     override fun getGames(
         pageNumber: Int,
         pageSize: Int,

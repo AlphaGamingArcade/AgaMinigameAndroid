@@ -16,6 +16,7 @@ data class NetworkGame(
     val trending: String,
     val comingSoon: String,
     val datetime: String,
+    val totalPlayers: Int,
     val gamecode: GameCode,
     val isFavorite: Boolean? = null
 )
@@ -41,6 +42,6 @@ fun NetworkGame.toExternalModel() = Game(
     needsSync = false,
     category = category,
     rating = 0.0f,
-    playerCount = 0,
+    playerCount = totalPlayers,
     isFavorite = isFavorite
 )

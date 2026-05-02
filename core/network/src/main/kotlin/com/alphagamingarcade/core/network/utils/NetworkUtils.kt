@@ -16,7 +16,11 @@
 
 package com.alphagamingarcade.core.network.utils
 
+import android.net.http.HttpException
+import com.alphagamingarcade.core.network.model.ApiError
+import com.alphagamingarcade.core.network.model.ApiResponse
 import kotlinx.coroutines.flow.Flow
+import kotlinx.serialization.json.Json
 
 /**
  * Network utils.

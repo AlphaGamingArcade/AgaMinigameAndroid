@@ -234,13 +234,12 @@ private fun AgamgScaffold(
             if (destination != null) {
                 shouldShowTopAppBar = true
 
-
                 AgamgTopAppBarWithLogoAndActions(
                     logoRes = if (isDarkTheme) R.drawable.ic_app_logo_dark else R.drawable.ic_app_logo,
                     logoContentDescription = "App Logo",
                     isLoggedIn = appState.isUserLoggedIn,
                     balance = CurrencyFormatter.format(appState.userState.balance, appState.userState.currency),
-                    onSettingsClick = { onTopAppBarActionClick() },
+                    onSettingsClick =  onTopAppBarActionClick,
                 )
             }
 

@@ -10,7 +10,6 @@ import com.alphagamingarcade.core.data.repository.ProfileRepository
 import com.alphagamingarcade.core.ui.utils.UiState
 import com.alphagamingarcade.core.utils.OneTimeEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
@@ -18,59 +17,102 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-/**
- * [ViewModel] for [GameDetailScreen].
- */
 @HiltViewModel
 class GameDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val gamesRepository: GamesRepository,
     private val membersRepository: MembersRepository,
-    private val profileRepository: ProfileRepository
+    private val profileRepository: ProfileRepository,
 ) : ViewModel() {
+
     private val gameId: String = savedStateHandle["gameId"] ?: ""
+
     private val _gameDetailUiState = MutableStateFlow(UiState(GameDetailScreenData()))
     val gameDetailUiState = _gameDetailUiState.asStateFlow()
 
+    private val _navigationEvent = MutableStateFlow<OneTimeEvent<PlayScreenArgs>?>(null)
+    val navigationEvent = _navigationEvent.asStateFlow()
+
     init {
         getGameDetail()
+        getSimilarGames()
     }
 
     fun getGameDetail() {
         viewModelScope.launch {
             try {
-                _gameDetailUiState.value = UiState(
-                    data = _gameDetailUiState.value.data,
+                _gameDetailUiState.value = _gameDetailUiState.value.copy(
                     loading = true,
                     error = OneTimeEvent(null),
                 )
 
                 gamesRepository.getGame(gameId.toInt())
                     .onSuccess { game ->
-                        _gameDetailUiState.value = UiState(
-                            data = GameDetailScreenData(game = GameDetailUiModel(
-                                id = game.id,
-                                title = game.name,
-                                category = game.category,
-                                playerCountLabel = game.playerCount.toString(),
-                                bannerUrl = game.imageUrl,
-                                iconUrl = game.imageUrl,
-                                screenshotUrls = emptyList(),
-                                description = game.name,
-                                isFavorite = game.isFavorite ?: false,
-                            )),
+                        _gameDetailUiState.value = _gameDetailUiState.value.copy(
+                            data = _gameDetailUiState.value.data.copy(
+                                game = GameDetailUiModel(
+                                    id = game.id,
+                                    title = game.name,
+                                    category = game.category,
+                                    playerCountLabel = game.playerCount.toString(),
+                                    bannerUrl = game.imageUrl,
+                                    iconUrl = game.imageUrl,
+                                    screenshotUrls = emptyList(),
+                                    description = game.name,
+                                    isFavorite = game.isFavorite ?: false,
+                                ),
+                            ),
                             loading = false,
+                            error = OneTimeEvent(null),
                         )
-                    }.onFailure { throwable ->
-                        _gameDetailUiState.value = UiState(
-                            data = _gameDetailUiState.value.data,
+                    }
+                    .onFailure { throwable ->
+                        _gameDetailUiState.value = _gameDetailUiState.value.copy(
                             loading = false,
                             error = OneTimeEvent(throwable),
                         )
                     }
             } catch (e: Exception) {
-                _gameDetailUiState.value = UiState(
-                    data = _gameDetailUiState.value.data,
+                _gameDetailUiState.value = _gameDetailUiState.value.copy(
+                    loading = false,
+                    error = OneTimeEvent(e),
+                )
+            }
+        }
+    }
+
+    fun getSimilarGames() {
+        viewModelScope.launch {
+            try {
+                gamesRepository.getSimilarGames(
+                    gameId = gameId.toInt(),
+                    pageNumber = 1,
+                    pageSize = 10,
+                )
+                    .onSuccess { games ->
+                        _gameDetailUiState.value = _gameDetailUiState.value.copy(
+                            data = _gameDetailUiState.value.data.copy(
+                                similarGames = games.map { game ->
+                                    SimilarGameUiModel(
+                                        id = game.id,
+                                        title = game.name,
+                                        category = game.category,
+                                        thumbnailUrl = game.imageUrl,
+                                    )
+                                },
+                            ),
+                            loading = false,
+                            error = OneTimeEvent(null),
+                        )
+                    }
+                    .onFailure { throwable ->
+                        _gameDetailUiState.value = _gameDetailUiState.value.copy(
+                            loading = false,
+                            error = OneTimeEvent(throwable),
+                        )
+                    }
+            } catch (e: Exception) {
+                _gameDetailUiState.value = _gameDetailUiState.value.copy(
                     loading = false,
                     error = OneTimeEvent(e),
                 )
@@ -84,13 +126,12 @@ class GameDetailViewModel @Inject constructor(
             val currentGame = currentState.data.game
             val newFavoriteState = !currentGame.isFavorite
 
-            // ✅ 1. Optimistic UI update (instant feedback)
             _gameDetailUiState.value = currentState.copy(
                 data = currentState.data.copy(
                     game = currentGame.copy(
-                        isFavorite = newFavoriteState
-                    )
-                )
+                        isFavorite = newFavoriteState,
+                    ),
+                ),
             )
 
             try {
@@ -106,22 +147,19 @@ class GameDetailViewModel @Inject constructor(
                 }
 
                 result.onFailure { e ->
-                    // ❌ rollback if API fails
-                    _gameDetailUiState.value = currentState.copy(
-                        data = currentState.data.copy(
-                            game = currentGame
+                    _gameDetailUiState.value = _gameDetailUiState.value.copy(
+                        data = _gameDetailUiState.value.data.copy(
+                            game = currentGame,
                         ),
-                        error = OneTimeEvent(e)
+                        error = OneTimeEvent(e),
                     )
                 }
-
             } catch (e: Exception) {
-                // ❌ rollback on exception
-                _gameDetailUiState.value = currentState.copy(
-                    data = currentState.data.copy(
-                        game = currentGame
+                _gameDetailUiState.value = _gameDetailUiState.value.copy(
+                    data = _gameDetailUiState.value.data.copy(
+                        game = currentGame,
                     ),
-                    error = OneTimeEvent(e)
+                    error = OneTimeEvent(e),
                 )
             }
         }
@@ -139,10 +177,7 @@ class GameDetailViewModel @Inject constructor(
         // optional hook if you want analytics or preload later
     }
 
-    private val _navigationEvent = MutableStateFlow<OneTimeEvent<PlayScreenArgs>?>(null)
-    val navigationEvent = _navigationEvent.asStateFlow()
-
-    fun play(){
+    fun play() {
         viewModelScope.launch {
             try {
                 val resolvedMemberId = profileRepository
@@ -152,32 +187,30 @@ class GameDetailViewModel @Inject constructor(
 
                 membersRepository.playGame(
                     resolvedMemberId,
-                    gameId.toInt()
+                    gameId.toInt(),
                 )
                     .onSuccess { play ->
-                        _navigationEvent.value = OneTimeEvent(PlayScreenArgs(
-                            playUrl = play.playUrl,
-                            gameName = _gameDetailUiState.value.data.game.title
-                        ))
+                        _navigationEvent.value = OneTimeEvent(
+                            PlayScreenArgs(
+                                playUrl = play.playUrl,
+                                gameName = _gameDetailUiState.value.data.game.title,
+                            ),
+                        )
                     }
                     .onFailure { e ->
                         _gameDetailUiState.value = _gameDetailUiState.value.copy(
-                            error = OneTimeEvent(e)
+                            error = OneTimeEvent(e),
                         )
                     }
-
             } catch (e: Exception) {
                 _gameDetailUiState.value = _gameDetailUiState.value.copy(
-                    error = OneTimeEvent(e)
+                    error = OneTimeEvent(e),
                 )
             }
         }
     }
 }
 
-/**
- * Data for [GameDetailScreen].
- */
 @Immutable
 data class GameDetailScreenData(
     val game: GameDetailUiModel = GameDetailUiModel(),
@@ -200,7 +233,7 @@ data class GameDetailUiModel(
 
 @Immutable
 data class SimilarGameUiModel(
-    val id: String = "",
+    val id: Int,
     val title: String = "",
     val category: String = "",
     val thumbnailUrl: String = "",

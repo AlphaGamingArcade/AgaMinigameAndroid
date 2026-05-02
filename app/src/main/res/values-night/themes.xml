@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!--
     Copyright 2026 Alpha Gaming Arcade
 
@@ -15,13 +16,26 @@
      limitations under the License.
 -->
 
+
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="NightAdjusted.Theme.Jetpack" parent="android:Theme.Material.NoActionBar" />
+    <!-- Dark mode version -->
+    <style name="NightAdjusted.Theme.Jetpack" parent="Theme.AppCompat.NoActionBar" />
+
+    <style name="Theme.Jetpack" parent="NightAdjusted.Theme.Jetpack" />
 
     <style name="NightAdjusted.Theme.Splash" parent="Theme.SplashScreen">
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
+    </style>
+
+    <style name="Theme.Jetpack.Splash" parent="NightAdjusted.Theme.Splash">
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="postSplashScreenTheme">@style/Theme.Jetpack</item>
+    </style>
+
+    <style name="Theme.OptOutEdgeToEdgeEnforcement" parent="Theme.AppCompat">
+        <item name="android:windowOptOutEdgeToEdgeEnforcement" tools:targetApi="35">true</item>
     </style>
 
 </resources>

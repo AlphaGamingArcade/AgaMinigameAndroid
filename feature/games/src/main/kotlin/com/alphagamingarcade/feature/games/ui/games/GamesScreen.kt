@@ -63,6 +63,7 @@ import coil.compose.AsyncImage
 import com.alphagamingarcade.core.ui.components.SectionHeader
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.core.ui.utils.StatefulComposable
+import com.alphagamingarcade.core.ui.utils.formatPlayerCount
 import com.alphagamingarcade.model.data.Banner
 import com.alphagamingarcade.model.data.Game
 import com.alphagamingarcade.feature.games.R
@@ -493,7 +494,7 @@ private fun TrendingCard(game: Game, onClick: () -> Unit) {
                     overflow = TextOverflow.Ellipsis,
                 )
                 Spacer(Modifier.height(2.dp))
-                Text(text = "⭐ 4.8", fontSize = 11.sp, color = TextSecondary)
+//                Text(text = "⭐ 4.8", fontSize = 11.sp, color = TextSecondary)
             }
         }
     }
@@ -621,7 +622,8 @@ private fun TopRatedListItem(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Spacer(Modifier.height(4.dp))
-                Text(text = "⭐ 4.9 · 120K plays", fontSize = 12.sp, color = TextSecondary)
+                Text(text = "${formatPlayerCount(game.playerCount)} plays", fontSize = 12.sp, color = TextSecondary)
+            //                Text(text = "⭐ 4.9 · 120K plays", fontSize = 12.sp, color = TextSecondary)
             }
 
             // Hot tag if applicable

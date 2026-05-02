@@ -8,6 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alphagamingarcade.core.common.result.AppResult
 import com.alphagamingarcade.core.ui.components.JetpackOverlayLoadingWheel
 import com.alphagamingarcade.core.utils.OneTimeEvent
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -137,6 +138,34 @@ context(viewModel: ViewModel) inline fun <T : Any> MutableStateFlow<UiState<T>>.
                     error = OneTimeEvent(result.exceptionOrNull()),
                     loading = false,
                 )
+            }
+        }
+    }
+}
+
+
+context(viewModel: ViewModel) inline fun <T : Any> MutableStateFlow<UiState<T>>.updateWithAppResult(
+    crossinline operation: suspend T.() -> AppResult<Unit>,
+) {
+    if (value.loading) return
+
+    viewModel.viewModelScope.launch {
+        update { it.copy(loading = true, error = OneTimeEvent(null)) }
+
+        when (val result = value.data.operation()) {
+            is AppResult.Success -> {
+                update { it.copy(loading = false) }
+            }
+
+            is AppResult.Error -> {
+                update {
+                    it.copy(
+                        loading = false,
+                        error = OneTimeEvent(
+                            if (result.errors.isNullOrEmpty()) Throwable("Unexpected error occurred") else null
+                        ),
+                    )
+                }
             }
         }
     }

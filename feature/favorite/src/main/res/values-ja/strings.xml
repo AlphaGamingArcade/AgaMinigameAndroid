@@ -16,8 +16,8 @@
 -->
 
 <resources>
-    <string name="search_favorites">お気に入りを検索…</string>
-    <string name="continue_playing">続けてプレイ</string>
+    <string name="search_favorites">お気に入りを検索...</string>
+    <string name="continue_playing">プレイを続ける</string>
     <string name="last_played">最終プレイ</string>
     <string name="all_favorites">すべてのお気に入り</string>
     <string name="results">結果</string>
@@ -25,8 +25,10 @@
     <string name="remove_from_favorites_sub_title">%1$s をお気に入りから削除しますか？</string>
     <string name="cancel">キャンセル</string>
     <string name="remove">削除</string>
-    <string name="no_favorites">お気に入りがありません</string>
+    <string name="no_favorites">お気に入りはありません</string>
     <string name="no_favorites_sub_title">お気に入りに追加したゲームがここに表示されます</string>
+    <string name="no_results_found">結果が見つかりません</string>
+    <string name="no_results_found_sub_title">別のキーワードで検索してください</string>
     <string name="resume">再開</string>
-
+    <string name="favorited">お気に入り済み</string>
 </resources>

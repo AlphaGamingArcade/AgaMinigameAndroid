@@ -52,4 +52,11 @@
     <string name="password_not_valid">Password not valid</string>
     <string name="password_min_characters">Password must be at least 8 characters</string>
     <string name="passwords_do_not_match">Passwords do not match</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="setup_profile_title">Tell us a bit about yourself to get started.</string>
+    <string name="account">Account</string>
+    <string name="nickname">Nickname</string>
+    <string name="date_of_birth">Date of Birth</string>
+    <string name="continue_btn">Continue</string>
+    <string name="resend_in">Resend in</string>
 </resources>

@@ -48,8 +48,17 @@
     <string name="reset_link_sent">メールを確認</string>
     <string name="reset_link_sent_description">パスワード再設定リンクを送信しました</string>
 
-    <string name="email_not_valid">有効なメールアドレスを入力してください</string>
-    <string name="password_not_valid">パスワードが無効です</string>
+    <string name="email_not_valid">メールアドレスが正しくありません</string>
+    <string name="password_not_valid">パスワードが正しくありません</string>
     <string name="password_min_characters">パスワードは8文字以上で入力してください</string>
     <string name="passwords_do_not_match">パスワードが一致しません</string>
+    <string name="confirm_password">パスワード確認</string>
+
+    <string name="setup_profile_title">始めるために、いくつか情報を教えてください。</string>
+
+    <string name="account">アカウント</string>
+    <string name="nickname">ニックネーム</string>
+    <string name="date_of_birth">生年月日</string>
+    <string name="continue_btn">続ける</string>
+    <string name="resend_in">再送まで</string>
 </resources>

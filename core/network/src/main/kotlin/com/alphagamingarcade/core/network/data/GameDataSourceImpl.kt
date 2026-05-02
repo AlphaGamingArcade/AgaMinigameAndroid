@@ -4,6 +4,7 @@ import com.alphagamingarcade.core.di.IoDispatcher
 import com.alphagamingarcade.core.network.api.GameRestApi
 import com.alphagamingarcade.core.network.model.ApiResponse
 import com.alphagamingarcade.core.network.model.NetworkGame
+import com.alphagamingarcade.core.network.model.PaginatedResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Inject
 
@@ -37,6 +38,24 @@ internal class GameDataSourceImpl @Inject constructor(
             orderBy = orderBy
         )
         return response.data.items
+    }
+
+    override suspend fun getSimilarGames(
+        gameId: Int,
+        pageNumber: Int,
+        pageSize: Int,
+        search: String?,
+        sortBy: String?,
+        orderBy: String?,
+    ): ApiResponse<PaginatedResponse<NetworkGame>> {
+        return gameRestApi.getSimilarGames(
+            gameId = gameId,
+            pageNumber = pageNumber,
+            pageSize = pageSize,
+            search = search,
+            sortBy = sortBy,
+            orderBy = orderBy
+        )
     }
 
     override suspend fun getTrendingGames(): List<NetworkGame> {

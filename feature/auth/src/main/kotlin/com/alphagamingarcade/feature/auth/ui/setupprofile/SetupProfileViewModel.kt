@@ -3,12 +3,10 @@ package com.alphagamingarcade.feature.auth.ui.setupprofile
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import com.alphagamingarcade.core.data.repository.MembersRepository
-import com.alphagamingarcade.core.data.repository.ProfileRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import com.alphagamingarcade.core.ui.utils.TextFieldData
 import com.alphagamingarcade.core.ui.utils.UiState
 import com.alphagamingarcade.core.ui.utils.updateState
-import com.alphagamingarcade.core.ui.utils.updateWith
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -16,6 +14,8 @@ import javax.inject.Inject
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import com.alphagamingarcade.core.common.result.AppResult
+import com.alphagamingarcade.core.ui.utils.updateWithAppResult
 
 @HiltViewModel
 class SetupProfileViewModel @Inject constructor(
@@ -89,15 +89,52 @@ class SetupProfileViewModel @Inject constructor(
     }
 
     fun onSetupProfile() {
-        _setUpProfileUiState.updateWith {
+        _setUpProfileUiState.updateWithAppResult {
             val result = membersRepository.createMember(
                 account = account.value,
                 nickname = nickname.value,
                 dateOfBirth = dob.value
             )
 
-            if (result.isSuccess){
-                _events.send(SetupProfileEvent.OnProfileSetupComplete)
+            when (result) {
+                is AppResult.Success -> {
+                    _events.send(SetupProfileEvent.OnProfileSetupComplete)
+                }
+
+                is AppResult.Error -> {
+                    val accountError = result.errors
+                        ?.firstOrNull { it.field.equals("account", ignoreCase = true) }
+                        ?.message
+
+                    val nicknameError = result.errors
+                        ?.firstOrNull { it.field.equals("nickname", ignoreCase = true) }
+                        ?.message
+
+                    val dobError = result.errors
+                        ?.firstOrNull {
+                            it.field.equals("dob", ignoreCase = true) ||
+                                    it.field.equals("dateOfBirth", ignoreCase = true) ||
+                                    it.field.equals("date_of_birth", ignoreCase = true)
+                        }
+                        ?.message
+
+                    _setUpProfileUiState.updateState {
+                        copy(
+                            account = TextFieldData(
+                                value = account.value,
+                                errorMessage = accountError ?: account.errorMessage
+                            ),
+                            nickname = TextFieldData(
+                                value = nickname.value,
+                                errorMessage = nicknameError ?: nickname.errorMessage
+                            ),
+                            dob = TextFieldData(
+                                value = dob.value,
+                                errorMessage = dobError ?: dob.errorMessage
+                            )
+                        )
+                    }
+                }
             }
 
             result
@@ -105,14 +142,12 @@ class SetupProfileViewModel @Inject constructor(
     }
 }
 
-
 @Immutable
 data class SetupProfileScreenData(
     val account: TextFieldData = TextFieldData(String()),       // NEW - 4-16 chars, alphanumeric
     val nickname: TextFieldData = TextFieldData(String()),      // RENAMED from name
     val dob: TextFieldData = TextFieldData(String()),           // NEW - date, must be 18+
 )
-
 
 sealed class SetupProfileEvent {
     object OnProfileSetupComplete : SetupProfileEvent()

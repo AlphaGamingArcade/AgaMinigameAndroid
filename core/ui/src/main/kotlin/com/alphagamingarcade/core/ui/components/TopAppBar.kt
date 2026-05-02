@@ -262,20 +262,20 @@ fun AgamgTopAppBarWithLogoAndActions(
                     modifier = Modifier
                         .padding(start = 8.dp)
                         .clip(RoundedCornerShape(50))
-                        .background(MaterialTheme.colorScheme.primaryContainer)
+                        .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.6f))
                         .padding(horizontal = 12.dp, vertical = 6.dp),
                 ) {
                     Icon(
                         imageVector = Icons.Outlined.AccountBalanceWallet,
                         contentDescription = "Balance",
-                        tint = MaterialTheme.colorScheme.primary,
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
                         modifier = Modifier.size(16.dp),
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = balance,
                         style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.primary,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
                         fontWeight = FontWeight.Bold,
                     )
                 }

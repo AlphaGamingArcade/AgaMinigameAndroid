@@ -59,6 +59,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -71,6 +72,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.core.ui.utils.StatefulComposable
 import com.alphagamingarcade.core.data.model.Profile
+import com.alphagamingarcade.core.data.utils.CONTACT_SUPPORT_URL
+import com.alphagamingarcade.core.data.utils.TERMS_OF_SERVICE_URL
 import com.alphagamingarcade.core.ui.utils.CurrencyFormatter
 import kotlinx.coroutines.launch
 import com.alphagamingarcade.feature.user.R
@@ -153,6 +156,8 @@ private fun ProfileScreen(
             ) {
                 ProfileHero(profile = profile)
 
+                val context = LocalUriHandler.current
+
                 WalletCard(
                     balance = CurrencyFormatter.format(profile.balance, profile.currency),
                     onRechargeClick = { showDailyReward = true },
@@ -180,13 +185,14 @@ private fun ProfileScreen(
                         onClick = onChangePasswordClick,
                     )
                     MenuDivider()
+
                     MenuItem(
                         icon = Icons.Default.Description,
                         iconBg = Color.Transparent,
                         iconTint = MaterialTheme.colorScheme.onSurface,
                         title = stringResource(R.string.terms_and_privacy),
                         subtitle = stringResource(R.string.terms_and_privacy_sub_title),
-                        onClick = onTermsAndPrivacyClick,
+                        onClick =  { context.openUri(TERMS_OF_SERVICE_URL) },
                     )
                 }
                 Spacer(Modifier.height(16.dp))
@@ -198,7 +204,7 @@ private fun ProfileScreen(
                         iconTint = MaterialTheme.colorScheme.onSurface,
                         title = stringResource(R.string.contact_support),
                         subtitle = stringResource(R.string.contact_support_sub_title),
-                        onClick = onContactSupportClick,
+                        onClick =  { context.openUri(CONTACT_SUPPORT_URL) },
                     )
                 }
                 Spacer(Modifier.height(16.dp))
@@ -320,8 +326,6 @@ private fun ProfileScreen(
     }
 }
 
-val SurfaceGray = Color(0xFFEEEEEE)
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DailyRewardBottomSheet(
@@ -404,8 +408,8 @@ private fun DailyRewardBottomSheet(
                 enabled = !isClaimed,
                 shape = RoundedCornerShape(14.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF061C20),
-                    contentColor = Color.White,
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
                     disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
                     disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                 ),

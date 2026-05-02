@@ -62,6 +62,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import com.alphagamingarcade.core.ui.components.JetpackButton
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.core.ui.utils.StatefulComposable
 import com.alphagamingarcade.feature.gamedetail.R
@@ -351,45 +352,14 @@ private fun GameHeroSection(
                 }
 
                 Spacer(modifier = Modifier.height(4.dp))
-
-                Button(
-                    onClick = {
-                        if (isLoggedIn){
-                            onPlayClick()
-                        } else {
-                            onSignInClick()
-                        }
-                    },
+                JetpackButton(
+                    onClick =  if (isLoggedIn) onPlayClick else onSignInClick,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(48.dp),
-                    shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = AccentColor,
-                        contentColor = Color.White,
-                    ),
-                    elevation = ButtonDefaults.buttonElevation(
-                        defaultElevation = 0.dp,
-                        pressedElevation = 0.dp,
-                        focusedElevation = 0.dp,
-                        hoveredElevation = 0.dp,
-                        disabledElevation = 0.dp,
-                    ),
-                ) {
-                    if (isLoggedIn){
-                        Text(
-                            text = stringResource(R.string.play),
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.Medium,
-                        )
-                    } else {
-                        Text(
-                            text = stringResource(R.string.sign_in_to_play),
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.Medium,
-                        )
-                    }
-                }
+                        .padding(vertical = 8.dp)
+                        .height(52.dp),
+                    text = { Text(if (isLoggedIn) stringResource(R.string.play) else stringResource(R.string.sign_in_to_play)) },
+                )
             }
         }
     }
@@ -515,7 +485,7 @@ private fun SimilarGamesSection(
             text = stringResource(R.string.similar_games),
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            color = TextPrimary,
+            color = MaterialTheme.colorScheme.onSurface,
         )
 
         LazyRow(
@@ -524,7 +494,7 @@ private fun SimilarGamesSection(
             items(games) { game ->
                 SimilarGameItem(
                     game = game,
-                    onClick = { onGameClick(game.id) },
+                    onClick = { onGameClick(game.id.toString()) },
                 )
             }
         }
@@ -540,10 +510,10 @@ private fun SimilarGameItem(
         modifier = Modifier
             .width(150.dp)
             .clip(RoundedCornerShape(18.dp))
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.surface)
             .border(
                 width = 1.dp,
-                color = BorderGray.copy(alpha = 0.6f),
+                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f),
                 shape = RoundedCornerShape(18.dp),
             )
             .clickable(onClick = onClick)
@@ -566,7 +536,7 @@ private fun SimilarGameItem(
             text = game.title,
             fontSize = 14.sp,
             fontWeight = FontWeight.SemiBold,
-            color = TextPrimary,
+            color = MaterialTheme.colorScheme.onSurface,
             maxLines = 1,
         )
 
@@ -575,7 +545,7 @@ private fun SimilarGameItem(
         Text(
             text = game.category,
             fontSize = 12.sp,
-            color = TextSecondary,
+            color =  MaterialTheme.colorScheme.onSurfaceVariant,
             maxLines = 1,
         )
     }

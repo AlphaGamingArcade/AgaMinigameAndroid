@@ -237,6 +237,8 @@ private fun SignUpScreen(
             },
         )
 
+        Spacer(modifier = Modifier.height(8.dp))
+
         // Password Field
         JetpackPasswordField(
             value = screenData.password.value,
@@ -252,12 +254,14 @@ private fun SignUpScreen(
             modifier = Modifier.fillMaxWidth(),
         )
 
+        Spacer(modifier = Modifier.height(8.dp))
+
         // Confirm Password Field
         JetpackPasswordField(
             value = screenData.confirmPassword.value,
             errorMessage = screenData.confirmPassword.errorMessage,
             onValueChange = onConfirmPasswordChange,
-            label = { Text("Confirm Password") },
+            label = { Text(stringResource(R.string.confirm_password)) },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Password,
@@ -267,7 +271,7 @@ private fun SignUpScreen(
             modifier = Modifier.fillMaxWidth(),
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         // Sign Up Button
         JetpackButton(

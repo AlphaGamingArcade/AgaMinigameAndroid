@@ -37,5 +37,4 @@
     <style name="Theme.OptOutEdgeToEdgeEnforcement" parent="Theme.AppCompat">
         <item name="android:windowOptOutEdgeToEdgeEnforcement" tools:targetApi="35">true</item>
     </style>
-
 </resources>

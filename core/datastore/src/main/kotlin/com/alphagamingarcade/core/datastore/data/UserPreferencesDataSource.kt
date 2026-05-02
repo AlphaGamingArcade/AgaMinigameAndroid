@@ -28,8 +28,6 @@ interface UserPreferencesDataSource {
     suspend fun getMemberIdOrThrow(): Int
 
     suspend fun setUserProfile(userDataPreferences: UserDataPreferences)
-
-
     suspend fun setUserMember(memberPreferences: MemberPreferences)
 
     suspend fun setUserMemberGameMoney(amount: Double)

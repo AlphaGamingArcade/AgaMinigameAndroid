@@ -39,8 +39,8 @@ import androidx.compose.ui.unit.dp
 val LightDefaultColorScheme = lightColorScheme(
     primary = Color(0xFF061C20),
     onPrimary = Color(0xFFE0F7FA),
-    primaryContainer = Purple90,
-    onPrimaryContainer = Purple10,
+    primaryContainer = Color(0xFFD3EA29),
+    onPrimaryContainer = Color(0xFF061C20),
     secondary = Orange40,
     onSecondary = Color.White,
     secondaryContainer = Orange90,
@@ -70,10 +70,10 @@ val LightDefaultColorScheme = lightColorScheme(
  */
 @VisibleForTesting
 val DarkDefaultColorScheme = darkColorScheme(
-    primary = Color(0xFFD3EA29) ,
-    onPrimary = Color(0xFF061C20),
-    primaryContainer = Purple30,
-    onPrimaryContainer = Purple90,
+    primary = Color(0xFF0F8CA0),
+    onPrimary = Color(0xFFE0F7FA),
+    primaryContainer = Color(0xFFD3EA29),
+    onPrimaryContainer = Color(0xFF061C20),
     secondary = Orange80,
     onSecondary = Orange20,
     secondaryContainer = Orange30,
@@ -122,9 +122,14 @@ fun JetpackTheme(
     }
     // Gradient colors
     val emptyGradientColors = GradientColors(container = colorScheme.surfaceColorAtElevation(2.dp))
+//    val defaultGradientColors = GradientColors(
+//        top = colorScheme.inverseOnSurface,
+//        bottom = colorScheme.primaryContainer,
+//        container = colorScheme.surface,
+//    )
     val defaultGradientColors = GradientColors(
-        top = colorScheme.inverseOnSurface,
-        bottom = colorScheme.primaryContainer,
+        top = colorScheme.surface,
+        bottom = colorScheme.surface,
         container = colorScheme.surface,
     )
     val gradientColors = when {

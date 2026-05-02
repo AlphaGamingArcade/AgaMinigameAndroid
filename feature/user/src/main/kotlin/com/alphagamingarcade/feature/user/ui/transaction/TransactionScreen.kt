@@ -232,7 +232,7 @@ private fun EmptyTransactionsContent() {
             Icon(
                 imageVector = Icons.Default.AccountBalanceWallet,
                 contentDescription = "No Transactions",
-                tint = TextPrimary,
+                tint = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.size(36.dp),
             )
 
@@ -242,7 +242,7 @@ private fun EmptyTransactionsContent() {
                 text = stringResource(R.string.no_recharge_transactions),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = TextPrimary,
+                color = MaterialTheme.colorScheme.onSurface,
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -250,7 +250,7 @@ private fun EmptyTransactionsContent() {
             Text(
                 text = stringResource(R.string.no_recharge_transactions_sub_title),
                 fontSize = 14.sp,
-                color = TextSecondary,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
             )
         }
     }

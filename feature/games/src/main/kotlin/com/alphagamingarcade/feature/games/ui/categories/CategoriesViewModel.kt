@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CategoriesViewModel @Inject constructor(
-    private  val gamesRepository: GamesRepository
+    private val gamesRepository: GamesRepository
 ) : ViewModel() {
 
     private val _isRefreshing = MutableStateFlow(false)
@@ -26,56 +26,66 @@ class CategoriesViewModel @Inject constructor(
 
     private var categoryName: String? = null
 
-    private val _uiState = MutableStateFlow(UiState(CategoriesScreenData()))
-    val uiState = _uiState.stateInDelayed(UiState(CategoriesScreenData()), viewModelScope)
+    private val initialState = UiState(
+        data = CategoriesScreenData(),
+        loading = true
+    )
+
+    private val _uiState = MutableStateFlow(initialState)
+
+    val uiState = _uiState.stateInDelayed(
+        initialValue = initialState,
+        scope = viewModelScope
+    )
 
     fun initialize(category: String) {
-        if (categoryName != null) return // prevent re-fetch on recomposition
+        if (categoryName == category) return
+
         categoryName = category
-        fetchGames()
+        fetchGames(showFullScreenLoading = true)
     }
 
-    fun refresh(){
+    fun refresh() {
+        fetchGames(showFullScreenLoading = false)
+    }
+
+    private fun fetchGames(showFullScreenLoading: Boolean) {
         viewModelScope.launch {
-            _isRefreshing.value = true
+            if (showFullScreenLoading) {
+                _uiState.value = _uiState.value.copy(
+                    loading = true,
+                    error = OneTimeEvent(null)
+                )
+            } else {
+                _isRefreshing.value = true
+            }
+
             try {
-                fetchGames()
+                gamesRepository.getGames(
+                    pageNumber = 1,
+                    pageSize = 50,
+                    category = categoryName
+                )
+                    .catch { e ->
+                        _uiState.value = _uiState.value.copy(
+                            loading = false,
+                            error = OneTimeEvent(e)
+                        )
+                    }
+                    .collect { games ->
+                        _uiState.value = UiState(
+                            data = CategoriesScreenData(games = games),
+                            loading = false
+                        )
+                    }
             } finally {
                 _isRefreshing.value = false
             }
-        }
-    }
-
-    private fun fetchGames() {
-        viewModelScope.launch {
-            gamesRepository.getGames(
-                pageNumber = 1,
-                pageSize = 50,
-                category = categoryName
-            )
-                .catch { e ->
-                    _uiState.value = UiState(
-                        data = CategoriesScreenData(
-                            games = emptyList(),
-                            isLoading = false,
-                        ),
-                        error = OneTimeEvent(e)
-                    )
-                }
-                .collect { games ->
-                    _uiState.value = UiState(
-                        CategoriesScreenData(
-                            games = games,
-                            isLoading = false,
-                        ),
-                    )
-                }
         }
     }
 }
 
 @Immutable
 data class CategoriesScreenData(
-    val games: List<Game> = emptyList(),
-    val isLoading: Boolean = true, // ← add this
+    val games: List<Game> = emptyList()
 )

@@ -1,0 +1,16 @@
+package com.alphagamingarcade.core.common.result
+
+data class FieldError(
+    val type: String,
+    val message: String,
+    val field: String? = null,
+)
+
+sealed class AppResult<out T> {
+    data class Success<T>(val data: T) : AppResult<T>()
+
+    data class Error(
+        val message: String,
+        val errors: List<FieldError>? = null
+    ) : AppResult<Nothing>()
+}

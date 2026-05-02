@@ -1,5 +1,6 @@
 package com.alphagamingarcade.core.data.repository
 
+import com.alphagamingarcade.core.common.result.AppResult
 import com.alphagamingarcade.core.network.model.NetworkPlay
 import com.alphagamingarcade.model.data.Game
 import com.alphagamingarcade.model.data.Play
@@ -9,11 +10,11 @@ interface MembersRepository {
         account: String,
         nickname: String,
         dateOfBirth: String,
-    ): Result<Unit>
+    ): AppResult<Unit>
 
     suspend fun updateMember(
         nickname: String
-    ): Result<Unit>
+    ): AppResult<Unit>
 
     suspend fun getMemberFavorites(
         memberId: Int,
