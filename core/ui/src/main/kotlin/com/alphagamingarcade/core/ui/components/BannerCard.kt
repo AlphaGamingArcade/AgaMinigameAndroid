@@ -11,12 +11,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import coil.compose.AsyncImage
+import com.alphagamingarcade.core.data.model.Language
 import com.alphagamingarcade.core.ui.utils.PreviewDevices
 import com.alphagamingarcade.core.ui.utils.PreviewThemes
 import com.alphagamingarcade.model.data.Banner
+import com.alphagamingarcade.model.data.get
 
 @Composable
-fun BannerCard(banner: Banner) {
+fun BannerCard(language: Language,banner: Banner) {
     Card(
         modifier = Modifier.fillMaxSize(),
         shape = RectangleShape
@@ -25,7 +27,7 @@ fun BannerCard(banner: Banner) {
             // Image layer
             AsyncImage(
                 model = banner.imageUrl,
-                contentDescription = banner.description,
+                contentDescription = banner.description.get(language.code),
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )

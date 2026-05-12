@@ -1,6 +1,8 @@
 package com.alphagamingarcade.feature.play.ui
 
+import android.app.Activity
 import android.graphics.Bitmap
+import android.view.ViewGroup
 import android.webkit.JavascriptInterface
 import android.webkit.WebSettings
 import android.webkit.WebView
@@ -33,6 +35,21 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.res.stringResource
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.material.icons.filled.Fullscreen
+import androidx.compose.material.icons.filled.FullscreenExit
+import androidx.compose.material3.SmallFloatingActionButton
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.feature.play.R
 
@@ -57,73 +74,146 @@ private fun PlayScreen(
     playUrl: String,
     gameName: String
 ) {
+    val context = LocalContext.current
+    val activity = context as? Activity
+
     var isLoading by remember { mutableStateOf(true) }
     var showExitDialog by remember { mutableStateOf(false) }
+    var isFullScreen by remember { mutableStateOf(false) }
 
-    // Handle the back button action with confirmation
-    val handleBackClick = {
-        showExitDialog = true
+    fun dispatchResize(webView: WebView) {
+        webView.evaluateJavascript(
+            "window.dispatchEvent(new Event('resize'));",
+            null
+        )
     }
 
-    // Confirm exit and call the actual back action
+    LaunchedEffect(isFullScreen) {
+        activity?.window?.let { window ->
+            val controller = WindowInsetsControllerCompat(window, window.decorView)
+
+            if (isFullScreen) {
+                WindowCompat.setDecorFitsSystemWindows(window, false)
+                controller.hide(WindowInsetsCompat.Type.systemBars())
+                controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            } else {
+                controller.show(WindowInsetsCompat.Type.systemBars())
+                WindowCompat.setDecorFitsSystemWindows(window, true)
+            }
+        }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            activity?.window?.let { window ->
+                WindowInsetsControllerCompat(window, window.decorView)
+                    .show(WindowInsetsCompat.Type.systemBars())
+
+                WindowCompat.setDecorFitsSystemWindows(window, true)
+            }
+        }
+    }
+
+    val handleBackClick = {
+        if (isFullScreen) {
+            isFullScreen = false
+        } else {
+            showExitDialog = true
+        }
+    }
+
     val confirmExit = {
         showExitDialog = false
         onBackClick.invoke()
     }
 
-    // Intercept all back navigation (hardware button, swipe, system back)
     BackHandler {
         handleBackClick()
     }
 
     Scaffold(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black),
+        containerColor = Color.Black,
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
-            TopAppBar(
-                navigationIcon = {
-                    IconButton(onClick = handleBackClick) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
-                            tint = MaterialTheme.colorScheme.onSurface
+            if (!isFullScreen) {
+                TopAppBar(
+                    navigationIcon = {
+                        IconButton(onClick = handleBackClick) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Back"
+                            )
+                        }
+                    },
+                    title = {
+                        Text(
+                            text = gameName,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp
                         )
-                    }
-                },
-                title = {
-                    Text(
-                        text = gameName,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp,
-                        color = MaterialTheme.colorScheme.onSurface,
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surface
                     )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
-                ),
-            )
+                )
+            }
         }
     ) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding) // ← WebView is bounded below the TopAppBar
+                .background(Color.Black)
+                .then(
+                    if (isFullScreen) {
+                        Modifier
+                    } else {
+                        Modifier.padding(innerPadding)
+                    }
+                )
         ) {
             AndroidView(
                 modifier = Modifier.fillMaxSize(),
-                factory = { context ->
-                    WebView(context).apply {
+                factory = { webViewContext ->
+                    WebView(webViewContext).apply {
+                        layoutParams = ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT
+                        )
+
+                        setBackgroundColor(android.graphics.Color.BLACK)
+
                         settings.apply {
                             javaScriptEnabled = true
                             domStorageEnabled = true
                             mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+
+                            useWideViewPort = true
+                            loadWithOverviewMode = true
+                            builtInZoomControls = false
+                            displayZoomControls = false
+
+                            userAgentString = "$userAgentString AGA-Mobile-App Android"
                         }
 
                         webViewClient = object : WebViewClient() {
-                            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                            override fun onPageStarted(
+                                view: WebView?,
+                                url: String?,
+                                favicon: Bitmap?
+                            ) {
                                 isLoading = true
                             }
+
                             override fun onPageFinished(view: WebView?, url: String?) {
                                 isLoading = false
+
+                                view?.evaluateJavascript(
+                                    "window.dispatchEvent(new Event('resize'));",
+                                    null
+                                )
                             }
                         }
 
@@ -131,29 +221,65 @@ private fun PlayScreen(
                             PlayJsInterface(handleBackClick),
                             "Android"
                         )
+
                         loadUrl(playUrl)
                     }
+                },
+                update = { webView ->
+                    webView.setBackgroundColor(android.graphics.Color.BLACK)
+                    dispatchResize(webView)
                 }
             )
 
+            SmallFloatingActionButton(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(
+                        top = if (isFullScreen) {
+                            WindowInsets.statusBars.asPaddingValues()
+                                .calculateTopPadding() + 12.dp
+                        } else {
+                            12.dp
+                        },
+                        end = 12.dp
+                    ),
+                onClick = { isFullScreen = !isFullScreen },
+                containerColor = Color.Black.copy(alpha = 0.75f),
+                contentColor = Color.White
+            ) {
+                Icon(
+                    imageVector = if (isFullScreen) {
+                        Icons.Default.FullscreenExit
+                    } else {
+                        Icons.Default.Fullscreen
+                    },
+                    contentDescription = if (isFullScreen) {
+                        "Exit fullscreen"
+                    } else {
+                        "Enter fullscreen"
+                    }
+                )
+            }
+
             if (isLoading) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center)
+                )
             }
         }
     }
 
-    // Exit confirmation dialog
     if (showExitDialog) {
         AlertDialog(
             onDismissRequest = {
                 showExitDialog = false
             },
             title = { Text(stringResource(R.string.quit_game)) },
-            text = { Text(stringResource(R.string.quit_game_confirmation, gameName)) },
+            text = {
+                Text(stringResource(R.string.quit_game_confirmation, gameName))
+            },
             confirmButton = {
-                TextButton(
-                    onClick = confirmExit
-                ) {
+                TextButton(onClick = confirmExit) {
                     Text(stringResource(R.string.quit))
                 }
             },

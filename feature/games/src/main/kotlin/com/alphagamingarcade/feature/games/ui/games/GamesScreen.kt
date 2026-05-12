@@ -134,6 +134,7 @@ private fun GamesScreen(
                 // ── Hero Banner ──────────────────────────────────────────────────
                 item {
                     HeroBannerCarousel(
+                        language = language,
                         banners = data.bannerGames,
                         onGameClick = onGameClick,
                         onExternalLinkClick = { externalUrl -> uriHandler.openUri(externalUrl)}
@@ -224,6 +225,7 @@ private fun GamesScreen(
 
 @Composable
 private fun HeroBannerCarousel(
+    language: Language,
     banners: List<Banner>,
     onGameClick: (String) -> Unit,
     onExternalLinkClick: (String) -> Unit
@@ -252,7 +254,7 @@ private fun HeroBannerCarousel(
             ) {
                 AsyncImage(
                     model = banner.imageUrl,
-                    contentDescription = banner.description,
+                    contentDescription = banner.description.get(language.code),
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize(),
                 )
@@ -273,7 +275,7 @@ private fun HeroBannerCarousel(
                         .padding(16.dp),
                 ) {
                     Text(
-                        text = banner.title,
+                        text = banner.title.get(language.code),
                         color = Color.White,
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp,

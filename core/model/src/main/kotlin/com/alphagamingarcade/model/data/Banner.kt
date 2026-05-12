@@ -2,9 +2,9 @@ package com.alphagamingarcade.model.data
 
 data class Banner(
     val id: Int,
-    val title: String,
+    val title: LocalizedText,
     val imageUrl: String,
-    val description: String,
+    val description: LocalizedText,
     val actionType: String,
     val actionValue: String,
     val order: Int,

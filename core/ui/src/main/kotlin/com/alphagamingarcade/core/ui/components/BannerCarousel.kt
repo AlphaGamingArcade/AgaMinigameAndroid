@@ -20,11 +20,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import com.alphagamingarcade.core.data.model.Language
 import com.alphagamingarcade.model.data.Banner
 import kotlinx.coroutines.delay
 
 @Composable
-fun BannerCarousel(banners: List<Banner>) {
+fun BannerCarousel(language: Language, banners: List<Banner>) {
     // Create a very large page count for "infinite" scrolling
     val infinitePageCount = Int.MAX_VALUE
     val actualPageCount = banners.size
@@ -56,7 +57,7 @@ fun BannerCarousel(banners: List<Banner>) {
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                BannerCard(banner = banners[actualPage])
+                BannerCard(language = language, banner = banners[actualPage])
             }
         }
 

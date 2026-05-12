@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.alphagamingarcade.core.data.model.Language
 import com.alphagamingarcade.core.data.repository.BannersRepository
 import com.alphagamingarcade.core.data.repository.GamesRepository
-import com.alphagamingarcade.core.data.repository.ProfileRepository
 import com.alphagamingarcade.core.extensions.stateInDelayed
 import com.alphagamingarcade.core.ui.utils.UiState
 import com.alphagamingarcade.core.ui.utils.getPreferredLocale

@@ -1,14 +1,18 @@
 package com.alphagamingarcade.core.network.model
 
 import com.alphagamingarcade.model.data.Banner
+import com.alphagamingarcade.model.data.LocalizedText
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlin.String
 
 @Serializable
 data class NetworkBanner(
     val id: Int,
-    val title: String,
-    val description: String,
+    @SerialName("titleMultiLanguage")
+    val title: NetworkLocalizedText,
+    @SerialName("descriptionMultiLanguage")
+    val description: NetworkLocalizedText,
     val image: String,
     val actionType: String,
     val actionValue: String,
@@ -22,9 +26,19 @@ data class NetworkBanner(
 
 fun NetworkBanner.toExternalModel() = Banner(
     id = id,
-    title = title,
+    title = LocalizedText(
+        en = title.get("en"),
+        ko = title.get("ko"),
+        zh = title.get("cn"),
+        ja = title.get("ja")
+    ),
     imageUrl = image,
-    description = description,
+    description = LocalizedText(
+        en = description.get("en"),
+        ko = description.get("ko"),
+        zh = description.get("cn"),
+        ja = description.get("ja")
+    ),
     actionType = actionType,
     actionValue = actionValue,
     order = order,
