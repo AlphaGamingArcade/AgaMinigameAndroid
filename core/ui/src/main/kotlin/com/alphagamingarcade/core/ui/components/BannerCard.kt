@@ -46,18 +46,3 @@ fun BannerCard(banner: Banner) {
         }
     }
 }
-
-@PreviewThemes
-@PreviewDevices
-@Composable
-private fun BannerCardPreview(){
-    BannerCard(
-        banner = Banner(
-            id = 1,
-            title = "Banner",
-            imageUrl = "Image url",
-            description = "Description",
-            isNew = true
-        )
-    )
-}

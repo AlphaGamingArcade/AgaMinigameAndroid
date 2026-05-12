@@ -38,4 +38,5 @@
     <string name="no_games_yet">暂无游戏</string>
     <string name="no_games_yet_sub_title">稍后再来看看！</string>
     <string name="plays">游玩次数</string>
+    <string name="tap_to_play">点击开始游戏</string>
 </resources>

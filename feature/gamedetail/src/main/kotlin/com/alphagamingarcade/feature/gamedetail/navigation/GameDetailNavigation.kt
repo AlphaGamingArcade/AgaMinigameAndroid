@@ -1,5 +1,6 @@
 package com.alphagamingarcade.feature.gamedetail.navigation
 
+import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -33,10 +34,21 @@ fun NavGraphBuilder.gameDetailScreen(
     onBackClick: () -> Unit,
     onSignInClick: () -> Unit,
     onNavigateToPlay: (String, String) -> Unit,
+    onSimilarGameClick: (String) -> Unit,
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
 ) {
-    composable<GameDetail> {
+    composable<GameDetail> { backStackEntry ->
+        val refreshMember = backStackEntry
+            .savedStateHandle
+            .getStateFlow("refresh_member", false)
+            .collectAsState()
+
         GameDetailScreen(
+            refreshMember = refreshMember.value,
+            onRefreshMemberHandled = {
+                backStackEntry.savedStateHandle["refresh_member"] = false
+            },
+            onSimilarGameClick = onSimilarGameClick,
             isLoggedIn = isLoggedIn,
             onBackClick = onBackClick,
             onSignInClick = onSignInClick,

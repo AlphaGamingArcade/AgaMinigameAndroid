@@ -29,12 +29,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.alphagamingarcade.core.data.model.Language
 import com.alphagamingarcade.core.ui.utils.formatPlayerCount
 import com.alphagamingarcade.model.data.Game
+import com.alphagamingarcade.model.data.get
 
 
 @Composable
-public fun FeaturedGameCard(game: Game, onClick: () -> Unit) {
+fun FeaturedGameCard(language: Language, game: Game, onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .width(220.dp)
@@ -44,7 +46,7 @@ public fun FeaturedGameCard(game: Game, onClick: () -> Unit) {
     ) {
         AsyncImage(
             model = game.imageUrl,
-            contentDescription = game.name,
+            contentDescription = game.name.get(language.code),
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize(),
         )
@@ -69,7 +71,7 @@ public fun FeaturedGameCard(game: Game, onClick: () -> Unit) {
             }
             Spacer(modifier = Modifier.height(2.dp))
             Text(
-                text = game.name,
+                text = game.name.get(language.code),
                 color = Color.White,
                 fontWeight = FontWeight.Bold,
                 fontSize = 14.sp,

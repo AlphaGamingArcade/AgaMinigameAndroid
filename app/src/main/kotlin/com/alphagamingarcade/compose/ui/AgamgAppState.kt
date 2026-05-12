@@ -162,7 +162,7 @@ class AgamgAppState(
 
         when (topLevelDestination) {
             TopLevelDestination.GAMES -> navController.navigateToGamesScreen(topLevelNavOptions)
-            TopLevelDestination.BROWSE -> navController.navigateToBrowseScreen(topLevelNavOptions)
+            TopLevelDestination.BROWSE -> navController.navigateToBrowseScreen(filter = "All", topLevelNavOptions)
             TopLevelDestination.FAVORITE -> navController.navigateToFavoriteScreen(topLevelNavOptions)
             TopLevelDestination.USER ->  navController.navigateToUserScreen(topLevelNavOptions)
         }

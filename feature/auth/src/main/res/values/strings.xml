@@ -16,47 +16,82 @@
 -->
 
 <resources>
-    <string name="email_verified">Email Verified</string>
-    <string name="email_verified_description">Your email has been successfully verified. You can now sign in to your account.</string>
-    <string name="continue_to_sign_in">Continue to Sign In</string>
-    <string name="password">Password</string>
-    <string name="show_password">Show password</string>
-    <string name="hide_password">Hide password</string>
     <string name="sign_in">Sign In</string>
-    <string name="do_not_have_an_account">"Do not have an account? "</string>
     <string name="sign_up">Sign Up</string>
     <string name="email">Email</string>
-    <string name="name">Full Name</string>
-    <string name="sign_up_with_google">Sign Up with Google</string>
-    <string name="already_have_an_account">Already have an account?</string>
-    <string name="login">Login</string>
-    <string name="or">or</string>
-    <string name="password_spec">Password should contain: uppercase letters (A-Z), lowercase letters (a-z), numbers (0-9) and special characters (#$@?)</string>
-    <string name="agree_to_terms">Before continuing, you agree to our</string>
-    <string name="privacy_policy">Privacy Policy</string>
-    <string name="feedback">Feedback</string>
-    <string name="terms_of_service">Terms of Service</string>
-    <string name="forgot_password">Forgot Password</string>
-    <string name="forgot_password_description">Enter your email and we will send you a link to reset your password.</string>
-    <string name="send_reset_link">Send Reset Link</string>
-    <string name="remember_your_password">Remember your password?</string>
-    <string name="check_your_email">Check your email</string>
-    <string name="check_your_email_description">We sent a password reset link to</string>
-    <string name="check_your_email_hint">Did not receive the email? Check your spam folder or tap below to resend.</string>
-    <string name="open_email_app">Open email app</string>
-    <string name="resend_email">Resend email</string>
-    <string name="reset_link_sent">Check Your Email</string>
-    <string name="reset_link_sent_description">We have sent a password reset link to</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="show_password">Show password</string>
+    <string name="hide_password">Hide password</string>
 
+    <string name="no_account">Don’t have an account?</string>
+    <string name="have_account">Already have an account?</string>
+
+    <string name="or">or</string>
+
+    <string name="email_required">Email is required</string>
     <string name="email_not_valid">Email not valid</string>
+    <string name="password_required">Password is required</string>
     <string name="password_not_valid">Password not valid</string>
     <string name="password_min_characters">Password must be at least 8 characters</string>
     <string name="passwords_do_not_match">Passwords do not match</string>
-    <string name="confirm_password">Confirm Password</string>
-    <string name="setup_profile_title">Tell us a bit about yourself to get started.</string>
+    <string name="confirm_password_required">Please confirm your password</string>
+
+    <string name="password_spec">Password must include uppercase, lowercase, number, and special character (#$@?)</string>
+
+
+    <string name="forgot_password">Forgot Password</string>
+    <string name="forgot_password_description">Enter your email and we will send a reset link.</string>
+    <string name="send_reset_link">Send Reset Link</string>
+    <string name="remember_password">Remember your password?</string>
+
+
+    <string name="check_email">Check your email</string>
+    <string name="check_email_description">We sent a reset link to</string>
+    <string name="check_email_hint">Didn’t receive it? Check spam or resend.</string>
+    <string name="open_email_app">Open email app</string>
+    <string name="resend_email">Resend email</string>
+
+    <string name="check_your_email">Check your email</string>
+    <string name="check_your_email_description">We sent a verification link to</string>
+    <string name="check_your_email_hint">Didn’t receive it? Check your spam folder or resend.</string>
+    <string name="continue_to_sign_in">Continue to Sign In</string>
+    <string name="no_email_app_found">No email app found</string>
+
+
+    <string name="email_verified">Email Verified</string>
+    <string name="email_verified_description">Your email is verified. You can now sign in.</string>
+
+    <string name="setup_profile_title">Tell us about yourself</string>
     <string name="account">Account</string>
     <string name="nickname">Nickname</string>
     <string name="date_of_birth">Date of Birth</string>
     <string name="continue_btn">Continue</string>
+
     <string name="resend_in">Resend in</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="terms_of_service">Terms of Service</string>
+    <string name="feedback">Feedback</string>
+
+    <string name="remember_your_password">Remember your password?</string>
+
+    <string name="reset_link_sent">Reset link sent</string>
+    <string name="reset_link_sent_description">We’ve sent a password reset link to your email.</string>
+
+    <string name="account_length_error">Account must be between 4 and 16 characters</string>
+    <string name="account_format_error">Account must contain both letters and numbers</string>
+
+    <string name="nickname_required">Nickname is required</string>
+    <string name="nickname_length_error">Nickname must be between 4 and 64 characters</string>
+    <string name="nickname_invalid">Invalid characters in nickname</string>
+
+    <string name="dob_required">Date of birth is required</string>
+    <string name="dob_future_error">Date of birth cannot be in the future</string>
+    <string name="invalid_date">Invalid date</string>
+
+    <string name="age_requirement_error">You must be 18 years or older</string>
+
+    <string name="do_not_have_an_account">Do not have an account?</string>
+    <string name="agree_to_terms">Agree to terms and conditions</string>
+    <string name="already_have_an_account">Already have an account</string>
 </resources>

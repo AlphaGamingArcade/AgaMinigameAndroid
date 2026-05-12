@@ -14,7 +14,6 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-
 <resources>
     <string name="member">メンバー</string>
     <string name="online">オンライン</string>
@@ -25,48 +24,57 @@
 
     <string name="account">アカウント</string>
     <string name="edit_profile">プロフィール編集</string>
-    <string name="edit_profile_sub_title">個人情報を更新</string>
+    <string name="edit_profile_sub_title">個人情報を更新する</string>
 
     <string name="change_password">パスワード変更</string>
     <string name="change_password_sub_title">セキュリティ設定を管理</string>
 
     <string name="terms_and_privacy">利用規約とプライバシー</string>
-    <string name="terms_and_privacy_sub_title">法的情報を確認</string>
+    <string name="terms_and_privacy_sub_title">法的文書を確認</string>
 
     <string name="help_an_support">ヘルプとサポート</string>
     <string name="contact_support">サポートに連絡</string>
-    <string name="contact_support_sub_title">サポートチームに問い合わせる</string>
+    <string name="contact_support_sub_title">チームからサポートを受ける</string>
 
     <string name="account_actions">アカウント操作</string>
-    <string name="sign_out">サインアウト</string>
+    <string name="sign_out">ログアウト</string>
     <string name="sign_out_sub_title">アカウントからログアウト</string>
-    <string name="sign_out_confirm">サインアウトしてもよろしいですか？</string>
+    <string name="sign_out_confirm">ログアウトしてもよろしいですか？</string>
     <string name="cancel">キャンセル</string>
 
     <string name="claimed">受取済み</string>
-    <string name="claimed_information">明日また来て、次のデイリー報酬を受け取ってください！</string>
-    <string name="claim_now">今すぐ受け取る</string>
-    <string name="claim_now_information">毎日ログインして無料コインを受け取りましょう！</string>
+    <string name="claimed_information">明日またログインして報酬を受け取ってください！</string>
+    <string name="claim_now">今すぐ受取</string>
+    <string name="claim_now_information">毎日ログインして無料コインを獲得しましょう！</string>
 
-    <string name="update_profile">プロフィールを更新</string>
-    <string name="update_profile_sub_title">個人情報を最新の状態に保ちましょう。</string>
+    <string name="update_profile">プロフィール更新</string>
+    <string name="update_profile_sub_title">個人情報を最新の状態に保つ</string>
     <string name="nickname">ニックネーム</string>
     <string name="save_changes">変更を保存</string>
 
-    <string name="update_password">パスワードを更新</string>
-    <string name="update_password_sub_title">アカウントを保護するために強力なパスワードを設定してください</string>
+    <string name="update_password">パスワード更新</string>
+    <string name="update_password_sub_title">強力なパスワードでアカウントを保護</string>
     <string name="current_password">現在のパスワード</string>
     <string name="new_password">新しいパスワード</string>
-    <string name="confirm_new_password">新しいパスワード（確認）</string>
-    <string name="password_change_success">パスワードが正常に変更されました。続行するには再度ログインしてください。</string>
+    <string name="confirm_new_password">新しいパスワード確認</string>
+    <string name="password_change_success">パスワードが変更されました。再ログインしてください。</string>
 
     <string name="your_recharge_transactions">チャージ履歴</string>
-    <string name="your_recharge_transactions_sub_title">最近のチャージと支払い状況を確認できます。</string>
-    <string name="no_recharge_transactions">チャージ履歴はまだありません</string>
-    <string name="no_recharge_transactions_sub_title">完了済みまたは処理中のチャージ履歴がここに表示されます。</string>
+    <string name="your_recharge_transactions_sub_title">最近の入金履歴を確認</string>
+    <string name="no_recharge_transactions">チャージ履歴がありません</string>
+    <string name="no_recharge_transactions_sub_title">完了または保留中の履歴が表示されます</string>
     <string name="reference_number">参照番号</string>
     <string name="date">日付</string>
     <string name="success">成功</string>
     <string name="failed">失敗</string>
-    <string name="pending">処理中</string>
+    <string name="pending">保留中</string>
+
+    <string name="password_required">パスワードは必須です</string>
+    <string name="password_min_characters">パスワードは8文字以上必要です</string>
+    <string name="confirm_password_required">パスワードを確認してください</string>
+    <string name="passwords_do_not_match">パスワードが一致しません</string>
+
+    <string name="nickname_required">ニックネームは必須です</string>
+    <string name="nickname_length_invalid">ニックネームは3〜64文字で入力してください</string>
+    <string name="nickname_format_invalid">ニックネームに無効な文字が含まれています</string>
 </resources>

@@ -141,7 +141,7 @@ private fun SignInScreen(
         Spacer(modifier = Modifier.height(24.dp))
         JetpackTextField(
             value = screenData.email.value,
-            errorMessage = screenData.email.errorMessage,
+            errorMessage = screenData.email.errorMessage?.asString(),
             onValueChange = onEmailChange,
             label = { Text(stringResource(R.string.email)) },
             keyboardOptions = KeyboardOptions.Default.copy(
@@ -158,7 +158,7 @@ private fun SignInScreen(
         Spacer(modifier = Modifier.height(8.dp))
         JetpackPasswordField(
             value = screenData.password.value,
-            errorMessage = screenData.password.errorMessage,
+            errorMessage = screenData.password.errorMessage?.asString(),
             onValueChange = onPasswordChange,
             label = { Text(stringResource(R.string.password)) },
             leadingIcon = {

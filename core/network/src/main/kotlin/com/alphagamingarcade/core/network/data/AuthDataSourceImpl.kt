@@ -120,12 +120,22 @@ internal class AuthDataSourceImpl @Inject constructor(
         newPassword: String,
         confirmPassword: String
     ): ApiResponseNullable<NetworkChangePasswordResponse?> {
+
         val request = NetworkChangePasswordRequest(
             currentPassword,
             newPassword,
             confirmPassword
         )
-        return authRestApi.changePassword(request)
+        return  try {
+            authRestApi.changePassword(request)
+        }  catch (e: HttpException) {
+            val errorBody = e.response()?.errorBody()?.string()
+            throw ApiException(
+                message = e.message() ?: "Unexpected error occur.",
+                statusCode = e.code(),
+                errors = parseFieldErrors(errorBody),
+            )
+        }
     }
 
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)

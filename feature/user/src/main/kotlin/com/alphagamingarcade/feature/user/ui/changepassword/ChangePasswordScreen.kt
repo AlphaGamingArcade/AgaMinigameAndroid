@@ -1,16 +1,12 @@
 package com.alphagamingarcade.feature.user.ui.changepassword
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -30,7 +26,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -160,7 +155,7 @@ private fun ChangePasswordScreen(
 
                 JetpackPasswordField(
                     value = screenData.currentPassword.value,
-                    errorMessage = screenData.currentPassword.errorMessage,
+                    errorMessage = screenData.currentPassword.errorMessage?.asString(),
                     onValueChange = onCurrentPasswordChange,
                     label = { Text(stringResource(R.string.current_password)) },
                     leadingIcon = {
@@ -174,7 +169,7 @@ private fun ChangePasswordScreen(
 
                 JetpackPasswordField(
                     value = screenData.newPassword.value,
-                    errorMessage = screenData.newPassword.errorMessage,
+                    errorMessage = screenData.newPassword.errorMessage?.asString(),
                     onValueChange = onNewPasswordChange,
                     label = { Text(stringResource(R.string.new_password)) },
                     leadingIcon = {
@@ -188,7 +183,7 @@ private fun ChangePasswordScreen(
 
                 JetpackPasswordField(
                     value = screenData.confirmPassword.value,
-                    errorMessage = screenData.confirmPassword.errorMessage,
+                    errorMessage = screenData.confirmPassword.errorMessage?.asString(),
                     onValueChange = onConfirmPasswordChange,
                     label = { Text(stringResource(R.string.confirm_new_password)) },
                     leadingIcon = {

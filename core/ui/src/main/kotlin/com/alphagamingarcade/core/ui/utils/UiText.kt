@@ -16,10 +16,13 @@
 
 package com.alphagamingarcade.core.ui.utils
 
+import com.alphagamingarcade.core.ui.R
 import android.content.Context
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import com.alphagamingarcade.core.common.result.FieldError
+import kotlin.text.lowercase
 
 // ... UiText by Phillip Lackner
 // ... https://youtu.be/mB1Lej0aDus
@@ -65,5 +68,20 @@ sealed class UiText {
             is DynamicString -> value
             is StringResource -> context.getString(resId, *args)
         }
+    }
+}
+
+
+fun FieldError.toUiText(): UiText {
+    return when (code.lowercase()) {
+        "invalid_credentials" -> UiText.StringResource(R.string.error_invalid_credentials)
+        "email_already_exists" -> UiText.StringResource(R.string.error_email_already_exists)
+        "account_already_exists" -> UiText.StringResource(R.string.error_account_already_exists)
+        "nickname_unchanged" -> UiText.StringResource(R.string.error_nickname_unchanged)
+        "nickname_cooldown" -> UiText.StringResource(R.string.error_nickname_cooldown)
+        "current_password_incorrect" -> UiText.StringResource(R.string.error_current_password_incorrect)
+        "password_unchanged" -> UiText.StringResource(R.string.error_password_unchanged)
+        "password_mismatched" -> UiText.StringResource(R.string.error_password_mismatched)
+        else -> UiText.StringResource(R.string.error_unknown)
     }
 }

@@ -14,6 +14,10 @@ import com.alphagamingarcade.core.network.model.PaginatedResponse
  * Data source interface for Jetpack.
  */
 interface MemberDataSource {
+    suspend fun getMember(
+        memberId: Int
+    ): ApiResponse<NetworkMember>
+
     suspend fun createMember(
         account: String,
         nickname: String,

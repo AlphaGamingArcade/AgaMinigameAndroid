@@ -26,28 +26,27 @@ fun String?.isPasswordValid(): Boolean {
     return matcher.matches()
 }
 
-/**
- * Checks if a given full name is valid.
- *
- * A valid full name consists of at least two parts: a first name and a last name.
- * Each part should contain only letters (assuming names don't contain special characters).
- *
- * @return `true` if the full name is valid, `false` otherwise.
- */
-fun String?.isValidFullName(): Boolean {
-    if (this == null) return false
-    // Split the full name into parts using spaces as separators
-    val parts = split(" ")
+fun String?.isNicknameValid(): Boolean {
+    return isNicknameLengthValid() && isNicknameFormatValid()
+}
 
-    // Check if there are at least two parts (first name and last name)
-    if (parts.size < 2) return false
+fun String?.isNicknameLengthValid(): Boolean {
+    return !isNullOrBlank() && length in 3..64
+}
 
-    // Check if each part contains only letters (assuming names don't contain special characters)
-    for (part in parts) {
-        if (!part.all { it.isLetter() }) {
-            return false
-        }
-    }
+fun String?.isNicknameFormatValid(): Boolean {
+    if (this.isNullOrBlank()) return false
+    val regex = Regex("^[A-Za-z0-9 _.-]+$")
+    return regex.matches(this)
+}
 
-    return true
+
+fun String?.isAccountLengthValid(): Boolean {
+    return !isNullOrEmpty() && length in 3..64
+}
+
+fun String?.isAccountFormatValid(): Boolean {
+    if (this.isNullOrEmpty()) return false
+    val regex = Regex("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]+$")
+    return regex.matches(this)
 }

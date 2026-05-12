@@ -33,4 +33,15 @@
     <string name="create_account">创建账号</string>
 
     <string name="see_more">查看更多</string>
+
+    <string name="error_invalid_credentials">凭证无效</string>
+    <string name="error_unknown">发生未知错误</string>
+    <string name="error_email_already_exists">该邮箱已被注册</string>
+
+    <string name="error_nickname_unchanged">昵称未发生更改</string>
+    <string name="error_nickname_cooldown">暂时无法更改昵称，请稍后再试</string>
+
+    <string name="error_current_password_incorrect">当前密码不正确</string>
+    <string name="error_password_unchanged">新密码必须与当前密码不同</string>
+    <string name="error_password_mismatched">密码不匹配</string>
 </resources>

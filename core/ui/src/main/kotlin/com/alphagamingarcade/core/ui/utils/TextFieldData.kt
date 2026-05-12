@@ -1,5 +1,6 @@
 package com.alphagamingarcade.core.ui.utils
 
+
 /**
  * Data class representing the state of a text field.
  *
@@ -8,5 +9,5 @@ package com.alphagamingarcade.core.ui.utils
  */
 data class TextFieldData(
     val value: String,
-    val errorMessage: String? = null,
+    val errorMessage: UiText? = null,
 )

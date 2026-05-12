@@ -368,7 +368,7 @@ private fun LanguagePickerBottomSheet(
                         Text(
                             text = stringResource(language.toStringRes()),
                             style = MaterialTheme.typography.bodyLarge,
-                            color = if (isSelected) MaterialTheme.colorScheme.primary
+                            color = if (isSelected) MaterialTheme.colorScheme.onSurface
                             else MaterialTheme.colorScheme.onSurface,
                         )
                     }
@@ -376,7 +376,7 @@ private fun LanguagePickerBottomSheet(
                         Icon(
                             imageVector = Icons.Default.Check,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
+                            tint = MaterialTheme.colorScheme.onSurface,
                             modifier = Modifier.size(20.dp),
                         )
                     }

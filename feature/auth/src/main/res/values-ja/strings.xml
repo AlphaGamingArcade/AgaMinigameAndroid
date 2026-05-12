@@ -16,49 +16,79 @@
 -->
 
 <resources>
-    <string name="email_verified">メール認証完了</string>
-    <string name="email_verified_description">メールの認証が完了しました。アカウントにサインインできます。</string>
-    <string name="continue_to_sign_in">サインインへ進む</string>
+    <string name="sign_in">ログイン</string>
+    <string name="sign_up">新規登録</string>
+    <string name="email">メールアドレス</string>
     <string name="password">パスワード</string>
+    <string name="confirm_password">パスワード確認</string>
     <string name="show_password">パスワードを表示</string>
     <string name="hide_password">パスワードを非表示</string>
-    <string name="sign_in">サインイン</string>
-    <string name="do_not_have_an_account">アカウントをお持ちでない方は</string>
-    <string name="sign_up">登録</string>
-    <string name="email">メールアドレス</string>
-    <string name="name">氏名</string>
-    <string name="sign_up_with_google">Googleで登録</string>
-    <string name="already_have_an_account">すでにアカウントをお持ちですか？</string>
-    <string name="login">ログイン</string>
-    <string name="or">または</string>
-    <string name="password_spec">パスワードは大文字・小文字・数字・特殊文字（#$@?）を含めてください</string>
-    <string name="agree_to_terms">続行することで、以下に同意したことになります</string>
-    <string name="privacy_policy">プライバシーポリシー</string>
-    <string name="feedback">フィードバック</string>
-    <string name="terms_of_service">利用規約</string>
-    <string name="forgot_password">パスワードをお忘れですか</string>
-    <string name="forgot_password_description">メールアドレスを入力すると、パスワード再設定用のリンクを送信します。</string>
-    <string name="send_reset_link">再設定リンクを送信</string>
-    <string name="remember_your_password">パスワードを思い出しましたか？</string>
-    <string name="check_your_email">メールを確認</string>
-    <string name="check_your_email_description">パスワード再設定リンクを次のアドレスに送信しました</string>
-    <string name="check_your_email_hint">メールが届かない場合は、迷惑メールフォルダをご確認いただくか、再送信してください。</string>
-    <string name="open_email_app">メールアプリを開く</string>
-    <string name="resend_email">メールを再送信</string>
-    <string name="reset_link_sent">メールを確認</string>
-    <string name="reset_link_sent_description">パスワード再設定リンクを送信しました</string>
 
-    <string name="email_not_valid">メールアドレスが正しくありません</string>
-    <string name="password_not_valid">パスワードが正しくありません</string>
+    <string name="no_account">アカウントをお持ちでないですか？</string>
+    <string name="have_account">すでにアカウントをお持ちですか？</string>
+
+    <string name="or">または</string>
+
+    <string name="email_required">メールアドレスは必須です</string>
+    <string name="email_not_valid">無効なメールアドレスです</string>
+    <string name="password_required">パスワードは必須です</string>
+    <string name="password_not_valid">無効なパスワードです</string>
     <string name="password_min_characters">パスワードは8文字以上で入力してください</string>
     <string name="passwords_do_not_match">パスワードが一致しません</string>
-    <string name="confirm_password">パスワード確認</string>
+    <string name="confirm_password_required">パスワードを確認してください</string>
 
-    <string name="setup_profile_title">始めるために、いくつか情報を教えてください。</string>
+    <string name="password_spec">パスワードは大文字・小文字・数字・記号（#$@?）を含める必要があります</string>
 
+    <string name="forgot_password">パスワードをお忘れですか</string>
+    <string name="forgot_password_description">メールアドレスを入力すると、リセットリンクを送信します。</string>
+    <string name="send_reset_link">リセットリンクを送信</string>
+    <string name="remember_password">パスワードを思い出しましたか？</string>
+
+    <string name="check_email">メールを確認してください</string>
+    <string name="check_email_description">リセットリンクを送信しました：</string>
+    <string name="check_email_hint">届いていない場合は、迷惑メールを確認するか再送信してください。</string>
+    <string name="open_email_app">メールアプリを開く</string>
+    <string name="resend_email">メールを再送信</string>
+
+    <string name="check_your_email">メールを確認してください</string>
+    <string name="check_your_email_description">確認リンクを送信しました：</string>
+    <string name="check_your_email_hint">届いていない場合は迷惑メールフォルダを確認するか再送信してください。</string>
+    <string name="continue_to_sign_in">ログインへ進む</string>
+    <string name="no_email_app_found">メールアプリが見つかりません</string>
+
+    <string name="email_verified">メール認証完了</string>
+    <string name="email_verified_description">メールが認証されました。ログインできます。</string>
+
+    <string name="setup_profile_title">プロフィールを入力してください</string>
     <string name="account">アカウント</string>
     <string name="nickname">ニックネーム</string>
     <string name="date_of_birth">生年月日</string>
-    <string name="continue_btn">続ける</string>
+    <string name="continue_btn">続行</string>
+
     <string name="resend_in">再送まで</string>
+    <string name="privacy_policy">プライバシーポリシー</string>
+    <string name="terms_of_service">利用規約</string>
+    <string name="feedback">フィードバック</string>
+
+    <string name="remember_your_password">パスワードを思い出しましたか？</string>
+
+    <string name="reset_link_sent">リセットリンクを送信しました</string>
+    <string name="reset_link_sent_description">パスワード再設定用のリンクをメールで送信しました。</string>
+
+    <string name="account_length_error">アカウントは4～16文字で入力してください</string>
+    <string name="account_format_error">アカウントは英字と数字を含める必要があります</string>
+
+    <string name="nickname_required">ニックネームは必須です</string>
+    <string name="nickname_length_error">ニックネームは4～64文字で入力してください</string>
+    <string name="nickname_invalid">ニックネームに無効な文字が含まれています</string>
+
+    <string name="dob_required">生年月日は必須です</string>
+    <string name="dob_future_error">生年月日は未来の日付にできません</string>
+    <string name="invalid_date">無効な日付です</string>
+
+    <string name="age_requirement_error">18歳以上である必要があります</string>
+
+    <string name="do_not_have_an_account">アカウントをお持ちではありませんか？</string>
+    <string name="agree_to_terms">利用規約に同意する</string>
+    <string name="already_have_an_account">すでにアカウントをお持ちです</string>
 </resources>

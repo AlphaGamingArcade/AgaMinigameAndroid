@@ -4,13 +4,17 @@ import androidx.compose.runtime.Immutable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alphagamingarcade.core.data.model.Language
 import com.alphagamingarcade.core.data.repository.GamesRepository
 import com.alphagamingarcade.core.data.repository.MembersRepository
 import com.alphagamingarcade.core.data.repository.ProfileRepository
 import com.alphagamingarcade.core.ui.utils.UiState
+import com.alphagamingarcade.core.ui.utils.getPreferredLocale
 import com.alphagamingarcade.core.utils.OneTimeEvent
+import com.alphagamingarcade.model.data.get
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -33,6 +37,10 @@ class GameDetailViewModel @Inject constructor(
     private val _navigationEvent = MutableStateFlow<OneTimeEvent<PlayScreenArgs>?>(null)
     val navigationEvent = _navigationEvent.asStateFlow()
 
+    private val _language = MutableStateFlow(getPreferredLanguage())
+    val language: StateFlow<Language> = _language.asStateFlow()
+
+
     init {
         getGameDetail()
         getSimilarGames()
@@ -52,13 +60,13 @@ class GameDetailViewModel @Inject constructor(
                             data = _gameDetailUiState.value.data.copy(
                                 game = GameDetailUiModel(
                                     id = game.id,
-                                    title = game.name,
+                                    title = game.name.get(language.value.code),
                                     category = game.category,
                                     playerCountLabel = game.playerCount.toString(),
                                     bannerUrl = game.imageUrl,
                                     iconUrl = game.imageUrl,
                                     screenshotUrls = emptyList(),
-                                    description = game.name,
+                                    description = game.description.get(language.value.code),
                                     isFavorite = game.isFavorite ?: false,
                                 ),
                             ),
@@ -95,7 +103,7 @@ class GameDetailViewModel @Inject constructor(
                                 similarGames = games.map { game ->
                                     SimilarGameUiModel(
                                         id = game.id,
-                                        title = game.name,
+                                        title = game.name.get(language.value.code),
                                         category = game.category,
                                         thumbnailUrl = game.imageUrl,
                                     )
@@ -173,10 +181,6 @@ class GameDetailViewModel @Inject constructor(
         )
     }
 
-    fun openSimilarGame(gameId: String) {
-        // optional hook if you want analytics or preload later
-    }
-
     fun play() {
         viewModelScope.launch {
             try {
@@ -207,6 +211,39 @@ class GameDetailViewModel @Inject constructor(
                     error = OneTimeEvent(e),
                 )
             }
+        }
+    }
+
+    fun refreshMemberOnFocus() {
+        viewModelScope.launch {
+            try {
+                val resolvedMemberId = profileRepository
+                    .getProfileMember()
+                    .map { it.memberId }
+                    .first()
+
+                membersRepository.getMember(resolvedMemberId)
+                    .onFailure { e ->
+                        _gameDetailUiState.value = _gameDetailUiState.value.copy(
+                            error = OneTimeEvent(e)
+                        )
+                    }
+
+            } catch (e: Exception) {
+                _gameDetailUiState.value = _gameDetailUiState.value.copy(
+                    error = OneTimeEvent(e)
+                )
+            }
+        }
+    }
+
+    private fun getPreferredLanguage(): Language {
+        val preferredLanguage = getPreferredLocale().language
+        return when (preferredLanguage) {
+            "ko" -> Language.KOREAN
+            "zh" -> Language.CHINESE
+            "ja" -> Language.JAPANESE
+            else -> Language.ENGLISH
         }
     }
 }

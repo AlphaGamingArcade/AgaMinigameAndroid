@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<resources>
+    <string name="quit_game">ゲームを終了</string>
+    <string name="quit_game_confirmation">%1$s を終了してもよろしいですか？</string>
+    <string name="quit">終了</string>
+    <string name="cancel">キャンセル</string>
+</resources>

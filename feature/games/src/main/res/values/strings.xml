@@ -38,4 +38,6 @@
     <string name="no_games_yet">No games yet</string>
     <string name="no_games_yet_sub_title">Check back later!</string>
     <string name="plays">plays</string>
+
+    <string name="tap_to_play">Tap to play</string>
 </resources>

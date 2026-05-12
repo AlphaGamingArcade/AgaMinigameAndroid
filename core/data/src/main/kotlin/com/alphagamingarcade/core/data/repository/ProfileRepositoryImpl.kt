@@ -1,5 +1,7 @@
 package com.alphagamingarcade.core.data.repository
 
+import com.alphagamingarcade.core.common.result.AppResult
+import com.alphagamingarcade.core.common.utils.suspendRunAppResultCatching
 import com.alphagamingarcade.core.data.model.Member
 import com.alphagamingarcade.core.data.model.Profile
 import com.alphagamingarcade.core.data.model.toMember
@@ -73,8 +75,8 @@ internal class ProfileRepositoryImpl @Inject constructor(
         currentPassword: String,
         newPassword: String,
         confirmPassword: String
-    ): Result<Unit> {
-        return  suspendRunCatching {
+    ): AppResult<Unit> {
+        return suspendRunAppResultCatching {
             authDataSource.changePassword(
                 currentPassword,
                 newPassword,

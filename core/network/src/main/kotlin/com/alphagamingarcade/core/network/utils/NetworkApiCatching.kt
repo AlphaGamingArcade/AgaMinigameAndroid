@@ -26,6 +26,7 @@ suspend fun <T> networkApiCatching(
                     FieldError(
                         type = error.type,
                         message = error.message,
+                        code = error.code,
                         field = error.field
                     )
                 }.orEmpty()
@@ -53,6 +54,7 @@ suspend fun <T> networkApiCatching(
                 FieldError(
                     type = error.type,
                     message = error.message,
+                    code = error.code,
                     field = error.field
                 )
             }.orEmpty()

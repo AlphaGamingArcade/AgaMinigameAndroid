@@ -6,8 +6,11 @@ import com.alphagamingarcade.core.common.result.AppResult
 import com.alphagamingarcade.core.data.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import com.alphagamingarcade.core.extensions.isEmailValid
+import com.alphagamingarcade.core.extensions.isPasswordValid
 import com.alphagamingarcade.core.ui.utils.TextFieldData
 import com.alphagamingarcade.core.ui.utils.UiState
+import com.alphagamingarcade.core.ui.utils.UiText
+import com.alphagamingarcade.core.ui.utils.toUiText
 import com.alphagamingarcade.core.ui.utils.updateState
 import com.alphagamingarcade.core.ui.utils.updateWithAppResult
 import com.alphagamingarcade.feature.auth.ui.signin.SignInEvent
@@ -16,6 +19,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import javax.inject.Inject
+import com.alphagamingarcade.feature.auth.R
 
 
 @HiltViewModel
@@ -32,23 +36,27 @@ class SignUpViewModel @Inject constructor(
     fun updateEmail(email: String) {
         _signUpUiState.updateState {
             copy(
-                email = TextFieldData(
+                email = this.email.copy(
                     value = email,
-                    errorMessage = if (email.isEmailValid()) null else "Email Not Valid",
+                    errorMessage = when {
+                        email.isBlank() -> null
+                        !email.isEmailValid() -> UiText.StringResource(R.string.email_not_valid)
+                        else -> null
+                    },
                 )
             )
         }
     }
-
     fun updatePassword(password: String) {
         _signUpUiState.updateState {
             copy(
-                password = TextFieldData(
+                password = this.password.copy(
                     value = password,
                     errorMessage = when {
-                        password.length < 8 -> "Password must be at least 8 characters"
+                        password.isBlank() -> null
+                        !password.isPasswordValid() -> UiText.StringResource(R.string.password_not_valid)
                         else -> null
-                    }
+                    },
                 )
             )
         }
@@ -57,17 +65,24 @@ class SignUpViewModel @Inject constructor(
     fun updateConfirmPassword(confirmPassword: String) {
         _signUpUiState.updateState {
             val currentPassword = signUpUiState.value.data.password.value
+
             copy(
-                confirmPassword = TextFieldData(
+                confirmPassword = this.confirmPassword.copy(
                     value = confirmPassword,
-                    errorMessage = if (confirmPassword == currentPassword) null
-                    else "Passwords do not match"
+                    errorMessage = when {
+                        confirmPassword.isBlank() -> null
+                        confirmPassword != currentPassword ->
+                            UiText.StringResource(R.string.passwords_do_not_match)
+                        else -> null
+                    },
                 )
             )
         }
     }
 
     fun registerWithEmailAndPassword() {
+        if (!validate()) return
+
         _signUpUiState.updateWithAppResult {
             val result = authRepository.registerWithEmailAndPassword(
                 email = email.value,
@@ -96,27 +111,28 @@ class SignUpViewModel @Inject constructor(
                 is AppResult.Error -> {
                     val emailError = result.errors
                         ?.firstOrNull { it.field.equals("Email", ignoreCase = true) }
-                        ?.message
+                        ?.toUiText()
 
                     val passwordError = result.errors
                         ?.firstOrNull { it.field.equals("Password", ignoreCase = true) }
-                        ?.message
+                        ?.toUiText()
 
                     val confirmPasswordError = result.errors
-                        ?.firstOrNull { it.field.equals("ConfirmPassword", ignoreCase = true) }
-                        ?.message
+                        ?.firstOrNull {
+                            it.field.equals("ConfirmPassword", ignoreCase = true) ||
+                                    it.field.equals("confirmPassword", ignoreCase = true) ||
+                                    it.field.equals("confirm_password", ignoreCase = true)
+                        }
+                        ?.toUiText()
 
                     _signUpUiState.updateState {
                         copy(
-                            email = TextFieldData(
-                                value = email.value,
-                                errorMessage = emailError,
-                            ),
-                            password = TextFieldData(
+                            email = email.copy(errorMessage = emailError),
+                            password = password.copy(
                                 value = "",
                                 errorMessage = passwordError,
                             ),
-                            confirmPassword = TextFieldData(
+                            confirmPassword = confirmPassword.copy(
                                 value = "",
                                 errorMessage = confirmPasswordError,
                             ),
@@ -127,6 +143,44 @@ class SignUpViewModel @Inject constructor(
 
             result
         }
+    }
+
+    private fun validate(): Boolean {
+        val data = _signUpUiState.value.data
+
+        val emailError = when {
+            data.email.value.isBlank() -> UiText.StringResource(R.string.email_required)
+            !data.email.value.isEmailValid() -> UiText.StringResource(R.string.email_not_valid)
+            else -> null
+        }
+
+        val passwordError = when {
+            data.password.value.isBlank() -> UiText.StringResource(R.string.password_required)
+            !data.password.value.isPasswordValid() -> UiText.StringResource(R.string.password_not_valid)
+            else -> null
+        }
+
+        val confirmPasswordError = when {
+            data.confirmPassword.value.isBlank() -> UiText.StringResource(R.string.confirm_password_required)
+            data.confirmPassword.value != data.password.value ->
+                UiText.StringResource(R.string.passwords_do_not_match)
+            else -> null
+        }
+
+        val isValid = listOf(emailError, passwordError, confirmPasswordError)
+            .all { it == null }
+
+        if (!isValid) {
+            _signUpUiState.updateState {
+                copy(
+                    email = email.copy(errorMessage = emailError),
+                    password = password.copy(errorMessage = passwordError),
+                    confirmPassword = confirmPassword.copy(errorMessage = confirmPasswordError),
+                )
+            }
+        }
+
+        return isValid
     }
 }
 

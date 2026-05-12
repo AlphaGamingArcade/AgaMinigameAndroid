@@ -1,14 +1,35 @@
 package com.alphagamingarcade.core.network.model
 
 import com.alphagamingarcade.model.data.Game
+import com.alphagamingarcade.model.data.LocalizedText
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlin.String
+
+
+@Serializable
+data class NetworkLocalizedText(
+    val en: String = "",
+    val ko: String = "",
+    val cn: String = "",
+    val ja: String = ""
+)
+
+fun NetworkLocalizedText.get(currentLang: String): String {
+    return when (currentLang) {
+        "ko" -> ko
+        "cn" -> cn
+        "ja" -> ja
+        else -> en
+    }
+}
+
 
 @Serializable
 data class NetworkGame(
     val code: String,
-    val description: String,
-    val descriptionMultiLanguage: Map<String, String>,
+    @SerialName("descriptionMultiLanguage")
+    val description: NetworkLocalizedText,
     val image: String,
     val category: String,
     val top: String,
@@ -17,23 +38,34 @@ data class NetworkGame(
     val comingSoon: String,
     val datetime: String,
     val totalPlayers: Int,
-    val gamecode: GameCode,
+    val gamecode: Gamecode,
     val isFavorite: Boolean? = null
 )
 
 @Serializable
-data class GameCode(
+data class Gamecode(
     val id: Int,
     val code: String,
-    val name: String,
-    val nameMultiLanguage: Map<String, String>,
+    @SerialName("nameMultiLanguage")
+    val name: NetworkLocalizedText,
     val gameType: String,
 )
 
 fun NetworkGame.toExternalModel() = Game(
     id = gamecode.id,
-    gameCode = gamecode.code,
-    name = gamecode.name,
+    gamecode = gamecode.code,
+    name = LocalizedText(
+        en = gamecode.name.get("en"),
+        ko = gamecode.name.get("ko"),
+        zh = gamecode.name.get("cn"),
+        ja = gamecode.name.get("ja")
+    ),
+    description = LocalizedText(
+        en = description.get("en"),
+        ko = description.get("ko"),
+        zh = description.get("cn"),
+        ja = description.get("ja")
+    ),
     imageUrl = image,
     isTop = top == "y",
     isLatest = latest == "y",

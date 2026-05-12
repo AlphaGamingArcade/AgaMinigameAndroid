@@ -31,12 +31,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -44,9 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.alphagamingarcade.core.extensions.getActivity
-import com.alphagamingarcade.core.ui.components.DividerWithText
 import com.alphagamingarcade.core.ui.components.JetpackButton
-import com.alphagamingarcade.core.ui.components.JetpackOutlinedButton
 import com.alphagamingarcade.core.ui.components.JetpackPasswordField
 import com.alphagamingarcade.core.ui.components.JetpackTextButton
 import com.alphagamingarcade.core.ui.components.JetpackTextField
@@ -225,7 +220,7 @@ private fun SignUpScreen(
         // Email Field
         JetpackTextField(
             value = screenData.email.value,
-            errorMessage = screenData.email.errorMessage,
+            errorMessage = screenData.email.errorMessage?.asString(),
             onValueChange = onEmailChange,
             label = { Text(stringResource(R.string.email)) },
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
@@ -242,7 +237,7 @@ private fun SignUpScreen(
         // Password Field
         JetpackPasswordField(
             value = screenData.password.value,
-            errorMessage = screenData.password.errorMessage,
+            errorMessage = screenData.password.errorMessage?.asString(),
             onValueChange = onPasswordChange,
             label = { Text(stringResource(R.string.password)) },
             leadingIcon = {
@@ -259,7 +254,7 @@ private fun SignUpScreen(
         // Confirm Password Field
         JetpackPasswordField(
             value = screenData.confirmPassword.value,
-            errorMessage = screenData.confirmPassword.errorMessage,
+            errorMessage = screenData.confirmPassword.errorMessage?.asString(),
             onValueChange = onConfirmPasswordChange,
             label = { Text(stringResource(R.string.confirm_password)) },
             leadingIcon = {

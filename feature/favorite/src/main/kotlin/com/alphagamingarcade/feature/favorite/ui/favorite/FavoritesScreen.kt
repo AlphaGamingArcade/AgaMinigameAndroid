@@ -57,11 +57,13 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import com.alphagamingarcade.core.data.model.Language
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.core.ui.utils.StatefulComposable
 import com.alphagamingarcade.model.data.Game
 import com.alphagamingarcade.feature.favorite.R
 import com.alphagamingarcade.core.ui.components.SearchBar
+import com.alphagamingarcade.model.data.get
 
 // ─── Palette ─────────────────────────────────────────────────────────────────
 
@@ -81,12 +83,14 @@ internal fun FavoriteScreen(
 ) {
     val homeState by browseViewModel.homeUiState.collectAsStateWithLifecycle()
     val isRefreshing by browseViewModel.isRefreshing.collectAsStateWithLifecycle()
+    val language by browseViewModel.language.collectAsStateWithLifecycle()
 
     StatefulComposable(
         state = homeState,
         onShowSnackbar = onShowSnackbar,
     ) { homeScreenData ->
         FavoriteScreen(
+            language = language,
             data = homeScreenData,
             isRefreshing = isRefreshing,
             onRefresh = browseViewModel::refresh,
@@ -102,6 +106,7 @@ internal fun FavoriteScreen(
 
 @Composable
 private fun FavoriteScreen(
+    language: Language,
     data: FavoriteScreenData,
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
@@ -113,7 +118,7 @@ private fun FavoriteScreen(
 
     val filteredGames = remember(searchQuery, data.games) {
         if (searchQuery.isBlank()) data.games
-        else data.games.filter { it.name.contains(searchQuery, ignoreCase = true) }
+        else data.games.filter { it.name.get(language.code).contains(searchQuery, ignoreCase = true) }
     }
 
     val isSearching = searchQuery.isNotBlank()
@@ -176,6 +181,7 @@ private fun FavoriteScreen(
                             )
                             Spacer(Modifier.height(10.dp))
                             ResumeCard(
+                                language = language,
                                 game = recent,
                                 onClick = { onResumeGameClick(recent.id.toString()) },
                                 modifier = Modifier.padding(horizontal = 20.dp),
@@ -222,6 +228,7 @@ private fun FavoriteScreen(
                 } else {
                     item {
                         FavoritesGrid(
+                            language = language,
                             games = filteredGames,
                             onGameClick = onResumeGameClick,
                             modifier = Modifier.padding(horizontal = 20.dp),
@@ -287,6 +294,7 @@ private fun FavoriteScreen(
 
 @Composable
 private fun ResumeCard(
+    language: Language,
     game: Game,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -300,7 +308,7 @@ private fun ResumeCard(
     ) {
         AsyncImage(
             model = game.imageUrl,
-            contentDescription = game.name,
+            contentDescription = game.name.get(language.code),
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize(),
         )
@@ -326,7 +334,7 @@ private fun ResumeCard(
             )
             Spacer(Modifier.height(4.dp))
             Text(
-                text = game.name,
+                text = game.name.get(language.code),
                 color = Color.White,
                 fontWeight = FontWeight.ExtraBold,
                 fontSize = 20.sp,
@@ -352,7 +360,7 @@ private fun ResumeCard(
 // ─── Hot Favorites Row ────────────────────────────────────────────────────────
 
 @Composable
-private fun HotFavoritesRow(games: List<Game>, onGameClick: (String) -> Unit) {
+private fun HotFavoritesRow(language: Language, games: List<Game>, onGameClick: (String) -> Unit) {
     LazyRow(
         contentPadding = PaddingValues(horizontal = 20.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -372,7 +380,7 @@ private fun HotFavoritesRow(games: List<Game>, onGameClick: (String) -> Unit) {
                 ) {
                     AsyncImage(
                         model = game.imageUrl,
-                        contentDescription = game.name,
+                        contentDescription = game.name.get(language.code),
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize(),
                     )
@@ -403,7 +411,7 @@ private fun HotFavoritesRow(games: List<Game>, onGameClick: (String) -> Unit) {
                 }
                 Spacer(Modifier.height(6.dp))
                 Text(
-                    text = game.name,
+                    text = game.name.get(language.code),
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
                     color = TextPrimary,
@@ -419,6 +427,7 @@ private fun HotFavoritesRow(games: List<Game>, onGameClick: (String) -> Unit) {
 
 @Composable
 private fun FavoritesGrid(
+    language: Language,
     games: List<Game>,
     onGameClick: (String) -> Unit,
     onRemoveFavoriteClick: (Game) -> Unit,
@@ -434,8 +443,9 @@ private fun FavoritesGrid(
     ) {
         items(items = games, key = { it.id }) { game ->
             FavoriteGridCard(
+                language = language,
                 game = game,
-                onClick = { onGameClick(game.gameCode) },
+                onGameClick = { onGameClick(game.id.toString()) },
                 onRemoveFavoriteClick = { onRemoveFavoriteClick(game) }
             )
         }
@@ -444,15 +454,16 @@ private fun FavoritesGrid(
 
 @Composable
 private fun FavoriteGridCard(
+    language: Language,
     game: Game,
-    onClick: () -> Unit,
+    onGameClick: () -> Unit,
     onRemoveFavoriteClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .clickable(onClick = onClick),
+            .clickable(onClick = onGameClick),
     ) {
         Box(
             modifier = Modifier
@@ -462,7 +473,7 @@ private fun FavoriteGridCard(
         ) {
             AsyncImage(
                 model = game.imageUrl,
-                contentDescription = game.name,
+                contentDescription = game.name.get(language.code),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize(),
             )
@@ -499,7 +510,7 @@ private fun FavoriteGridCard(
         Spacer(Modifier.height(6.dp))
 
         Text(
-            text = game.name,
+            text = game.name.get(language.code),
             fontWeight = FontWeight.SemiBold,
             fontSize = 13.sp,
             color = MaterialTheme.colorScheme.onSurface,

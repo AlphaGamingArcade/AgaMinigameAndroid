@@ -33,4 +33,15 @@
     <string name="create_account">アカウント作成</string>
 
     <string name="see_more">もっと見る</string>
+
+    <string name="error_invalid_credentials">認証情報が無効です</string>
+    <string name="error_unknown">予期しないエラーが発生しました</string>
+    <string name="error_email_already_exists">このメールアドレスはすでに登録されています</string>
+
+    <string name="error_nickname_unchanged">ニックネームは変更されていません</string>
+    <string name="error_nickname_cooldown">現在ニックネームを変更できません。しばらくしてから再度お試しください</string>
+
+    <string name="error_current_password_incorrect">現在のパスワードが正しくありません</string>
+    <string name="error_password_unchanged">新しいパスワードは現在のパスワードと異なる必要があります</string>
+    <string name="error_password_mismatched">パスワードが一致しません</string>
 </resources>

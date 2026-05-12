@@ -25,12 +25,9 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Casino
-import androidx.compose.material.icons.rounded.ChevronRight
 import androidx.compose.material.icons.rounded.Diamond
 import androidx.compose.material.icons.rounded.GridView
 import androidx.compose.material.icons.rounded.LiveTv
-import androidx.compose.material.icons.rounded.MonetizationOn
 import androidx.compose.material.icons.rounded.SportsEsports
 import androidx.compose.material.icons.rounded.SportsSoccer
 import androidx.compose.material.icons.rounded.Toll
@@ -52,6 +49,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -60,6 +58,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import com.alphagamingarcade.core.data.model.Language
 import com.alphagamingarcade.core.ui.components.SectionHeader
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.core.ui.utils.StatefulComposable
@@ -67,6 +66,7 @@ import com.alphagamingarcade.core.ui.utils.formatPlayerCount
 import com.alphagamingarcade.model.data.Banner
 import com.alphagamingarcade.model.data.Game
 import com.alphagamingarcade.feature.games.R
+import com.alphagamingarcade.model.data.get
 
 // ─── Palette ─────────────────────────────────────────────────────────────────
 
@@ -85,9 +85,11 @@ internal fun GamesScreen(
     onCategoryClick: (GameCategory) -> Unit,
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
     gamesViewModel: GamesViewModel = hiltViewModel(),
+    onSeeMoreClick: (String) -> Unit
 ) {
     val gamesState by gamesViewModel.gamesUiState.collectAsStateWithLifecycle()
     val isRefreshing by gamesViewModel.isRefreshing.collectAsStateWithLifecycle()
+    val language by gamesViewModel.language.collectAsStateWithLifecycle()
 
     StatefulComposable(
         state = gamesState,
@@ -95,10 +97,12 @@ internal fun GamesScreen(
     ) { data ->
         GamesScreen(
             data = data,
+            language = language,
             isRefreshing = isRefreshing,
             onRefresh = gamesViewModel::refresh,
             onGameClick = onGameClick,
-            onCategoryClick = onCategoryClick
+            onCategoryClick = onCategoryClick,
+            onSeeMoreClick = onSeeMoreClick
         )
     }
 }
@@ -108,10 +112,12 @@ internal fun GamesScreen(
 @Composable
 private fun GamesScreen(
     data: GamesScreenData,
+    language: Language,
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
     onGameClick: (String) -> Unit,
     onCategoryClick: (GameCategory) -> Unit,
+    onSeeMoreClick: (String) -> Unit,
 ) {
     Surface(color = MaterialTheme.colorScheme.surface, modifier = Modifier.fillMaxSize()) {
         PullToRefreshBox(
@@ -119,16 +125,18 @@ private fun GamesScreen(
             onRefresh = onRefresh,
             modifier = Modifier.fillMaxSize(),
         ) {
+            val uriHandler = LocalUriHandler.current
+
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(bottom = 32.dp),
             ) {
-
                 // ── Hero Banner ──────────────────────────────────────────────────
                 item {
                     HeroBannerCarousel(
                         banners = data.bannerGames,
                         onGameClick = onGameClick,
+                        onExternalLinkClick = { externalUrl -> uriHandler.openUri(externalUrl)}
                     )
                     Spacer(Modifier.height(24.dp))
                 }
@@ -150,10 +158,10 @@ private fun GamesScreen(
                         title = stringResource(R.string.trending_now),
                         subtitle = stringResource(R.string.trending_now_subtitle),
                         modifier = Modifier.padding(horizontal = 20.dp),
-                        onSeeMoreClick = {}
+                        onSeeMoreClick = { onSeeMoreClick("trending_now") }
                     )
                     Spacer(Modifier.height(12.dp))
-                    TrendingRow(games = data.trendingGames, onGameClick = onGameClick)
+                    TrendingRow(games = data.trendingGames, language = language, onGameClick = onGameClick)
                     Spacer(Modifier.height(28.dp))
                 }
 
@@ -163,10 +171,10 @@ private fun GamesScreen(
                         title = stringResource(R.string.new_release),
                         subtitle = stringResource(R.string.new_release_sub_title),
                         modifier = Modifier.padding(horizontal = 20.dp),
-                        onSeeMoreClick = {}
+                        onSeeMoreClick = { onSeeMoreClick("new_releases") }
                     )
                     Spacer(Modifier.height(12.dp))
-                    NewReleasesRow(games = data.newReleases, onGameClick = onGameClick)
+                    NewReleasesRow(language = language,  games = data.newReleases, onGameClick = onGameClick)
                     Spacer(Modifier.height(28.dp))
                 }
 
@@ -176,9 +184,13 @@ private fun GamesScreen(
                         title = stringResource(R.string.coming_soon),
                         subtitle = stringResource(R.string.coming_soon_sub_title),
                         modifier = Modifier.padding(horizontal = 20.dp),
+                        onSeeMoreClick = { onSeeMoreClick("coming_soon") }
                     )
                     Spacer(Modifier.height(12.dp))
-                    ComingSoonRow(games = data.comingSoonGames)
+                    ComingSoonRow(
+                        language = language,
+                        games = data.comingSoonGames,
+                    )
                     Spacer(Modifier.height(28.dp))
                 }
 
@@ -189,13 +201,14 @@ private fun GamesScreen(
                         title = stringResource(R.string.top_rated),
                         subtitle = stringResource(R.string.top_rated_sub_title),
                         modifier = Modifier.padding(horizontal = 20.dp),
-                        onSeeMoreClick = {}
+                        onSeeMoreClick = { onSeeMoreClick("top_rated") }
                     )
                     Spacer(Modifier.height(12.dp))
                 }
 
                 items(items = data.topRated, key = { it.id }) { game ->
                     TopRatedListItem(
+                        language = language,
                         game = game,
                         rank = data.topRated.indexOf(game) + 1,
                         onClick = { onGameClick(game.id.toString()) },
@@ -213,6 +226,7 @@ private fun GamesScreen(
 private fun HeroBannerCarousel(
     banners: List<Banner>,
     onGameClick: (String) -> Unit,
+    onExternalLinkClick: (String) -> Unit
 ) {
     val pagerState = rememberPagerState(pageCount = { banners.size })
 
@@ -228,7 +242,13 @@ private fun HeroBannerCarousel(
                     .fillMaxWidth()
                     .height(200.dp)
                     .clip(RoundedCornerShape(20.dp))
-                    .clickable { onGameClick(banner.id.toString()) },
+                    .clickable {
+                        if (banner.actionType.equals("GAME_DETAIL", ignoreCase = true)){
+                            onGameClick(banner.actionValue)
+                        } else if (banner.actionType.equals("EXTERNAL_URL", ignoreCase = true)){
+                            onExternalLinkClick(banner.actionValue)
+                        }
+                    },
             ) {
                 AsyncImage(
                     model = banner.imageUrl,
@@ -252,21 +272,19 @@ private fun HeroBannerCarousel(
                         .align(Alignment.BottomStart)
                         .padding(16.dp),
                 ) {
-                    if (banner.isNew) {
-                        GameTag(label = "NEW", color = TagNew)
-                        Spacer(Modifier.height(6.dp))
-                    }
                     Text(
                         text = banner.title,
                         color = Color.White,
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp,
                     )
-                    Text(
-                        text = "Tap to play",
-                        color = Color.White.copy(alpha = 0.7f),
-                        fontSize = 12.sp,
-                    )
+                    if (banner.actionType.equals("GAME_DETAIL", ignoreCase = true)){
+                        Text(
+                            text = stringResource(R.string.tap_to_play),
+                            color = Color.White.copy(alpha = 0.7f),
+                            fontSize = 12.sp,
+                        )
+                    }
                 }
             }
         }
@@ -290,7 +308,6 @@ private fun HeroBannerCarousel(
         }
     }
 }
-
 
 enum class GameCategory(
     val value: String,
@@ -349,19 +366,22 @@ private fun QuickCategoryPills(
 // ─── Coming Soon Row ──────────────────────────────────────────────────────────
 
 @Composable
-private fun ComingSoonRow(games: List<Game>) {
+private fun ComingSoonRow(language: Language, games: List<Game>) {
     LazyRow(
         contentPadding = PaddingValues(horizontal = 20.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         items(games) { game ->
-            ComingSoonCard(game = game)
+            ComingSoonCard(
+                language = language,
+                game = game
+            )
         }
     }
 }
 
 @Composable
-private fun ComingSoonCard(game: Game) {
+private fun ComingSoonCard(language: Language, game: Game) {
     Box(
         modifier = Modifier
             .width(160.dp)
@@ -378,7 +398,7 @@ private fun ComingSoonCard(game: Game) {
             ) {
                 AsyncImage(
                     model = game.imageUrl,
-                    contentDescription = game.name,
+                    contentDescription = game.description.get(language.code),
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize(),
                 )
@@ -421,7 +441,7 @@ private fun ComingSoonCard(game: Game) {
                 verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 Text(
-                    text = game.name,
+                    text = game.name.get(language.code),
                     fontWeight = FontWeight.Bold,
                     fontSize = 13.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -437,19 +457,19 @@ private fun ComingSoonCard(game: Game) {
 // ─── Trending Row ─────────────────────────────────────────────────────────────
 
 @Composable
-private fun TrendingRow(games: List<Game>, onGameClick: (String) -> Unit) {
+private fun TrendingRow(language: Language, games: List<Game>, onGameClick: (String) -> Unit) {
     LazyRow(
         contentPadding = PaddingValues(horizontal = 20.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         items(games) { game ->
-            TrendingCard(game = game, onClick = { onGameClick(game.id.toString()) })
+            TrendingCard(game = game, language = language, onClick = { onGameClick(game.id.toString()) })
         }
     }
 }
 
 @Composable
-private fun TrendingCard(game: Game, onClick: () -> Unit) {
+private fun TrendingCard(language: Language, game: Game, onClick: () -> Unit) {
     Card(
         onClick = onClick,
         modifier = Modifier.width(140.dp),
@@ -465,7 +485,7 @@ private fun TrendingCard(game: Game, onClick: () -> Unit) {
             ) {
                 AsyncImage(
                     model = game.imageUrl,
-                    contentDescription = game.name,
+                    contentDescription = game.name.get(language.code),
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize(),
                 )
@@ -486,7 +506,7 @@ private fun TrendingCard(game: Game, onClick: () -> Unit) {
                     .fillMaxWidth()
             ) {
                 Text(
-                    text = game.name,
+                    text = game.name.get(language.code),
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 13.sp,
                     color = MaterialTheme.colorScheme.onBackground,
@@ -503,19 +523,19 @@ private fun TrendingCard(game: Game, onClick: () -> Unit) {
 // ─── New Releases Row ─────────────────────────────────────────────────────────
 
 @Composable
-private fun NewReleasesRow(games: List<Game>, onGameClick: (String) -> Unit) {
+private fun NewReleasesRow(language: Language, games: List<Game>, onGameClick: (String) -> Unit) {
     LazyRow(
         contentPadding = PaddingValues(horizontal = 20.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         items(games) { game ->
-            NewReleaseCard(game = game, onClick = { onGameClick(game.id.toString()) })
+            NewReleaseCard(language = language, game = game, onClick = { onGameClick(game.id.toString()) })
         }
     }
 }
 
 @Composable
-private fun NewReleaseCard(game: Game, onClick: () -> Unit) {
+private fun NewReleaseCard(language: Language, game: Game, onClick: () -> Unit) {
     Column(
         modifier = Modifier
             .width(110.dp)
@@ -531,7 +551,7 @@ private fun NewReleaseCard(game: Game, onClick: () -> Unit) {
         ) {
             AsyncImage(
                 model = game.imageUrl,
-                contentDescription = game.name,
+                contentDescription = game.name.get(language.code),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize(),
             )
@@ -545,7 +565,7 @@ private fun NewReleaseCard(game: Game, onClick: () -> Unit) {
         }
         Spacer(Modifier.height(8.dp))
         Text(
-            text = game.name,
+            text = game.name.get(language.code),
             fontSize = 12.sp,
             fontWeight = FontWeight.Medium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -559,6 +579,7 @@ private fun NewReleaseCard(game: Game, onClick: () -> Unit) {
 
 @Composable
 private fun TopRatedListItem(
+    language: Language,
     game: Game,
     rank: Int,
     onClick: () -> Unit,
@@ -604,7 +625,7 @@ private fun TopRatedListItem(
             // Game thumbnail
             AsyncImage(
                 model = game.imageUrl,
-                contentDescription = game.name,
+                contentDescription = game.name.get(language.code),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(56.dp)
@@ -616,13 +637,13 @@ private fun TopRatedListItem(
             // Game info
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = game.name,
+                    text = game.name.get(language.code),
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Spacer(Modifier.height(4.dp))
-                Text(text = "${formatPlayerCount(game.playerCount)} plays", fontSize = 12.sp, color = TextSecondary)
+                Text(text = "${formatPlayerCount(game.playerCount)} ${stringResource(R.string.plays)}", fontSize = 12.sp, color = TextSecondary)
             //                Text(text = "⭐ 4.9 · 120K plays", fontSize = 12.sp, color = TextSecondary)
             }
 

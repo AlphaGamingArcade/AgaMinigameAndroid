@@ -1,21 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-     Copyright 2026 Alpha Gaming Arcade
-
-     Licensed under the Apache License, Version 2.0 (the "License");
-     you may not use this file except in compliance with the License.
-     You may obtain a copy of the License at
-
-          http://www.apache.org/licenses/LICENSE-2.0
-
-     Unless required by applicable law or agreed to in writing, software
-     distributed under the License is distributed on an "AS IS" BASIS,
-     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     See the License for the specific language governing permissions and
-     limitations under the License.
--->
-
 <resources>
+
+    <!-- EXISTING (unchanged) -->
     <string name="member">Member</string>
     <string name="online">Online</string>
     <string name="wallet_balance">WALLET BALANCE</string>
@@ -36,7 +21,6 @@
     <string name="help_an_support">Help and Support</string>
     <string name="contact_support">Contact support</string>
     <string name="contact_support_sub_title">Get help from our team</string>
-
 
     <string name="account_actions">Account Actions</string>
     <string name="sign_out">Sign Out</string>
@@ -70,4 +54,16 @@
     <string name="success">Success</string>
     <string name="failed">Failed</string>
     <string name="pending">Pending</string>
+
+    <string name="remember_your_password">Remember your password?</string>
+
+    <string name="password_required">Password is required</string>
+    <string name="password_min_characters">Password must be at least 8 characters</string>
+    <string name="confirm_password_required">Please confirm your password</string>
+    <string name="passwords_do_not_match">Passwords do not match</string>
+
+    <string name="nickname_required">Nickname is required</string>
+    <string name="nickname_length_invalid">Nickname must be 3–64 characters</string>
+    <string name="nickname_format_invalid">Invalid characters in nickname</string>
+
 </resources>

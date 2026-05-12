@@ -35,11 +35,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.alphagamingarcade.core.data.model.Language
 import com.alphagamingarcade.model.data.Game
+import com.alphagamingarcade.model.data.get
 import java.util.Locale
 
 @Composable
 fun FavoriteGameCard(
+    language: Language,
     game: Game,
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
@@ -57,7 +60,7 @@ fun FavoriteGameCard(
                 .data(game.imageUrl)
                 .crossfade(true)
                 .build(),
-            contentDescription = game.name,
+            contentDescription = game.name.get(language.code),
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
         )
@@ -149,7 +152,7 @@ fun FavoriteGameCard(
 
             // Game name
             Text(
-                text = game.name,
+                text = game.name.get(language.code),
                 fontSize = 14.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = Color.White,

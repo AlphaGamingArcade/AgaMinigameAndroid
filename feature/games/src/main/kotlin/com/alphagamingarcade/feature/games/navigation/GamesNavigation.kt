@@ -30,12 +30,14 @@ fun NavGraphBuilder.gamesScreen(
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
     onGameClick: (String) -> Unit,
     onCategoryClick: (GameCategory) -> Unit,
+    onSeeMoreClick: (String) -> Unit,
 ) {
     composable<Games> {
         GamesScreen(
             onShowSnackbar = onShowSnackbar,
             onGameClick = onGameClick,
             onCategoryClick = onCategoryClick,
+            onSeeMoreClick = onSeeMoreClick
         )
     }
 }

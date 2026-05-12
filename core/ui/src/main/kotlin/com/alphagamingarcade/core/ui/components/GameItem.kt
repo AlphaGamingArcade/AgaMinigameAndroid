@@ -29,15 +29,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.alphagamingarcade.core.data.model.Language
 import com.alphagamingarcade.model.data.Game
+import com.alphagamingarcade.model.data.LocalizedText
+import com.alphagamingarcade.model.data.get
 
-@Preview()
+
 @Composable
 fun GameItem(
+    language: Language,
     modifier: Modifier = Modifier,
     game: Game = Game(
         id = 1,
-        name = "Forest Quest",
+        name = LocalizedText(),
         imageUrl = "https://picsum.photos/200/300",
     ),
     onPlayClick: () -> Unit = {}
@@ -56,7 +60,7 @@ fun GameItem(
         Box(Modifier.fillMaxSize()) {
             AsyncImage(
                 model = game.imageUrl,
-                contentDescription = game.name,
+                contentDescription = game.name.get(language.code),
                 modifier = Modifier
                     .fillMaxSize()
                     .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)),
@@ -94,7 +98,7 @@ fun GameItem(
                     .align(Alignment.BottomCenter)
             ) {
                 Text(
-                    game.name,
+                    text = game.name.get(language.code),
                     style = MaterialTheme.typography.bodyLarge.copy(
                         fontWeight = FontWeight.Bold
                     ),

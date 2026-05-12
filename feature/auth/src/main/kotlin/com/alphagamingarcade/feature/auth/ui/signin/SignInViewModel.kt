@@ -4,13 +4,16 @@ import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import com.alphagamingarcade.core.common.result.AppResult
 import com.alphagamingarcade.core.data.repository.AuthRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
 import com.alphagamingarcade.core.extensions.isEmailValid
 import com.alphagamingarcade.core.extensions.isPasswordValid
 import com.alphagamingarcade.core.ui.utils.TextFieldData
 import com.alphagamingarcade.core.ui.utils.UiState
+import com.alphagamingarcade.core.ui.utils.UiText
+import com.alphagamingarcade.core.ui.utils.toUiText
 import com.alphagamingarcade.core.ui.utils.updateState
 import com.alphagamingarcade.core.ui.utils.updateWithAppResult
+import com.alphagamingarcade.feature.auth.R
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
@@ -21,17 +24,23 @@ import javax.inject.Inject
 class SignInViewModel @Inject constructor(
     private val authRepository: AuthRepository,
 ) : ViewModel() {
+
     private val _signInUiState = MutableStateFlow(UiState(SignInScreenData()))
     val signInUiState = _signInUiState.asStateFlow()
+
     private val _events = kotlinx.coroutines.channels.Channel<SignInEvent>()
     val events = _events.receiveAsFlow()
 
     fun updateEmail(email: String) {
         _signInUiState.updateState {
             copy(
-                email = TextFieldData(
+                email = this.email.copy(
                     value = email,
-                    errorMessage = if (email.isEmailValid()) null else "Email Not Valid",
+                    errorMessage = when {
+                        email.isBlank() -> null
+                        !email.isEmailValid() -> UiText.StringResource(R.string.email_not_valid)
+                        else -> null
+                    },
                 ),
             )
         }
@@ -40,15 +49,21 @@ class SignInViewModel @Inject constructor(
     fun updatePassword(password: String) {
         _signInUiState.updateState {
             copy(
-                password = TextFieldData(
+                password = this.password.copy(
                     value = password,
-                    errorMessage = if (password.isPasswordValid()) null else "Password Not Valid",
+                    errorMessage = when {
+                        password.isBlank() -> null
+                        !password.isPasswordValid() -> UiText.StringResource(R.string.password_not_valid)
+                        else -> null
+                    },
                 ),
             )
         }
     }
 
     fun loginWithEmailAndPassword() {
+        if (!validate()) return
+
         _signInUiState.updateWithAppResult {
             val result = authRepository.signInWithEmailAndPassword(
                 email = email.value,
@@ -61,36 +76,25 @@ class SignInViewModel @Inject constructor(
                     val hasProfileSetup = authRepository.hasProfileSetup().first()
 
                     when {
-                        !isEmailVerified -> {
-                            _events.send(SignInEvent.NavigateToVerifyEmail(email.value))
-                        }
-
-                        !hasProfileSetup -> {
-                            _events.send(SignInEvent.NavigateToProfileSetup)
-                        }
-
-                        else -> {
-                            _events.send(SignInEvent.NavigateToPrevious)
-                        }
+                        !isEmailVerified -> _events.send(SignInEvent.NavigateToVerifyEmail(email.value))
+                        !hasProfileSetup -> _events.send(SignInEvent.NavigateToProfileSetup)
+                        else -> _events.send(SignInEvent.NavigateToPrevious)
                     }
                 }
 
                 is AppResult.Error -> {
                     val emailError = result.errors
                         ?.firstOrNull { it.field.equals("Email", ignoreCase = true) }
-                        ?.message
+                        ?.toUiText()
 
                     val passwordError = result.errors
                         ?.firstOrNull { it.field.equals("Password", ignoreCase = true) }
-                        ?.message
+                        ?.toUiText()
 
                     _signInUiState.updateState {
                         copy(
-                            email = TextFieldData(
-                                value = email.value,
-                                errorMessage = emailError,
-                            ),
-                            password = TextFieldData(
+                            email = email.copy(errorMessage = emailError),
+                            password = password.copy(
                                 value = "",
                                 errorMessage = passwordError,
                             ),
@@ -102,6 +106,35 @@ class SignInViewModel @Inject constructor(
             result
         }
     }
+
+    private fun validate(): Boolean {
+        val data = _signInUiState.value.data
+
+        val emailError = when {
+            data.email.value.isBlank() -> UiText.StringResource(R.string.email_required)
+            !data.email.value.isEmailValid() -> UiText.StringResource(R.string.email_not_valid)
+            else -> null
+        }
+
+        val passwordError = when {
+            data.password.value.isBlank() -> UiText.StringResource(R.string.password_required)
+            !data.password.value.isPasswordValid() -> UiText.StringResource(R.string.password_not_valid)
+            else -> null
+        }
+
+        val isValid = listOf(emailError, passwordError).all { it == null }
+
+        if (!isValid) {
+            _signInUiState.updateState {
+                copy(
+                    email = email.copy(errorMessage = emailError),
+                    password = password.copy(errorMessage = passwordError),
+                )
+            }
+        }
+
+        return isValid
+    }
 }
 
 sealed class SignInEvent {
@@ -110,12 +143,6 @@ sealed class SignInEvent {
     object NavigateToPrevious : SignInEvent()
 }
 
-/**
- * Data for [SignInScreen].
- *
- * @param email [TextFieldData].
- * @param password [TextFieldData].
- */
 @Immutable
 data class SignInScreenData(
     val email: TextFieldData = TextFieldData(String()),

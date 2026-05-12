@@ -27,6 +27,7 @@ dependencies {
     api(project(":core:common"))
     api(project(":core:android"))
     api(project(":core:model"))
+    api(project(":core:data"))
 
     // ... AppCompat
     api(libs.androidx.appcompat)

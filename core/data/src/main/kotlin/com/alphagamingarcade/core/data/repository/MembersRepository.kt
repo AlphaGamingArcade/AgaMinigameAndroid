@@ -6,6 +6,9 @@ import com.alphagamingarcade.model.data.Game
 import com.alphagamingarcade.model.data.Play
 
 interface MembersRepository {
+    suspend fun getMember(
+        memberId: Int
+    ): Result<Unit>
     suspend fun createMember(
         account: String,
         nickname: String,

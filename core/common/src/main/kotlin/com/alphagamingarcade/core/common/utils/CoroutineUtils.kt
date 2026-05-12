@@ -30,7 +30,7 @@ suspend inline fun <T> suspendRunAppResultCatching(
 
 fun parseFieldErrors(errorBody: String?): List<FieldError> {
     if (errorBody == null) return listOf(
-        FieldError(type = "error", message = "Bad Request", field = null)
+        FieldError(type = "error", message = "Bad Request", code = "unknown_error", field = null)
     )
 
     return try {
@@ -44,15 +44,16 @@ fun parseFieldErrors(errorBody: String?): List<FieldError> {
                 FieldError(
                     type = obj.optString("type", "error"),
                     message = obj.optString("message", "Unknown error"),
+                    code = obj.optString("code", "unknown_error"),
                     field = obj.optString("field").ifEmpty { null },
                 )
             }
         } else {
             // Fall back to top-level message e.g. "message": "Authentication failed"
             val message = json.optString("message", "Bad Request")
-            listOf(FieldError(type = "error", message = message, field = null))
+            listOf(FieldError(type = "error", message = message, code = "unknown_error", field = null))
         }
     } catch (e: Exception) {
-        listOf(FieldError(type = "error", message = "Bad Request", field = null))
+        listOf(FieldError(type = "error", message = "Bad Request", code = "unknown_error", field = null))
     }
 }

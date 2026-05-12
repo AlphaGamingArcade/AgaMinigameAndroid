@@ -182,7 +182,7 @@ private fun SetupProfileContent(
 
         JetpackTextField(
             value = screenData.account.value,
-            errorMessage = screenData.account.errorMessage,
+            errorMessage = screenData.account.errorMessage?.asString(),
             onValueChange = onAccountChange,
             label = { Text(stringResource(R.string.account)) },
             keyboardOptions = KeyboardOptions.Default.copy(
@@ -200,7 +200,7 @@ private fun SetupProfileContent(
 
         JetpackTextField(
             value = screenData.nickname.value,
-            errorMessage = screenData.nickname.errorMessage,
+            errorMessage = screenData.nickname.errorMessage?.asString(),
             onValueChange = onNicknameChange,
             label = { Text(stringResource(R.string.nickname)) },
             keyboardOptions = KeyboardOptions.Default.copy(
@@ -221,7 +221,7 @@ private fun SetupProfileContent(
         ) {
             JetpackTextField(
                 value = screenData.dob.value,
-                errorMessage = screenData.dob.errorMessage,
+                errorMessage = screenData.dob.errorMessage?.asString(),
                 onValueChange = {},
                 readOnly = true,
                 label = { Text(stringResource(R.string.date_of_birth)) },

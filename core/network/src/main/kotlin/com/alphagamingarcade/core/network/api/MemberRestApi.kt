@@ -22,6 +22,11 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface MemberRestApi {
+    @GET("members/{memberId}")
+    suspend fun getMember(
+        @Path(value = "memberId") memberId: Int,
+    ): ApiResponse<NetworkMember>
+
     @POST("members")
     suspend fun createMember(
         @Body request: NetworkCreateMemberRequest

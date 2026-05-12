@@ -31,11 +31,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material.icons.outlined.StarBorder
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -60,6 +56,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.alphagamingarcade.core.ui.components.JetpackButton
@@ -83,15 +81,33 @@ private val AccentSoft = Color(0xFFE8F7FA)
  */
 @Composable
 internal fun GameDetailScreen(
+    onSimilarGameClick: (String) -> Unit,
     isLoggedIn: Boolean,
     onBackClick: () -> Unit,
     onSignInClick: () -> Unit,
+    onRefreshMemberHandled: () -> Unit,
+    refreshMember: Boolean,
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
     onNavigateToPlay: (String, String) -> Unit,
     viewModel: GameDetailViewModel = hiltViewModel(),
 ) {
     val gameDetailState by viewModel.gameDetailUiState.collectAsStateWithLifecycle()
     val navEvent = viewModel.navigationEvent.collectAsState().value
+
+    if (isLoggedIn) {
+        LaunchedEffect(refreshMember) {
+            if (refreshMember) {
+                viewModel.refreshMemberOnFocus()
+                onRefreshMemberHandled()
+            }
+        }
+
+        LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
+            if (!refreshMember) {
+                viewModel.refreshMemberOnFocus()
+            }
+        }
+    }
 
     LaunchedEffect(navEvent) {
         navEvent?.getContentIfNotHandled()?.let { args ->
@@ -111,7 +127,7 @@ internal fun GameDetailScreen(
             onFavoriteClick = viewModel::toggleFavorite,
             onScreenshotClick = viewModel::selectScreenshot,
             onPlayClick = viewModel::play,
-            onSimilarGameClick = viewModel::openSimilarGame,
+            onSimilarGameClick = onSimilarGameClick,
         )
     }
 }
@@ -176,7 +192,9 @@ private fun GameDetailScreen(
                         title = stringResource(R.string.about_this_game),
                         content = screenData.game.description,
                     )
+                }
 
+                if (!screenData.similarGames.isEmpty()){
                     SimilarGamesSection(
                         games = screenData.similarGames,
                         onGameClick = onSimilarGameClick,
@@ -479,9 +497,11 @@ private fun SimilarGamesSection(
     onGameClick: (String) -> Unit,
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(14.dp),
+        modifier = Modifier.padding(top = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Text(
+            modifier = Modifier.padding(horizontal =  20.dp),
             text = stringResource(R.string.similar_games),
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
@@ -490,6 +510,7 @@ private fun SimilarGamesSection(
 
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(14.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp),
         ) {
             items(games) { game ->
                 SimilarGameItem(

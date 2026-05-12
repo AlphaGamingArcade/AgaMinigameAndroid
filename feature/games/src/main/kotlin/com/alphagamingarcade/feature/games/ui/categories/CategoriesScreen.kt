@@ -64,6 +64,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import com.alphagamingarcade.core.data.model.Language
 import com.alphagamingarcade.core.ui.components.FilterChips
 import com.alphagamingarcade.core.ui.components.SearchBar
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
@@ -71,6 +72,7 @@ import com.alphagamingarcade.core.ui.utils.StatefulComposable
 import com.alphagamingarcade.model.data.Game
 import com.alphagamingarcade.feature.games.R
 import com.alphagamingarcade.feature.games.ui.games.GameCategory
+import com.alphagamingarcade.model.data.get
 
 enum class CategoryFilter(
     @StringRes val labelRes: Int,
@@ -93,6 +95,7 @@ internal fun CategoriesScreen(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
+    val language by viewModel.language.collectAsStateWithLifecycle()
 
     LaunchedEffect(category.value) {
         viewModel.initialize(category.value)
@@ -103,6 +106,7 @@ internal fun CategoriesScreen(
         onShowSnackbar = onShowSnackbar,
     ) { data ->
         CategoriesScreen(
+            language = language,
             data = data,
             isLoading = state.loading,
             onRefresh = viewModel::refresh,
@@ -119,6 +123,7 @@ internal fun CategoriesScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CategoriesScreen(
+    language: Language,
     category: GameCategory,
     isLoading: Boolean,
     data: CategoriesScreenData,
@@ -133,7 +138,7 @@ private fun CategoriesScreen(
     val filteredGames = remember(searchQuery, selectedFilter, data.games) {
         data.games
             .filter { game ->
-                searchQuery.isEmpty() || game.name.contains(searchQuery, ignoreCase = true)
+                searchQuery.isEmpty() || game.name.get(language.code).contains(searchQuery, ignoreCase = true)
             }
             .let { games ->
                 when (selectedFilter) {
@@ -228,6 +233,7 @@ private fun CategoriesScreen(
                             } else {
                                 itemsIndexed(items = filteredGames, key = { _, game -> game.id }) { index, game ->
                                     CategoryGameCard(
+                                        language = language,
                                         game = game,
                                         onClick = { onGameClick(game.id.toString()) }
                                     )
@@ -245,6 +251,7 @@ private fun CategoriesScreen(
 
 @Composable
 private fun CategoryGameCard(
+    language: Language,
     game: Game,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -264,7 +271,7 @@ private fun CategoryGameCard(
         ) {
             AsyncImage(
                 model = game.imageUrl,
-                contentDescription = game.name,
+                contentDescription = game.name.get(language.code),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize(),
             )
@@ -282,7 +289,7 @@ private fun CategoryGameCard(
         Spacer(Modifier.height(8.dp))
 
         Text(
-            text = game.name,
+            text = game.name.get(language.code),
             fontWeight = FontWeight.SemiBold,
             fontSize = 13.sp,
             color = MaterialTheme.colorScheme.onSurface,

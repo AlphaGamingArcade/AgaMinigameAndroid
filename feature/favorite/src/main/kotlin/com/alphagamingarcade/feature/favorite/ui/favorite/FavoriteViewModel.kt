@@ -5,10 +5,12 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
+import com.alphagamingarcade.core.data.model.Language
 import com.alphagamingarcade.core.data.repository.MembersRepository
 import com.alphagamingarcade.core.data.repository.ProfileRepository
 import com.alphagamingarcade.core.extensions.stateInDelayed
 import com.alphagamingarcade.core.ui.utils.UiState
+import com.alphagamingarcade.core.ui.utils.getPreferredLocale
 import com.alphagamingarcade.core.utils.OneTimeEvent
 import com.alphagamingarcade.model.data.Game
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,8 +29,12 @@ class FavoriteViewModel @Inject constructor(
     private val profileRepository: ProfileRepository
 ) : ViewModel() {
     private val _favoriteUiState = MutableStateFlow(UiState(FavoriteScreenData()))
+
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
+
+    private val _language = MutableStateFlow(getPreferredLanguage())
+    val language: StateFlow<Language> = _language.asStateFlow()
 
     val homeUiState = _favoriteUiState
         .onStart {}
@@ -152,6 +158,16 @@ class FavoriteViewModel @Inject constructor(
                     error = OneTimeEvent(e),
                 )
             }
+        }
+    }
+
+    private fun getPreferredLanguage(): Language {
+        val preferredLanguage = getPreferredLocale().language
+        return when (preferredLanguage) {
+            "ko" -> Language.KOREAN
+            "zh" -> Language.CHINESE
+            "ja" -> Language.JAPANESE
+            else -> Language.ENGLISH
         }
     }
 }

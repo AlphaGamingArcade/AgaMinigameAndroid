@@ -102,7 +102,7 @@ private fun ForgotPasswordScreen(
         Spacer(modifier = Modifier.height(24.dp))
         JetpackTextField(
             value = screenData.email.value,
-            errorMessage = screenData.email.errorMessage,
+            errorMessage = screenData.email.errorMessage?.asString(),
             onValueChange = onEmailChange,
             label = { Text(stringResource(R.string.email)) },
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),

@@ -282,7 +282,7 @@ private fun CheckYourEmailScreen(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(text = stringResource(R.string.remember_your_password))
+                Text(text = stringResource(R.string.remember_password))
                 JetpackTextButton(onClick = onBackToSignInClick) {
                     Text(
                         text = stringResource(R.string.sign_in),

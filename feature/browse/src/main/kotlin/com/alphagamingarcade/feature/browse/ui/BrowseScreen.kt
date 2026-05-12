@@ -40,17 +40,20 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import com.alphagamingarcade.core.data.model.Language
 import com.alphagamingarcade.core.ui.components.FilterChips
 import com.alphagamingarcade.core.ui.components.SearchBar
 import com.alphagamingarcade.core.ui.utils.SnackbarAction
 import com.alphagamingarcade.core.ui.utils.StatefulComposable
 import com.alphagamingarcade.model.data.Game
 import com.alphagamingarcade.feature.browse.R
+import com.alphagamingarcade.model.data.get
 
 // ─── Palette ─────────────────────────────────────────────────────────────────
 
@@ -59,7 +62,7 @@ private val TagNew         = Color(0xFF00C48C)
 private val TagHot         = Color(0xFFFF4757)
 private val TextSecondary  = Color(0xFF8A8A9A)
 
-private enum class BrowseCategory(
+enum class BrowseCategory(
     @StringRes val labelRes: Int,
 ) {
     All(R.string.all_filter),
@@ -72,17 +75,21 @@ private enum class BrowseCategory(
 @Composable
 internal fun BrowseScreen(
     onGameClick: (String) -> Unit,
+    filter: String,
     onShowSnackbar: suspend (String, SnackbarAction, Throwable?) -> Boolean,
     browseViewModel: BrowseViewModel = hiltViewModel(),
 ) {
     val browseState by browseViewModel.browseUiState.collectAsStateWithLifecycle()
     val isRefreshing by browseViewModel.isRefreshing.collectAsStateWithLifecycle()
+    val language by browseViewModel.language.collectAsStateWithLifecycle()
 
     StatefulComposable(
         state = browseState,
         onShowSnackbar = onShowSnackbar,
     ) { browseScreenData ->
         BrowseScreen(
+            language = language,
+            filter = filter,
             data = browseScreenData,
             onRefresh = browseViewModel::refresh,
             isRefreshing = isRefreshing,
@@ -95,13 +102,26 @@ internal fun BrowseScreen(
 
 @Composable
 private fun BrowseScreen(
+    language: Language,
+    filter: String,
     data: BrowseScreenData,
     onGameClick: (String) -> Unit,
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
 ) {
     var searchQuery by remember { mutableStateOf("") }
-    var selectedCategory by remember { mutableStateOf(BrowseCategory.All) }
+    var selectedCategory by remember(filter) {
+        mutableStateOf(
+            when (filter.lowercase()) {
+                "all"          -> BrowseCategory.All
+                "trending_now" -> BrowseCategory.Trending
+                "new_releases" -> BrowseCategory.New
+                "coming_soon"  -> BrowseCategory.ComingSoon
+                "top_rated"    -> BrowseCategory.Hot
+                else           -> BrowseCategory.All // safe fallback
+            }
+        )
+    }
 
     val filteredGames = remember(data.allGames, selectedCategory, searchQuery) {
         data.allGames
@@ -115,7 +135,7 @@ private fun BrowseScreen(
                 }
             }
             .filter { game ->
-                searchQuery.isBlank() || game.name.contains(searchQuery, ignoreCase = true)
+                searchQuery.isBlank() || game.name.get(language.code).contains(searchQuery, ignoreCase = true)
             }
     }
 
@@ -172,7 +192,11 @@ private fun BrowseScreen(
                             modifier = Modifier.padding(horizontal = 20.dp),
                         )
                         Spacer(Modifier.height(12.dp))
-                        FeaturedRow(games = data.featuredGames, onGameClick = onGameClick)
+                        FeaturedRow(
+                            language = language,
+                            games = data.featuredGames,
+                            onGameClick = onGameClick
+                        )
                         Spacer(Modifier.height(24.dp))
                     }
                 }
@@ -187,6 +211,7 @@ private fun BrowseScreen(
                     )
                     Spacer(Modifier.height(12.dp))
                     AllGamesGrid(
+                        language = language,
                         games = filteredGames,
                         onGameClick = onGameClick,
                         modifier = Modifier.padding(horizontal = 20.dp),
@@ -199,7 +224,7 @@ private fun BrowseScreen(
 
 // ─── Featured Row ─────────────────────────────────────────────────────────────
 @Composable
-private fun FeaturedRow(games: List<Game>, onGameClick: (String) -> Unit) {
+private fun FeaturedRow(language: Language, games: List<Game>, onGameClick: (String) -> Unit) {
     LazyRow(
         contentPadding = PaddingValues(horizontal = 20.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -214,7 +239,7 @@ private fun FeaturedRow(games: List<Game>, onGameClick: (String) -> Unit) {
             ) {
                 AsyncImage(
                     model = game.imageUrl,
-                    contentDescription = game.name,
+                    contentDescription = game.name.get(language.code),
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize(),
                 )
@@ -235,7 +260,7 @@ private fun FeaturedRow(games: List<Game>, onGameClick: (String) -> Unit) {
                     if (game.isLatest) GameTag(label = "NEW", color = TagNew)
                     Spacer(Modifier.height(4.dp))
                     Text(
-                        text = game.name,
+                        text = game.name.get(language.code),
                         color = Color.White,
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
@@ -249,6 +274,7 @@ private fun FeaturedRow(games: List<Game>, onGameClick: (String) -> Unit) {
 // ─── All Games Grid ───────────────────────────────────────────────────────────
 @Composable
 private fun AllGamesGrid(
+    language: Language,
     games: List<Game>,
     onGameClick: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -262,13 +288,17 @@ private fun AllGamesGrid(
         userScrollEnabled = false,
     ) {
         items(games) { game ->
-            GridGameCard(game = game, onClick = { onGameClick(game.id.toString()) })
+            GridGameCard(
+                language = language,
+                game = game,
+                onClick = { onGameClick(game.id.toString()) }
+            )
         }
     }
 }
 
 @Composable
-private fun GridGameCard(game: Game, onClick: () -> Unit) {
+private fun GridGameCard(language: Language, game: Game, onClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -282,7 +312,7 @@ private fun GridGameCard(game: Game, onClick: () -> Unit) {
         ) {
             AsyncImage(
                 model = game.imageUrl,
-                contentDescription = game.name,
+                contentDescription = game.name.get(language.code),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize(),
             )
@@ -298,7 +328,7 @@ private fun GridGameCard(game: Game, onClick: () -> Unit) {
         }
         Spacer(Modifier.height(6.dp))
         Text(
-            text = game.name,
+            text = game.name.get(language.code),
             fontWeight = FontWeight.SemiBold,
             fontSize = 13.sp,
             color = MaterialTheme.colorScheme.onSurface,

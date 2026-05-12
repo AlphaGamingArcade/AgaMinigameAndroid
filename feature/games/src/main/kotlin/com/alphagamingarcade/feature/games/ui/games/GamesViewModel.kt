@@ -3,10 +3,13 @@ package com.alphagamingarcade.feature.games.ui.games
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alphagamingarcade.core.data.model.Language
 import com.alphagamingarcade.core.data.repository.BannersRepository
 import com.alphagamingarcade.core.data.repository.GamesRepository
+import com.alphagamingarcade.core.data.repository.ProfileRepository
 import com.alphagamingarcade.core.extensions.stateInDelayed
 import com.alphagamingarcade.core.ui.utils.UiState
+import com.alphagamingarcade.core.ui.utils.getPreferredLocale
 import com.alphagamingarcade.core.utils.OneTimeEvent
 import com.alphagamingarcade.model.data.Banner
 import com.alphagamingarcade.model.data.Game
@@ -27,6 +30,9 @@ class GamesViewModel @Inject constructor(
     private val _gamesUiState = MutableStateFlow(UiState(GamesScreenData()))
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
+
+    private val _language = MutableStateFlow(getPreferredLanguage())
+    val language: StateFlow<Language> = _language.asStateFlow()
 
     val gamesUiState = _gamesUiState
         .onStart {
@@ -146,6 +152,17 @@ class GamesViewModel @Inject constructor(
                 }
         }
     }
+
+
+    private fun getPreferredLanguage(): Language {
+        val preferredLanguage = getPreferredLocale().language
+        return when (preferredLanguage) {
+            "ko" -> Language.KOREAN
+            "zh" -> Language.CHINESE
+            "ja" -> Language.JAPANESE
+            else -> Language.ENGLISH
+        }
+    }
 }
 
 /**
@@ -163,14 +180,6 @@ data class GamesScreenData(
     val trendingGames: List<Game> = emptyList(),
     val newReleases: List<Game> = emptyList(),
     val topRated: List<Game> = emptyList(),
-    val jackpotGames: List<Game> = listOf(
-        Game(
-            id = 501,
-            name = "Mega Millions",
-            imageUrl = "https://picsum.photos/seed/megamillions/400/400",
-            isTrending = true,
-            isLatest = false,
-        )
-    ),
+    val jackpotGames: List<Game> = emptyList(),
     val comingSoonGames: List<Game> = emptyList()
 )

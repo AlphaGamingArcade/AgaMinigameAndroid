@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<resources>
+    <string name="quit_game">게임 종료</string>
+    <string name="quit_game_confirmation">%1$s 게임을 종료하시겠습니까?</string>
+    <string name="quit">종료</string>
+    <string name="cancel">취소</string>
+</resources>

@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 data class ApiError(
     val type: String,
     val message: String,
+    val code: String,
     val field: String? = null,
 )
 

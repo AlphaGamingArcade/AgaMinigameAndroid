@@ -22,6 +22,7 @@ import com.alphagamingarcade.feature.auth.navigation.signUpScreen
 import com.alphagamingarcade.feature.games.navigation.Games
 import com.alphagamingarcade.feature.games.navigation.gamesScreen
 import com.alphagamingarcade.feature.browse.navigation.browseScreen
+import com.alphagamingarcade.feature.browse.navigation.navigateToBrowseScreen
 import com.alphagamingarcade.feature.favorite.navigation.favoriteScreen
 import com.alphagamingarcade.feature.gamedetail.navigation.gameDetailScreen
 import com.alphagamingarcade.feature.gamedetail.navigation.navigateToGameDetailScreen
@@ -119,13 +120,22 @@ fun AgamgNavHost(
             onShowSnackbar = onShowSnackbar,
             onBackClick = { navController.popBackStack() },
             onSignInClick = navController::navigateToSignInScreen,
+            onSimilarGameClick = { gameId ->
+                navController.navigateToGameDetailScreen(gameId)
+            },
             onNavigateToPlay = { playUrl, gameName ->
                 navController.navigateToPlayScreen(playUrl = playUrl, gameName = gameName)
             }
         )
         playScreen(
             onShowSnackbar = onShowSnackbar,
-            onBackClick = { navController.popBackStack() },
+            onBackClick = {
+                // Tag to refresh member
+                navController.previousBackStackEntry
+                    ?.savedStateHandle
+                    ?.set("refresh_member", true)
+
+                navController.popBackStack() },
         )
         gamesScreen(
             onShowSnackbar = onShowSnackbar,
@@ -135,6 +145,9 @@ fun AgamgNavHost(
             onCategoryClick = { category ->
                 navController.navigateToCategoriesScreen(category = category)
             },
+            onSeeMoreClick = { filter ->
+                navController.navigateToBrowseScreen(filter = filter)
+            }
         )
         categoriesScreen(
             onShowSnackbar = onShowSnackbar,

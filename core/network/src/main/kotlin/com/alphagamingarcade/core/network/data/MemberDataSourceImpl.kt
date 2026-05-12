@@ -23,6 +23,15 @@ import javax.inject.Inject
 internal class MemberDataSourceImpl @Inject constructor(
     private val memberRestApi: MemberRestApi
 ) : MemberDataSource {
+    override suspend fun getMember(
+        memberId: Int
+    ): ApiResponse<NetworkMember> {
+        return memberRestApi.getMember(
+            memberId = memberId
+        )
+    }
+
+
     override suspend fun createMember(
         account: String,
         nickname: String,

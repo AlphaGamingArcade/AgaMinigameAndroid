@@ -33,4 +33,16 @@
     <string name="create_account">Create Account</string>
 
     <string name="see_more">See more</string>
+
+    <string name="error_invalid_credentials">Invalid credentials</string>
+    <string name="error_unknown">Unexpected error</string>
+    <string name="error_email_already_exists">Email already exists</string>
+    <string name="error_account_already_exists">Account already in use</string>
+
+    <string name="error_nickname_unchanged">Nickname is unchanged</string>
+    <string name="error_nickname_cooldown">You can’t change your nickname yet. Please try again later</string>
+
+    <string name="error_current_password_incorrect">Current password is incorrect</string>
+    <string name="error_password_unchanged">New password must be different from the current password</string>
+    <string name="error_password_mismatched">Passwords do not match</string>
 </resources>

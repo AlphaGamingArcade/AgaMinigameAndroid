@@ -9,10 +9,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.alphagamingarcade.core.data.model.Language
 import com.alphagamingarcade.model.data.Game
 
 @Composable
-public fun GamesGrid(
+fun GamesGrid(
+    language: Language,
     games: List<Game>,
     onGameClick: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -30,6 +32,7 @@ public fun GamesGrid(
             ) {
                 rowGames.forEach { game ->
                     GameItem(
+                        language = language,
                         game = game,
                         modifier = Modifier.weight(1f),
                         onPlayClick = { onGameClick(game.id.toString()) },

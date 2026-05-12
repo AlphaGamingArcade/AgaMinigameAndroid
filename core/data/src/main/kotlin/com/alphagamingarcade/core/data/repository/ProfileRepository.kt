@@ -1,5 +1,6 @@
 package com.alphagamingarcade.core.data.repository
 
+import com.alphagamingarcade.core.common.result.AppResult
 import com.alphagamingarcade.core.data.model.Member
 import com.alphagamingarcade.core.data.model.Profile
 import kotlinx.coroutines.flow.Flow
@@ -46,5 +47,5 @@ interface ProfileRepository {
         currentPassword: String,
         newPassword: String,
         confirmPassword: String
-    ): Result<Unit>
+    ): AppResult<Unit>
 }

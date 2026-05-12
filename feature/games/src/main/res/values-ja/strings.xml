@@ -38,4 +38,6 @@
     <string name="no_games_yet">まだゲームがありません</string>
     <string name="no_games_yet_sub_title">後でもう一度ご確認ください！</string>
     <string name="plays">プレイ数</string>
+    <string name="tap_to_play">タップしてプレイ</string>
+
 </resources>

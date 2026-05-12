@@ -3,9 +3,11 @@ package com.alphagamingarcade.feature.games.ui.categories
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alphagamingarcade.core.data.model.Language
 import com.alphagamingarcade.core.data.repository.GamesRepository
 import com.alphagamingarcade.core.extensions.stateInDelayed
 import com.alphagamingarcade.core.ui.utils.UiState
+import com.alphagamingarcade.core.ui.utils.getPreferredLocale
 import com.alphagamingarcade.core.utils.OneTimeEvent
 import com.alphagamingarcade.model.data.Game
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,6 +25,9 @@ class CategoriesViewModel @Inject constructor(
 
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
+
+    private val _language = MutableStateFlow(getPreferredLanguage())
+    val language: StateFlow<Language> = _language.asStateFlow()
 
     private var categoryName: String? = null
 
@@ -81,6 +86,16 @@ class CategoriesViewModel @Inject constructor(
             } finally {
                 _isRefreshing.value = false
             }
+        }
+    }
+
+    private fun getPreferredLanguage(): Language {
+        val preferredLanguage = getPreferredLocale().language
+        return when (preferredLanguage) {
+            "ko" -> Language.KOREAN
+            "zh" -> Language.CHINESE
+            "ja" -> Language.JAPANESE
+            else -> Language.ENGLISH
         }
     }
 }
